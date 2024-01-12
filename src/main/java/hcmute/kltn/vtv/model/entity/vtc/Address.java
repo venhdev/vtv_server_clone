@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +32,6 @@ public class Address {
 
     private String phone;
 
-    private String codeWard;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -44,5 +44,9 @@ public class Address {
     @JoinColumn(name = "customer_id")
     @JsonIgnore
     private Customer customer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ward_code")
+    private Ward wardCode;
 
 }

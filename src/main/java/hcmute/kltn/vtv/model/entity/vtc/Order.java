@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,8 +47,6 @@ public class Order {
 
     private String shippingMethod;
 
-    private String codeWard;
-
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
@@ -55,6 +54,10 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ward_code")
+    private Ward wardCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")

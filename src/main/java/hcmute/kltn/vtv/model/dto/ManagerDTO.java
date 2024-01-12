@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.kltn.vtv.model.entity.vtc.manager.Manager;
+import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;

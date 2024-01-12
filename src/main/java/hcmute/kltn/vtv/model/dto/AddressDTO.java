@@ -30,7 +30,8 @@ public class AddressDTO {
 
     private Status status;
 
-    private String codeWard;
+    private String wardCode;
+
 
     public static AddressDTO convertEntityToDTO(Address address) {
         AddressDTO addressDTO = new AddressDTO();
@@ -42,7 +43,7 @@ public class AddressDTO {
         addressDTO.setFullName(address.getFullName());
         addressDTO.setPhone(address.getPhone());
         addressDTO.setStatus(address.getStatus());
-        addressDTO.setCodeWard(address.getCodeWard());
+        addressDTO.setWardCode(address.getWardCode().getWardCode());
         return addressDTO;
 
     }

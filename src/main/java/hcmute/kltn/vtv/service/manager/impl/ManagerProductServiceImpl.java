@@ -7,7 +7,7 @@ import hcmute.kltn.vtv.model.dto.manager.ManagerProductDTO;
 import hcmute.kltn.vtv.model.entity.vtc.Customer;
 import hcmute.kltn.vtv.model.entity.vtc.Product;
 import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
-import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerProduct;
+import hcmute.kltn.vtv.model.entity.manager.ManagerProduct;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.ProductRepository;
 import hcmute.kltn.vtv.repository.ProductVariantRepository;

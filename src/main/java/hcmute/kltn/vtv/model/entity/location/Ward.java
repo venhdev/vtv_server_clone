@@ -37,6 +37,4 @@ public class Ward {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "district_code")
     private District district;
-
-    // Getters and setters
 }

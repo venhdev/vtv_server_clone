@@ -5,7 +5,7 @@ import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
 import hcmute.kltn.vtv.model.dto.ManagerDTO;
 import hcmute.kltn.vtv.model.entity.vtc.Customer;
-import hcmute.kltn.vtv.model.entity.vtc.manager.Manager;
+import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.CustomerRepository;

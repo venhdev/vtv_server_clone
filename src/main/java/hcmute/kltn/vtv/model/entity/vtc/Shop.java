@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,8 +30,6 @@ public class Shop {
 
     private String ward;
 
-    private String codeWard;
-
     private String phone;
 
     private String email;
@@ -53,5 +52,9 @@ public class Shop {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ward_code")
+    private Ward wardCode;
 
 }

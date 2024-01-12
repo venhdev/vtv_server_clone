@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
-import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerShop;
+import hcmute.kltn.vtv.model.entity.manager.ManagerShop;
 import lombok.*;
 
 import java.util.Comparator;

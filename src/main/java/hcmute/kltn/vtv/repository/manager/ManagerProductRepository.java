@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.repository.manager;
 
-import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerProduct;
+import hcmute.kltn.vtv.model.entity.manager.ManagerProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

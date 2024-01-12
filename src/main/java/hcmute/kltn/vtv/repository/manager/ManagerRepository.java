@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.repository.manager;
 
-import hcmute.kltn.vtv.model.entity.vtc.manager.Manager;
+import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

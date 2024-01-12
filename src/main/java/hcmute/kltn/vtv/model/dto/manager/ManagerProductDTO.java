@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
 import hcmute.kltn.vtv.model.dto.ProductDTO;
-import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerProduct;
+import hcmute.kltn.vtv.model.entity.manager.ManagerProduct;
 import lombok.*;
 
 import java.util.ArrayList;

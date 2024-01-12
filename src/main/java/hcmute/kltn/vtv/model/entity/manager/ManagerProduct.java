@@ -1,25 +1,24 @@
-package hcmute.kltn.vtv.model.entity.vtc.manager;
+package hcmute.kltn.vtv.model.entity.manager;
 
 import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.entity.vtc.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Setter
+@Getter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class ManagerCustomer {
+public class ManagerProduct {
 
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long managerCustomerId;
+    private Long managerProductId;
 
     private String note;
 
@@ -38,6 +37,6 @@ public class ManagerCustomer {
     private Customer manager;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "product_id")
+    private Product product;
 }

@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.entity.vtc.manager;
+package hcmute.kltn.vtv.model.entity.manager;
 
 import hcmute.kltn.vtv.model.entity.vtc.Customer;
 import hcmute.kltn.vtv.model.entity.vtc.Shop;
