@@ -45,4 +45,15 @@ public class WardDTO {
         // return entities.stream().map(WardDTO::convertEntityToDTO).toList();
     }
 
+    public static List<String> convertEntitiesToNames(List<Ward> entities) {
+        List<String> wardNames = new ArrayList<>();
+        for (Ward entity : entities) {
+            wardNames.add(convertEntityToDTO(entity).getName());
+        }
+        wardNames.sort((o1, o2) -> o1.compareTo(o2));
+        return wardNames;
+
+        // return entities.stream().map(WardDTO::convertEntityToDTO).toList();
+    }
+
 }
