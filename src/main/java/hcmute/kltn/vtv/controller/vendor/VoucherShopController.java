@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.vendor;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.VoucherShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListVoucherShopResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.VoucherShopResponse;
@@ -35,7 +36,7 @@ public class VoucherShopController {
     public ResponseEntity<VoucherShopResponse> getVoucherByVoucherId(@PathVariable Long voucherId,
             HttpServletRequest httpServletRequest) {
         if (voucherId == null) {
-            throw new IllegalArgumentException("Mã giảm giá không được để trống!");
+            throw new BadRequestException("Mã giảm giá không được để trống!");
         }
         String username = (String) httpServletRequest.getAttribute("username");
 
@@ -81,7 +82,7 @@ public class VoucherShopController {
             @RequestParam Status status,
             HttpServletRequest httpServletRequest) {
         if (voucherId == null) {
-            throw new IllegalArgumentException("Mã giảm giá không được để trống!");
+            throw new BadRequestException("Mã giảm giá không được để trống!");
         }
 
         String username = (String) httpServletRequest.getAttribute("username");

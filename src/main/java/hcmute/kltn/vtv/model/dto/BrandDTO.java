@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.dto;
 
 import hcmute.kltn.vtv.model.entity.vtc.Brand;
 import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
@@ -31,22 +32,22 @@ public class BrandDTO {
 
     public void validate() {
         if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Tên thương hiệu không được để trống.");
+            throw new BadRequestException("Tên thương hiệu không được để trống.");
         }
         if (description == null || description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả không được để trống.");
+            throw new BadRequestException("Mô tả không được để trống.");
         }
         if (information == null || information.isEmpty()) {
-            throw new IllegalArgumentException("Thông tin không được để trống.");
+            throw new BadRequestException("Thông tin không được để trống.");
         }
         if (origin == null || origin.isEmpty()) {
-            throw new IllegalArgumentException("Xuất xứ không được để trống.");
+            throw new BadRequestException("Xuất xứ không được để trống.");
         }
         if (image == null || image.isEmpty()) {
-            throw new IllegalArgumentException("Hình ảnh không được để trống.");
+            throw new BadRequestException("Hình ảnh không được để trống.");
         }
         if (status == null) {
-            throw new IllegalArgumentException("Trạng thái không được để trống.");
+            throw new BadRequestException("Trạng thái không được để trống.");
         }
     }
 

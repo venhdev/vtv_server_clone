@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 import java.util.List;
@@ -29,27 +30,28 @@ public class OrderRequest {
     public static void validate(OrderRequest request) {
 
         if (request.getCartIds() == null || request.getCartIds().isEmpty()) {
-            throw new IllegalArgumentException("Danh sách sản phẩm không được để trống!");
+            throw new BadRequestException("Danh sách sản phẩm không được để trống!");
         }
 
         if (request.getAddressId() == null) {
-            throw new IllegalArgumentException("Mã địa chỉ không được để trống!");
+            throw new BadRequestException("Mã địa chỉ không được để trống!");
         }
 
         if (request.getPaymentMethod() == null || request.getPaymentMethod().isEmpty()) {
-            throw new IllegalArgumentException("Phương thức thanh toán không được để trống! ");
+            throw new BadRequestException("Phương thức thanh toán không được để trống! ");
         }
         if (!request.getPaymentMethod().equals("COD")) {
-            throw new IllegalArgumentException("Phương thanh toán không hợp lệ! Hiện tai chỉ hỗ trợ COD");
+            throw new BadRequestException("Phương thanh toán không hợp lệ! Hiện tai chỉ hỗ trợ COD");
         }
 
         if (request.getShippingMethod() == null || request.getShippingMethod().isEmpty()) {
-            throw new IllegalArgumentException("Phương thức vận chuyển không được để trống.");
+            throw new BadRequestException("Phương thức vận chuyển không được để trống.");
         }
         if (!request.getShippingMethod().equals("GHN") &&
                 !request.getShippingMethod().equals("GHTK") &&
                 !request.getShippingMethod().equals("EXPRESS")) {
-            throw new IllegalArgumentException("Phương thức vận chuyển không hợp lệ! Hiện tại chỉ hỗ trợ GHN, GHTK, EXPRESS");
+            throw new BadRequestException(
+                    "Phương thức vận chuyển không hợp lệ! Hiện tại chỉ hỗ trợ GHN, GHTK, EXPRESS");
         }
 
         request.trim();
@@ -61,6 +63,5 @@ public class OrderRequest {
         this.paymentMethod = this.paymentMethod.trim();
         this.shippingMethod = this.shippingMethod.trim();
     }
-
 
 }

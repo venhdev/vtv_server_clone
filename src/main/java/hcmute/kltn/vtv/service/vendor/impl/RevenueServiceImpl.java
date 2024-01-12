@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.StatisticsRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.StatisticsResponse;
 import hcmute.kltn.vtv.model.dto.StatisticsDTO;
@@ -35,7 +36,7 @@ public class RevenueServiceImpl implements IRevenueService {
                 Status.COMPLETED, startDate, endDate);
         List<Order> orders = orderRepository
                 .findAllByShopIdAndStatusAndOrderDateBetween(shop.getShopId(), Status.COMPLETED, startDate, endDate)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng nào."));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng nào."));
         List<StatisticsDTO> statisticsDTOs = listStatisticsDTO(orders, request.getStartDate(), request.getEndDate());
 
         if (!orders.isEmpty()) {

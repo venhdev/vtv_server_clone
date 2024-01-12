@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.CreateOrderUpdateRequest;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
@@ -98,21 +99,21 @@ public class OrderServiceImpl implements IOrderService {
 
             return orderResponse(request.getUsername(), save, "Đặt hàng thành công.", false);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Đặt hàng thất bại! " + e.getMessage() + " " + e.getCause());
+            throw new BadRequestException("Đặt hàng thất bại! " + e.getMessage() + " " + e.getCause());
         }
     }
 
     @Override
     public ListOrderResponse getOrders(String username) {
         List<Order> orders = orderRepository.findAllByCustomerUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng!"));
         return listOrderResponse(orders, "Lấy danh sách đơn hàng thành công.", username);
     }
 
     @Override
     public ListOrderResponse getOrdersByStatus(String username, Status status) {
         List<Order> orders = orderRepository.findAllByCustomerUsernameAndStatus(username, status)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng!"));
 
         String message = messageByOrderStatus(status);
 
@@ -122,9 +123,9 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public OrderResponse getOrderDetail(String username, Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng!"));
         if (!order.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Không tìm thấy đơn hàng!");
+            throw new BadRequestException("Không tìm thấy đơn hàng!");
         }
         return orderResponse(username, order, "Lấy chi tiết đơn hàng thành công.", true);
     }
@@ -133,9 +134,9 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional
     public OrderResponse cancelOrder(String username, Long orderId) {
         Order order = orderRepository.findByOrderIdAndStatus(orderId, Status.PENDING)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đơn hàng!"));
         if (order == null || !order.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Không tìm thấy đơn hàng!");
+            throw new BadRequestException("Không tìm thấy đơn hàng!");
         }
 
         order.setStatus(Status.CANCEL);
@@ -154,7 +155,7 @@ public class OrderServiceImpl implements IOrderService {
 
             return orderResponse(username, save, "Hủy đơn hàng thành công.", false);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Hủy đơn hàng thất bại!");
+            throw new BadRequestException("Hủy đơn hàng thất bại!");
         }
     }
 
@@ -319,7 +320,7 @@ public class OrderServiceImpl implements IOrderService {
     private void checkListCartSameShop(String username, List<Long> cartIds) {
         boolean check = cartService.checkCartsSameShop(username, cartIds);
         if (!check) {
-            throw new IllegalArgumentException("Các sản phẩm không thuộc cùng một cửa hàng.");
+            throw new BadRequestException("Các sản phẩm không thuộc cùng một cửa hàng.");
         }
     }
 

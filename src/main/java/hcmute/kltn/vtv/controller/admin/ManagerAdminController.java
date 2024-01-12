@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.service.admin.IManagerAdminService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class ManagerAdminController {
             @RequestParam String username) {
         managerAdminService.checkRequestPageParams(size, page);
         if (username.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên tài khoản không được để trống!");
+            throw new BadRequestException("Tên tài khoản không được để trống!");
         }
         return ResponseEntity.ok(managerAdminService.getManagerPageByUsername(page, size, username.trim()));
     }

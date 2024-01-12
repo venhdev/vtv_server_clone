@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ChangePasswordRequest;
 import hcmute.kltn.vtv.model.data.user.request.ForgotPasswordRequest;
 import hcmute.kltn.vtv.model.data.user.request.ProfileCustomerRequest;
@@ -42,7 +43,7 @@ public class CustomerServiceImpl implements ICustomerService {
     @Override
     public ProfileCustomerResponse getProfileCustomer(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
         Customer customer = getCustomerByUsername(username);
         CustomerDTO customerDTO = modelMapper.map(customer, CustomerDTO.class);
@@ -80,7 +81,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật thông tin khách hàng thất bại!");
+            throw new BadRequestException("Cập nhật thông tin khách hàng thất bại!");
         }
 
     }
@@ -93,7 +94,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
         boolean checkPassword = passwordEncoder.matches(request.getOldPassword(), customerUpdate.getPassword());
         if (!checkPassword) {
-            throw new IllegalArgumentException("Mật khẩu cũ không chính xác.");
+            throw new BadRequestException("Mật khẩu cũ không chính xác.");
         }
 
         customerUpdate.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -111,7 +112,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật mật khẩu của khách hàng thất bại!");
+            throw new BadRequestException("Cập nhật mật khẩu của khách hàng thất bại!");
         }
 
     }
@@ -138,7 +139,7 @@ public class CustomerServiceImpl implements ICustomerService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cài lại mật khẩu của tài khoản thất bại!");
+            throw new BadRequestException("Cài lại mật khẩu của tài khoản thất bại!");
         }
 
     }

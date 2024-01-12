@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ReviewRequest;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
 import hcmute.kltn.vtv.model.dto.ReviewDTO;
@@ -34,7 +35,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
         checkOrderItemAndRoleReviewAndStatus(request.getOrderItemId(), username);
 
         OrderItem orderItem = orderItemRepository.findById(request.getOrderItemId())
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Sản phẩm không tồn tại!"));
 
         Product product = orderItem.getCart().getProductVariant().getProduct();
 
@@ -52,14 +53,14 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
             reviewRepository.save(review);
             return reviewResponse(review, username, "Thêm mới đánh giá thành công!", false);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm mới đánh giá thất bại!" + e.getMessage());
+            throw new BadRequestException("Thêm mới đánh giá thất bại!" + e.getMessage());
         }
     }
 
     @Override
     public ReviewResponse getReviewByOrderItemId(Long orderItemId) {
         Review review = reviewRepository.findByOrderItemOrderItemId(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Đánh giá không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại!"));
         return reviewResponse(review, review.getCustomer().getUsername(), "Lấy đánh giá thành công!", false);
     }
 
@@ -74,23 +75,23 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
             reviewRepository.save(review);
             return reviewResponse(review, username, "Xóa đánh giá thành công!", true);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa đánh giá thất bại!");
+            throw new BadRequestException("Xóa đánh giá thất bại!");
         }
     }
 
     @Override
     public Review checkReviewRole(Long reviewId, String username, boolean isShop) {
         Review review = reviewRepository.findByReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Đánh giá không tồn tại"));
+                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại"));
 
         if (isShop) {
             if (!review.getProduct().getCategory().getShop().getCustomer().getUsername().equals(username)) {
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Bạn không phải chủ cửa hàng. Bạn không có quyền trả lời đánh giá này.");
             }
         } else {
             if (!review.getCustomer().getUsername().equals(username)) {
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Bạn không phải chủ đánh giá. Bạn không có quyền trả lời đánh giá này.");
             }
         }
@@ -101,9 +102,9 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     @Override
     public Review checkReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Đánh giá không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại!"));
         if (review.getStatus() == Status.INACTIVE) {
-            throw new IllegalArgumentException("Đánh giá này đã bị xóa!");
+            throw new BadRequestException("Đánh giá này đã bị xóa!");
         }
 
         return review;
@@ -112,20 +113,20 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     private Review checkDeleteReview(Long reviewId, String username) {
         Review review = checkReview(reviewId);
         if (!review.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Bạn không có quyền xóa đánh giá này!");
+            throw new BadRequestException("Bạn không có quyền xóa đánh giá này!");
         }
         return review;
     }
 
     private void checkOrderItem(Long orderItemId) {
         if (reviewRepository.existsByOrderItemOrderItemId(orderItemId)) {
-            throw new IllegalArgumentException("Đã đánh giá sản phẩm này!");
+            throw new BadRequestException("Đã đánh giá sản phẩm này!");
         }
     }
 
     private void checkRoleReview(Long orderItemId, String username) {
         if (!orderItemRepository.existsByOrderItemIdAndCartCustomerUsername(orderItemId, username)) {
-            throw new IllegalArgumentException("Bạn không có quyền đánh giá sản phẩm này!");
+            throw new BadRequestException("Bạn không có quyền đánh giá sản phẩm này!");
         }
     }
 
@@ -134,7 +135,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
         checkRoleReview(orderItemId, username);
 
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Sản phẩm không tồn tại!"));
 
         System.out.println("aaaaaaa" + orderItem.getCart().getStatus());
 
@@ -142,7 +143,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
                 orderItem.getCart().getStatus() == Status.COMPLETED) {
             return;
         }
-        throw new IllegalArgumentException("Bạn không thể đánh giá sản phẩm này!");
+        throw new BadRequestException("Bạn không thể đánh giá sản phẩm này!");
     }
 
     private ReviewResponse reviewResponse(Review review, String username, String message, boolean created) {

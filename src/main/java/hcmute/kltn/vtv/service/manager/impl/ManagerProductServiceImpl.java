@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerProductResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerProductResponse;
 import hcmute.kltn.vtv.model.dto.manager.ManagerProductDTO;
@@ -46,9 +47,9 @@ public class ManagerProductServiceImpl implements IManagerProductService {
         ManagerProduct managerProduct = new ManagerProduct();
         if (managerProductRepository.existsByProduct_ProductId(productId)) {
             managerProduct = managerProductRepository.findByProduct_ProductId(productId)
-                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm"));
+                    .orElseThrow(() -> new BadRequestException("Không tìm thấy sản phẩm"));
             if (managerProduct.isLock()) {
-                throw new IllegalArgumentException("Sản phẩm đã bị khóa");
+                throw new BadRequestException("Sản phẩm đã bị khóa");
             }
         } else {
             managerProduct.setProduct(product);
@@ -72,7 +73,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
             return managerProductResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Khóa sản phẩm thất bại");
+            throw new BadRequestException("Khóa sản phẩm thất bại");
         }
     }
 
@@ -104,7 +105,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
             return managerProductResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Mở khóa sản phẩm thất bại");
+            throw new BadRequestException("Mở khóa sản phẩm thất bại");
         }
     }
 
@@ -115,7 +116,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
         Page<ManagerProduct> managerProducts = managerProductRepository
                 .findAllByLock(true, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách sản phẩm đã khóa"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách sản phẩm đã khóa"));
         String message = "Lấy danh sách sản phẩm đã khóa thành công";
 
         return listManagerProductResponse(managerProducts.getContent(), page, totalPage, size, message);
@@ -128,7 +129,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
         Page<ManagerProduct> managerProducts = managerProductRepository
                 .findAllByLockAndProductNameContains(true, productName, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách sản phẩm đã khóa"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách sản phẩm đã khóa"));
         String message = "Lấy danh sách sản phẩm đã khóa thành công";
 
         return listManagerProductResponse(managerProducts.getContent(), page, totalPage, size, message);
@@ -165,12 +166,12 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
     public ManagerProduct checkManagerProduct(Long productId, String username) {
         ManagerProduct managerProduct = managerProductRepository.findByProduct_ProductId(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy sản phẩm"));
         if (!managerProduct.getManager().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Bạn không có quyền thực hiện hành động này");
+            throw new BadRequestException("Bạn không có quyền thực hiện hành động này");
         }
         if (!managerProduct.isLock()) {
-            throw new IllegalArgumentException("Sản phẩm chưa bị khóa");
+            throw new BadRequestException("Sản phẩm chưa bị khóa");
         }
 
         return managerProduct;
@@ -188,7 +189,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
                 try {
                     productVariantRepository.save(productVariant);
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Mở khóa biến thể sản phẩm thất bại");
+                    throw new BadRequestException("Mở khóa biến thể sản phẩm thất bại");
                 }
             }
 
@@ -197,7 +198,7 @@ public class ManagerProductServiceImpl implements IManagerProductService {
         try {
             productRepository.save(product);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Mở khóa sản phẩm thất bại");
+            throw new BadRequestException("Mở khóa sản phẩm thất bại");
         }
     }
 
@@ -214,23 +215,23 @@ public class ManagerProductServiceImpl implements IManagerProductService {
             try {
                 productVariantRepository.save(productVariant);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Khóa biến thể sản phẩm thất bại");
+                throw new BadRequestException("Khóa biến thể sản phẩm thất bại");
             }
         }
 
         try {
             productRepository.save(product);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Khóa sản phẩm thất bại");
+            throw new BadRequestException("Khóa sản phẩm thất bại");
         }
     }
 
     private Product checkProductByProductId(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy sản phẩm"));
 
         if (product.getStatus().equals(Status.DELETED)) {
-            throw new IllegalArgumentException("Sản phẩm đã bị xóa");
+            throw new BadRequestException("Sản phẩm đã bị xóa");
         }
 
         return product;

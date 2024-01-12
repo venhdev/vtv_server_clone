@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.data.admin.request.VoucherAdminRequest;
 import hcmute.kltn.vtv.model.data.admin.response.ListVoucherAdminResponse;
 import hcmute.kltn.vtv.model.data.admin.response.VoucherAdminResponse;
 import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.extra.VoucherType;
 import hcmute.kltn.vtv.service.admin.IVoucherAdminService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +34,7 @@ public class VoucherAdminController {
     @GetMapping("/detail/system/{voucherId}")
     public ResponseEntity<VoucherAdminResponse> getVoucherAdminByVoucherId(@PathVariable Long voucherId) {
         if (voucherId == null) {
-            throw new IllegalArgumentException("Mã của mã giảm giá không được để trống!");
+            throw new BadRequestException("Mã của mã giảm giá không được để trống!");
         }
         return ResponseEntity.ok(voucherAdminService.getVoucherAdminByVoucherId(voucherId));
     }
@@ -81,7 +82,7 @@ public class VoucherAdminController {
             HttpServletRequest servletRequest) {
         String username = (String) servletRequest.getAttribute("username");
         if (voucherId == null) {
-            throw new IllegalArgumentException("Mã giảm giá không được để trống!");
+            throw new BadRequestException("Mã giảm giá không được để trống!");
         }
 
         return ResponseEntity.ok(voucherAdminService.updateStatusVoucherAdmin(voucherId, status, username));

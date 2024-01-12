@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.data.admin.response.AllBrandAdminResponse;
 import hcmute.kltn.vtv.model.data.admin.response.BrandAdminResponse;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.service.admin.IBrandAdminService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +61,13 @@ public class BrandAdminController {
         String username = (String) httpServletRequest.getAttribute("username");
 
         if (brandId == null || brandId == 0) {
-            throw new IllegalArgumentException("Mã thương hiệu không hợp lệ!");
+            throw new BadRequestException("Mã thương hiệu không hợp lệ!");
         }
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tên đăng nhập không được để trống!");
+            throw new BadRequestException("Tên đăng nhập không được để trống!");
         }
         if (status == null) {
-            throw new IllegalArgumentException("Trạng thái không được để trống!");
+            throw new BadRequestException("Trạng thái không được để trống!");
         }
 
         BrandAdminResponse response = brandAdminService.updateStatusBrandAdmin(brandId, username, status);

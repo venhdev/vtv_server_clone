@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.CommentRequest;
 import hcmute.kltn.vtv.model.data.user.response.CommentResponse;
 import hcmute.kltn.vtv.model.dto.CommentDTO;
@@ -53,7 +54,7 @@ public class CommentCustomerServiceImpl implements ICommentCustomerService {
             return commentResponse(comment, request.getReviewId(), request.getUsername(),
                     "Bình luận thành công vào đánh giá thành công.");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Bình luận thất bại.");
+            throw new BadRequestException("Bình luận thất bại.");
         }
     }
 
@@ -67,20 +68,20 @@ public class CommentCustomerServiceImpl implements ICommentCustomerService {
             commentRepository.save(comment);
             return commentResponse(comment, comment.getReview().getReviewId(), username, "Xóa bình luận thành công.");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa bình luận thất bại." + e.getMessage());
+            throw new BadRequestException("Xóa bình luận thất bại." + e.getMessage());
         }
     }
 
     private Comment checkComment(Long commentId, String username) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Bình luận không tồn tại."));
+                .orElseThrow(() -> new BadRequestException("Bình luận không tồn tại."));
 
         if (!comment.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Bạn không phải chủ bình luận. Bạn không có quyền xóa bình luận này.");
+            throw new BadRequestException("Bạn không phải chủ bình luận. Bạn không có quyền xóa bình luận này.");
         }
 
         if (comment.getStatus() == Status.INACTIVE) {
-            throw new IllegalArgumentException("Bình luận này đã bị xóa.");
+            throw new BadRequestException("Bình luận này đã bị xóa.");
         }
 
         return comment;

@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.admin.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.admin.CategoryAdminDTO;
 import hcmute.kltn.vtv.model.data.admin.request.CategoryAdminRequest;
 import hcmute.kltn.vtv.model.data.admin.response.AllCategoryAdminResponse;
@@ -35,7 +36,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
 
         Optional<Category> existingCategory = categoryRepository.findByNameAndAdminOnly(request.getName(), true);
         if (existingCategory.isPresent()) {
-            throw new IllegalArgumentException("Tên danh mục đã tồn tại!");
+            throw new BadRequestException("Tên danh mục đã tồn tại!");
         }
         Category category = modelMapper.map(request, Category.class);
         category.setAdminOnly(true);
@@ -64,7 +65,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
     @Transactional
     public CategoryAdminResponse getCategoryParent(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh mục!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục!"));
 
         CategoryAdminDTO categoryAdminDTO = modelMapper.map(category, CategoryAdminDTO.class);
 
@@ -106,7 +107,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
     public CategoryAdminResponse updateCategoryParent(CategoryAdminRequest request) {
 
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh mục!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục!"));
 
         if (!category.getName().equals(request.getName())) {
             checkCategoryName(request.getName());
@@ -137,7 +138,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
     @Transactional
     public CategoryAdminResponse updateStatusCategoryParent(Long categoryId, Status status) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh mục!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục!"));
 
         category.setStatus(status);
         category.setUpdateAt(LocalDateTime.now());
@@ -151,7 +152,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
                     try {
                         categoryRepository.save(category1);
                     } catch (Exception e) {
-                        throw new IllegalArgumentException("Cập nhật danh mục con thất bại!");
+                        throw new BadRequestException("Cập nhật danh mục con thất bại!");
                     }
                 }
             }
@@ -176,7 +177,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
     private void checkCategoryName(String name) {
         Optional<Category> category = categoryRepository.findByNameAndAdminOnly(name, true);
         if (category.isPresent()) {
-            throw new IllegalArgumentException("Tên danh mục đã tồn tại!");
+            throw new BadRequestException("Tên danh mục đã tồn tại!");
         }
     }
 }

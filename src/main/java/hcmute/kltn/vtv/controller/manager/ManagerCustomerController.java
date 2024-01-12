@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.manager;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListCustomerManagerResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.model.extra.Status;
@@ -45,7 +46,7 @@ public class ManagerCustomerController {
             @RequestParam String search) {
         managerCustomerService.checkRequestPageParams(page, size);
         if (search == null) {
-            throw new IllegalArgumentException("Từ khóa tìm kiếm không được để trống!");
+            throw new BadRequestException("Từ khóa tìm kiếm không được để trống!");
         }
 
         return ResponseEntity.ok(managerCustomerService.searchCustomerByStatus(size, page, status, search));

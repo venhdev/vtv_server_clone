@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.data.user.request;
 
 import hcmute.kltn.vtv.model.dto.AddressDTO;
 import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 import java.util.regex.Pattern;
@@ -37,78 +38,78 @@ public class AddressRequest {
     public void validate() {
 
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         if (province == null || province.isEmpty()) {
-            throw new IllegalArgumentException("Tỉnh/Thành phố không được để trống.");
+            throw new BadRequestException("Tỉnh/Thành phố không được để trống.");
         }
 
         if (district == null || district.isEmpty()) {
-            throw new IllegalArgumentException("Quận/Huyện không được để trống.");
+            throw new BadRequestException("Quận/Huyện không được để trống.");
         }
 
         if (ward == null || ward.isEmpty()) {
-            throw new IllegalArgumentException("Phường/Xã không được để trống.");
+            throw new BadRequestException("Phường/Xã không được để trống.");
         }
 
         if (fullAddress == null || fullAddress.isEmpty()) {
-            throw new IllegalArgumentException("Địa chỉ không được để trống.");
+            throw new BadRequestException("Địa chỉ không được để trống.");
         }
 
         if (fullName == null || fullName.isEmpty()) {
-            throw new IllegalArgumentException("Họ tên không được để trống.");
+            throw new BadRequestException("Họ tên không được để trống.");
         }
 
         if (phone == null || phone.isEmpty()) {
-            throw new IllegalArgumentException("Số điện thoại không được để trống.");
+            throw new BadRequestException("Số điện thoại không được để trống.");
         }
 
         if (!Pattern.matches("[0-9]+", phone)) {
-            throw new IllegalArgumentException("Số điện thoại chỉ được chứa ký tự số.");
+            throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
         }
 
         if (phone.length() < 9 || phone.length() > 11) {
-            throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
+            throw new BadRequestException("Số điện thoại không hợp lệ.");
         }
 
         // if (addressDTO.getProvince() == null || addressDTO.getProvince().isEmpty()) {
-        // throw new IllegalArgumentException("Tỉnh/Thành phố không được để trống.");
+        // throw new BadRequestException("Tỉnh/Thành phố không được để trống.");
         // }
         //
         // if (addressDTO.getDistrict() == null || addressDTO.getDistrict().isEmpty()) {
-        // throw new IllegalArgumentException("Quận/Huyện không được để trống.");
+        // throw new BadRequestException("Quận/Huyện không được để trống.");
         // }
         //
         // if (addressDTO.getWard() == null || addressDTO.getWard().isEmpty()) {
-        // throw new IllegalArgumentException("Phường/Xã không được để trống.");
+        // throw new BadRequestException("Phường/Xã không được để trống.");
         // }
         //
         // if (addressDTO.getFullAddress() == null ||
         // addressDTO.getFullAddress().isEmpty()) {
-        // throw new IllegalArgumentException("Địa chỉ không được để trống.");
+        // throw new BadRequestException("Địa chỉ không được để trống.");
         // }
         //
         // if (addressDTO.getFullName() == null || addressDTO.getFullName().isEmpty()) {
-        // throw new IllegalArgumentException("Họ tên không được để trống.");
+        // throw new BadRequestException("Họ tên không được để trống.");
         // }
         //
         // if (addressDTO.getPhone() == null || addressDTO.getPhone().isEmpty()) {
-        // throw new IllegalArgumentException("Số điện thoại không được để trống.");
+        // throw new BadRequestException("Số điện thoại không được để trống.");
         // }
         //
         // if (!Pattern.matches("[0-9]+", addressDTO.getPhone())) {
-        // throw new IllegalArgumentException("Số điện thoại chỉ được chứa ký tự số.");
+        // throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
         // }
         //
         // if(addressDTO.getPhone().length() < 9 || addressDTO.getPhone().length() >
         // 11){
-        // throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
+        // throw new BadRequestException("Số điện thoại không hợp lệ.");
         // }
         //
         // if (addressDTO.getStatus() == null ||
         // Status.isValidStatus(String.valueOf(addressDTO.getStatus()))) {
-        // throw new IllegalArgumentException("Trạng thái không hợp lệ.");
+        // throw new BadRequestException("Trạng thái không hợp lệ.");
         // }
 
         trim();

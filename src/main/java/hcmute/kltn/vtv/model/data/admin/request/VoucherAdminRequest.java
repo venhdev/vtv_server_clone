@@ -3,6 +3,7 @@ package hcmute.kltn.vtv.model.data.admin.request;
 import hcmute.kltn.vtv.model.entity.vtc.Voucher;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.VoucherType;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -43,60 +44,60 @@ public class VoucherAdminRequest {
 
     public void validate() {
         if (this.code == null || this.code.isEmpty()) {
-            throw new IllegalArgumentException("Mã giảm giá không được để trống");
+            throw new BadRequestException("Mã giảm giá không được để trống");
         }
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên giảm giá không được để trống");
+            throw new BadRequestException("Tên giảm giá không được để trống");
         }
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả giảm giá không được để trống");
+            throw new BadRequestException("Mô tả giảm giá không được để trống");
         }
         if (this.discount == null) {
-            throw new IllegalArgumentException("Giá trị giảm giá không được để trống");
+            throw new BadRequestException("Giá trị giảm giá không được để trống");
         }
         if (this.discount < 0) {
-            throw new IllegalArgumentException("Giá trị giảm giá không được nhỏ hơn 0%");
+            throw new BadRequestException("Giá trị giảm giá không được nhỏ hơn 0%");
         }
         if (this.discount == 0) {
-            throw new IllegalArgumentException("Giá trị giảm giá không được bằng 0%");
+            throw new BadRequestException("Giá trị giảm giá không được bằng 0%");
         }
         // if (this.minPrice == null) {
-        // throw new IllegalArgumentException("Giá trị đơn hàng tối thiểu không được để
+        // throw new BadRequestException("Giá trị đơn hàng tối thiểu không được để
         // trống");
         // }
         // if (this.maxPrice == null) {
-        // throw new IllegalArgumentException("Giá trị đơn hàng tối đa không được để
+        // throw new BadRequestException("Giá trị đơn hàng tối đa không được để
         // trống");
         // }
         // if (this.maxDiscount == null) {
-        // throw new IllegalArgumentException("Giá trị giảm giá tối đa không được để
+        // throw new BadRequestException("Giá trị giảm giá tối đa không được để
         // trống");
         // }
         if (this.quantity == null) {
-            throw new IllegalArgumentException("Số lượng giảm giá không được để trống");
+            throw new BadRequestException("Số lượng giảm giá không được để trống");
         }
         if (this.quantity > 1000) {
-            throw new IllegalArgumentException("Số lượng giảm giá không được lớn hơn 1000");
+            throw new BadRequestException("Số lượng giảm giá không được lớn hơn 1000");
         }
         if (this.startDate == null) {
-            throw new IllegalArgumentException("Ngày bắt đầu không được để trống");
+            throw new BadRequestException("Ngày bắt đầu không được để trống");
         }
         if (this.endDate == null) {
-            throw new IllegalArgumentException("Ngày kết thúc không được để trống");
+            throw new BadRequestException("Ngày kết thúc không được để trống");
         }
         // if (this.minPrice < 0 || this.maxPrice < 0 || this.maxDiscount < 0 ||
         // this.quantity < 0) {
-        // throw new IllegalArgumentException("Giá trị không được nhỏ hơn 0");
+        // throw new BadRequestException("Giá trị không được nhỏ hơn 0");
         // }
         if (this.startDate.after(this.endDate)) {
-            throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày kết thúc");
+            throw new BadRequestException("Ngày bắt đầu không được sau ngày kết thúc");
         }
         // if (this.startDate.before(new Date())) {
-        // throw new IllegalArgumentException("Ngày bắt đầu không được trước ngày hiện
+        // throw new BadRequestException("Ngày bắt đầu không được trước ngày hiện
         // tại");
         // }
         if (this.endDate.equals(this.startDate)) {
-            throw new IllegalArgumentException("Ngày bắt đầu không được trùng ngày kết thúc");
+            throw new BadRequestException("Ngày bắt đầu không được trùng ngày kết thúc");
         }
 
         trim();
@@ -107,25 +108,25 @@ public class VoucherAdminRequest {
         validate();
 
         if (this.type == null || this.type.isEmpty()) {
-            throw new IllegalArgumentException("Loại giảm giá không được để trống");
+            throw new BadRequestException("Loại giảm giá không được để trống");
         }
         if (!this.type.equals("percent".trim()) && !this.type.equals("money".trim())
                 && !this.type.equals("shipping".trim())) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Loại giảm giá không hợp lệ. Loại giảm giá cửa chỉ có thể là percent, money hoặc shipping");
         }
         if (this.type.equals("percent") && this.discount > 100) {
-            throw new IllegalArgumentException("Giá trị giảm giá không được lớn 100%");
+            throw new BadRequestException("Giá trị giảm giá không được lớn 100%");
         }
         // if (this.type.equals("money") && this.discount >= this.maxDiscount) {
-        // throw new IllegalArgumentException("Giá trị giảm giá không được lớn hơn giá
+        // throw new BadRequestException("Giá trị giảm giá không được lớn hơn giá
         // trị giảm giá tối đa");
         // }
     }
 
     public void validateUpdate() {
         if (this.voucherId == null) {
-            throw new IllegalArgumentException("Mã giảm giá không được để trống");
+            throw new BadRequestException("Mã giảm giá không được để trống");
         }
 
         validateCreate();

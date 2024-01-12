@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
@@ -60,7 +61,7 @@ public class ProductShopServiceImpl implements IProductShopService {
 
         if (productRepository.existsByNameAndCategoryShopShopIdAndStatus(
                 request.getName(), category.getShop().getShopId(), Status.ACTIVE)) {
-            throw new IllegalArgumentException("Sản phẩm có tên đã tồn tại trong cửa hàng!");
+            throw new BadRequestException("Sản phẩm có tên đã tồn tại trong cửa hàng!");
         }
 
         List<ProductVariant> productVariants = productVariantService.addNewListProductVariant(
@@ -247,7 +248,7 @@ public class ProductShopServiceImpl implements IProductShopService {
         if (!product.getName().equals(productRequest.getName()) &&
                 productRepository.existsByNameAndCategoryShopShopIdAndStatus(
                         productRequest.getName(), category.getShop().getShopId(), Status.ACTIVE)) {
-            throw new IllegalArgumentException("Sản phẩm cập nhật đã có tên đã tồn tại trong cửa hàng!");
+            throw new BadRequestException("Sản phẩm cập nhật đã có tên đã tồn tại trong cửa hàng!");
         }
 
         List<ProductVariant> productVariants = productVariantService.getListProductVariant(
@@ -292,7 +293,7 @@ public class ProductShopServiceImpl implements IProductShopService {
         Product product = getProductByIdOnShop(productId, username);
 
         if (product.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Sản phẩm đã bị xóa trong cửa hàng!");
+            throw new BadRequestException("Sản phẩm đã bị xóa trong cửa hàng!");
         }
 
         product.setStatus(status);
@@ -328,7 +329,7 @@ public class ProductShopServiceImpl implements IProductShopService {
         Product product = getProductByIdOnShop(productId, username);
 
         if (product.getStatus() != Status.DELETED) {
-            throw new IllegalArgumentException("Sản phẩm chưa bị xóa trong cửa hàng!");
+            throw new BadRequestException("Sản phẩm chưa bị xóa trong cửa hàng!");
         }
 
         List<ProductVariant> activeProductVariants = product.getProductVariants().stream()
@@ -422,7 +423,7 @@ public class ProductShopServiceImpl implements IProductShopService {
         }
 
         return brandRepository.findById(brandId)
-                .orElseThrow(() -> new IllegalArgumentException("Thương hiệu không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Thương hiệu không tồn tại!"));
     }
 
     private ProductDTO getProductDeleteToDTO(Product product) {

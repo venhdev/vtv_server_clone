@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.user;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.FavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ProductResponse;
@@ -22,7 +23,7 @@ public class FavoriteProductController {
     public ResponseEntity<FavoriteProductResponse> addNewFavoriteProduct(@RequestParam Long productId,
             HttpServletRequest request) {
         if (productId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm không được để trống!");
+            throw new BadRequestException("Mã sản phẩm không được để trống!");
         }
         String username = (String) request.getAttribute("username");
 
@@ -35,7 +36,7 @@ public class FavoriteProductController {
             @PathVariable("favoriteProductId") Long favoriteProductId,
             HttpServletRequest request) {
         if (favoriteProductId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm yêu thích không được để trống!");
+            throw new BadRequestException("Mã sản phẩm yêu thích không được để trống!");
         }
         String username = (String) request.getAttribute("username");
         ProductResponse response = favoriteProductService.getProductByFavoriteProductId(favoriteProductId, username);
@@ -53,7 +54,7 @@ public class FavoriteProductController {
             @PathVariable("favoriteProductId") Long favoriteProductId,
             HttpServletRequest request) {
         if (favoriteProductId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm yêu thích không được để trống!");
+            throw new BadRequestException("Mã sản phẩm yêu thích không được để trống!");
         }
         String username = (String) request.getAttribute("username");
         FavoriteProductResponse response = favoriteProductService.deleteFavoriteProduct(favoriteProductId, username);

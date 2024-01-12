@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.CustomerVoucherResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListCustomerVoucherResponse;
 import hcmute.kltn.vtv.model.dto.VoucherDTO;
@@ -32,7 +33,7 @@ public class CustomerVoucherServiceImpl implements ICustomerVoucherService {
     @Override
     public CustomerVoucherResponse saveVoucher(Long voucherId, String username) {
         if (customerVoucherRepository.existsByCustomerUsernameAndVoucherVoucherId(username, voucherId)) {
-            throw new IllegalArgumentException("Bạn đã lưu mã giảm giá này rồi!");
+            throw new BadRequestException("Bạn đã lưu mã giảm giá này rồi!");
         }
 
         CustomerVoucher customerVoucher = new CustomerVoucher();
@@ -44,7 +45,7 @@ public class CustomerVoucherServiceImpl implements ICustomerVoucherService {
             customerVoucherRepository.save(customerVoucher);
             return customerVoucherResponse(customerVoucher.getVoucher(), "Thêm mã giảm giá thành công!", username);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Lưu mã giảm giá thất bại!");
+            throw new BadRequestException("Lưu mã giảm giá thất bại!");
         }
 
     }
@@ -52,7 +53,7 @@ public class CustomerVoucherServiceImpl implements ICustomerVoucherService {
     @Override
     public ListCustomerVoucherResponse listCustomerVoucherByUsername(String username) {
         List<Voucher> vouchers = voucherRepository.getAllByUsernameAndUsed(username, false)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listCustomerVoucherResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", username);
     }
@@ -60,22 +61,22 @@ public class CustomerVoucherServiceImpl implements ICustomerVoucherService {
     @Override
     public CustomerVoucherResponse deleteCustomerVoucher(Long voucherId, String username) {
         if (!customerVoucherRepository.existsByCustomerUsernameAndVoucherVoucherId(username, voucherId)) {
-            throw new IllegalArgumentException("Bạn chưa lưu mã giảm giá này!");
+            throw new BadRequestException("Bạn chưa lưu mã giảm giá này!");
         }
 
         CustomerVoucher customerVoucher = customerVoucherRepository
                 .findByCustomerUsernameAndVoucherVoucherId(username, voucherId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         if (customerVoucher.isUsed()) {
-            throw new IllegalArgumentException("Mã giảm giá đã được sử dụng!");
+            throw new BadRequestException("Mã giảm giá đã được sử dụng!");
         }
 
         try {
             customerVoucherRepository.delete(customerVoucher);
             return customerVoucherResponse(customerVoucher.getVoucher(), "Xóa mã giảm giá thành công!", username);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa mã giảm giá thất bại!");
+            throw new BadRequestException("Xóa mã giảm giá thất bại!");
         }
     }
 

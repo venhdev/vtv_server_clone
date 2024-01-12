@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
-
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 @Getter
@@ -19,19 +19,18 @@ public class FavoriteProductRequest {
 
     public void validate() {
         if (productId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm không được để trống!");
+            throw new BadRequestException("Mã sản phẩm không được để trống!");
         }
 
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống!");
+            throw new BadRequestException("Tài khoản không được để trống!");
         }
     }
 
     public void validateUpdate() {
         if (favoriteProductId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm yêu thích không được để trống!");
+            throw new BadRequestException("Mã sản phẩm yêu thích không được để trống!");
         }
     }
-
 
 }

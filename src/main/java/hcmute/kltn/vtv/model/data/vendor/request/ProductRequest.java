@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -38,7 +39,7 @@ public class ProductRequest {
         validateNotNullOrEmpty(information, "Thông tin sản phẩm không được để trống!");
 
         if (categoryId == null) {
-            throw new IllegalArgumentException("Danh mục sản phẩm không được để trống!");
+            throw new BadRequestException("Danh mục sản phẩm không được để trống!");
         }
 
         Set<String> skuSet = productVariantRequests
@@ -46,11 +47,11 @@ public class ProductRequest {
                 .map(ProductVariantRequest::getSku)
                 .collect(Collectors.toSet());
         if (skuSet.size() < productVariantRequests.size()) {
-            throw new IllegalArgumentException("Có mã biến thể sản phẩm trùng lặp trong danh sách biến thể của sản phẩm!");
+            throw new BadRequestException("Có mã biến thể sản phẩm trùng lặp trong danh sách biến thể của sản phẩm!");
         }
 
         if (productVariantRequests == null || productVariantRequests.isEmpty()) {
-            throw new IllegalArgumentException("Sản phẩm phải có ít nhất 1 biến thể!");
+            throw new BadRequestException("Sản phẩm phải có ít nhất 1 biến thể!");
         } else {
             for (ProductVariantRequest variantRequest : productVariantRequests) {
                 variantRequest.validate();
@@ -62,7 +63,7 @@ public class ProductRequest {
 
     public void validateUpdate() {
         if (productId == null) {
-            throw new IllegalArgumentException("Mã sản phẩm không được để trống!");
+            throw new BadRequestException("Mã sản phẩm không được để trống!");
         }
 
         validate();
@@ -74,7 +75,7 @@ public class ProductRequest {
 
     private void validateNotNullOrEmpty(String field, String errorMessage) {
         if (field == null || field.isEmpty()) {
-            throw new IllegalArgumentException(errorMessage);
+            throw new BadRequestException(errorMessage);
         }
     }
 

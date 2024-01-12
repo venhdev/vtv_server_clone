@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.entity.vtc.Order;
 import hcmute.kltn.vtv.model.entity.vtc.Voucher;
 import hcmute.kltn.vtv.model.entity.vtc.VoucherOrder;
@@ -46,7 +47,7 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
             voucherRepository.save(voucher);
             return voucherOrderRepository.save(voucherOrder);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm mới mã giảm giá thất bại!");
+            throw new BadRequestException("Thêm mới mã giảm giá thất bại!");
         }
     }
 
@@ -54,7 +55,7 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
     @Override
     public VoucherOrder cancelVoucherOrder(Long voucherOrderId) {
         VoucherOrder voucherOrder = voucherOrderRepository.findById(voucherOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Mã giảm giá không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Mã giảm giá không tồn tại!"));
 
         Voucher voucher = voucherOrder.getVoucher();
         voucher.setQuantityUsed(voucher.getQuantityUsed() - 1);
@@ -63,7 +64,7 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
             voucherRepository.save(voucher);
             return voucherOrder;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật mã giảm giá thất bại!");
+            throw new BadRequestException("Cập nhật mã giảm giá thất bại!");
         }
     }
 

@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.ForgotPasswordResponse;
 import hcmute.kltn.vtv.model.dto.MailDTO;
 import hcmute.kltn.vtv.model.entity.vtc.Customer;
@@ -41,7 +42,7 @@ public class MailServiceImpl implements IMailService {
     @Override
     public ForgotPasswordResponse sendMailForgotPassword(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         Customer customer = customerService.getCustomerByUsername(username);

@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
-
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 @Getter
@@ -22,15 +22,14 @@ public class CommentRequest {
     public void validate() {
 
         if (content == null || content.isEmpty()) {
-            throw new IllegalArgumentException("Nội dung không được để trống.");
+            throw new BadRequestException("Nội dung không được để trống.");
         }
 
         if (reviewId == null) {
-            throw new IllegalArgumentException("Mã review không được để trống.");
+            throw new BadRequestException("Mã review không được để trống.");
         }
 
         this.content = this.content.trim();
     }
-
 
 }

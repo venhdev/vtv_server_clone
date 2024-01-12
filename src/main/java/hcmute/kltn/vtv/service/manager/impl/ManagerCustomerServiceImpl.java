@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListCustomerManagerResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.model.dto.CustomerDTO;
@@ -34,7 +35,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
         int totalPage = (int) Math.ceil((double) totalCustomer / size);
 
         Page<Customer> customers = customerRepository.findAllByStatus(status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
 
         return listCustomerAdminResponse(customers.getContent(),
                 size, page, totalPage, "Lấy danh sách khách hàng theo trạng thái thành công!");
@@ -50,24 +51,24 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
         switch (sort) {
             case "name-asc" -> {
                 customers = customerRepository.findAllByStatusOrderByFullName(status, PageRequest.of(page - 1, size))
-                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                        .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
                 message = "Lọc danh sách khách hàng theo tên tăng dần và trạng thái thành công!";
             }
             case "name-desc" -> {
                 customers = customerRepository
                         .findAllByStatusOrderByFullNameDesc(status, PageRequest.of(page - 1, size))
-                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                        .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
                 message = "Lọc danh sách khách hàng theo tên giảm dần và trạng thái thành công!";
             }
             case "at-asc" -> {
                 customers = customerRepository.findAllByStatusOrderByCreateAtAsc(status, PageRequest.of(page - 1, size))
-                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                        .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
                 message = "Lọc danh sách khách hàng theo ngày tạo tăng dần và trạng thái thành công!";
             }
             case "at-desc" -> {
                 customers = customerRepository
                         .findAllByStatusOrderByCreateAtDesc(status, PageRequest.of(page - 1, size))
-                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                        .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
                 message = "Lọc danh sách khách hàng theo ngày tạo giảm dần và trạng thái thành công!";
             }
             default -> {
@@ -86,7 +87,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
 
         Page<Customer> customers = customerRepository.findAllByFullNameContainingAndStatus(search, status,
                 PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách khách hàng"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
         String message = "Tìm kiếm danh sách khách hàng theo tên và trạng thái thành công!";
 
         return listCustomerAdminResponse(customers.getContent(), size, page, totalPage, message);

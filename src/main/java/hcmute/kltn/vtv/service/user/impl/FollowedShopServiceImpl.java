@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.FollowedShopResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFollowedShopResponse;
 import hcmute.kltn.vtv.model.dto.FollowedShopDTO;
@@ -36,12 +37,12 @@ public class FollowedShopServiceImpl implements IFollowedShopService {
 
         boolean isExist = followedShopRepository.existsByCustomerUsernameAndShopShopId(username, shopId);
         if (isExist) {
-            throw new IllegalArgumentException("Bạn đã theo dõi cửa hàng này!");
+            throw new BadRequestException("Bạn đã theo dõi cửa hàng này!");
         }
 
         Customer customer = customerService.getCustomerByUsername(username);
         Shop shop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new IllegalArgumentException("Cửa hàng không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Cửa hàng không tồn tại!"));
 
         FollowedShop followedShop = new FollowedShop();
         followedShop.setCustomer(customer);
@@ -59,14 +60,14 @@ public class FollowedShopServiceImpl implements IFollowedShopService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Lỗi theo dõi cửa hàng!");
+            throw new BadRequestException("Lỗi theo dõi cửa hàng!");
         }
     }
 
     @Override
     public ListFollowedShopResponse getListFollowedShopByUsername(String username) {
         List<FollowedShop> followedShops = followedShopRepository.findAllByCustomerUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Không có cửa hàng nào được theo dõi!"));
+                .orElseThrow(() -> new BadRequestException("Không có cửa hàng nào được theo dõi!"));
 
         ListFollowedShopResponse response = new ListFollowedShopResponse();
         response.setFollowedShopDTOs(FollowedShopDTO.convertToListDTO(followedShops));
@@ -80,10 +81,10 @@ public class FollowedShopServiceImpl implements IFollowedShopService {
     @Override
     public FollowedShopResponse deleteFollowedShop(Long followedShopId, String username) {
         FollowedShop followedShop = followedShopRepository.findById(followedShopId)
-                .orElseThrow(() -> new IllegalArgumentException("Theo dõi cửa hàng không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Theo dõi cửa hàng không tồn tại!"));
 
         if (!followedShop.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Bạn không có quyền xóa theo dõi cửa hàng này!");
+            throw new BadRequestException("Bạn không có quyền xóa theo dõi cửa hàng này!");
         }
 
         try {
@@ -95,7 +96,7 @@ public class FollowedShopServiceImpl implements IFollowedShopService {
             response.setCode(200);
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Lỗi xóa theo dõi cửa hàng!");
+            throw new BadRequestException("Lỗi xóa theo dõi cửa hàng!");
         }
     }
 

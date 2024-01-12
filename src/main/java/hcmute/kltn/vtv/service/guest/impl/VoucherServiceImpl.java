@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListVoucherResponse;
 import hcmute.kltn.vtv.model.data.guest.VoucherResponse;
 import hcmute.kltn.vtv.model.dto.VoucherDTO;
@@ -29,14 +30,14 @@ public class VoucherServiceImpl implements IVoucherService {
     @Override
     public ListVoucherResponse listVoucherByShopId(Long shopId) {
         List<Voucher> vouchers = voucherRepository.findAllByShopShopIdAndStatus(shopId, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá trên cửa hàng!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá trên cửa hàng!"));
         return listVoucherResponse(vouchers, "Lấy danh sách mã giảm giá trong cửa hàng thành công.");
     }
 
     @Override
     public ListVoucherResponse listVoucherByType(VoucherType type) {
         List<Voucher> vouchers = voucherRepository.findAllByStatusAndType(Status.ACTIVE, type)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherResponse(vouchers, "Lấy danh sách mã giảm giá theo loại thành công.");
     }
@@ -44,7 +45,7 @@ public class VoucherServiceImpl implements IVoucherService {
     @Override
     public ListVoucherResponse listVoucherSystem() {
         List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatus(Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherResponse(vouchers, "Lấy danh sách mã giảm giá cửa hệ thống thành công.");
     }
@@ -52,7 +53,7 @@ public class VoucherServiceImpl implements IVoucherService {
     @Override
     public ListVoucherResponse allVoucher() {
         List<Voucher> vouchers = voucherRepository.findAllByStatus(Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherResponse(vouchers, "Lấy danh sách tất cả khã dụng mã giảm giá thành công.");
     }
@@ -81,9 +82,9 @@ public class VoucherServiceImpl implements IVoucherService {
     @Override
     public Voucher getVoucherById(Long voucherId) {
         Voucher voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
         if (voucher.getStatus().equals(Status.DELETED)) {
-            throw new IllegalArgumentException("Mã giảm giá đã bị xóa!");
+            throw new BadRequestException("Mã giảm giá đã bị xóa!");
         }
         return voucher;
 

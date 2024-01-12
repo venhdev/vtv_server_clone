@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.admin.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -16,15 +17,15 @@ public class CategoryAdminRequest {
 
     public void validate() {
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên danh mục không được để trống!");
+            throw new BadRequestException("Tên danh mục không được để trống!");
         }
 
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả danh mục không được để trống!");
+            throw new BadRequestException("Mô tả danh mục không được để trống!");
         }
 
         if (this.image == null || this.image.isEmpty()) {
-            throw new IllegalArgumentException("Hình ảnh danh mục không được để trống!");
+            throw new BadRequestException("Hình ảnh danh mục không được để trống!");
         }
 
         trim();

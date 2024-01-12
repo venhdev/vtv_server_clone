@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -18,15 +19,15 @@ public class AttributeRequest {
 
     public void validate() {
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên thuộc tính không được để trống!");
+            throw new BadRequestException("Tên thuộc tính không được để trống!");
         }
 
         if (this.value == null || this.value.isEmpty()) {
-            throw new IllegalArgumentException("Giá trị thuộc tính không được để trống!");
+            throw new BadRequestException("Giá trị thuộc tính không được để trống!");
         }
 
         if (this.username == null || this.username.isEmpty()) {
-            throw new IllegalArgumentException("Tên đăng nhập không được để trống!");
+            throw new BadRequestException("Tên đăng nhập không được để trống!");
         }
 
         trim();
@@ -34,7 +35,7 @@ public class AttributeRequest {
 
     public void validateUpdate() {
         if (this.attributeId == null) {
-            throw new IllegalArgumentException("Mã thuộc tính không được để trống!");
+            throw new BadRequestException("Mã thuộc tính không được để trống!");
         }
 
         validate();

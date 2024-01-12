@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.admin.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
 import hcmute.kltn.vtv.model.dto.ManagerDTO;
@@ -38,7 +39,7 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
     public ManagerResponse addRoleManager(String username, String usernameCustomer) {
 
         if (managerRepository.existsByManagerUsernameAndStatus(usernameCustomer, Status.ACTIVE)) {
-            throw new IllegalArgumentException("Nhân viên đã có quyền quản lý!");
+            throw new BadRequestException("Nhân viên đã có quyền quản lý!");
         }
 
         Customer admin = customerService.getCustomerByUsername(username);
@@ -50,7 +51,7 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
             manager = managerRepository.findByManagerUsername(usernameCustomer)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
             if (!manager.getAdmin().equals(admin)) {
-                throw new IllegalArgumentException("Bạn không có quyền thêm quyền quản lý cho nhân viên này!");
+                throw new BadRequestException("Bạn không có quyền thêm quyền quản lý cho nhân viên này!");
             }
         } else {
             manager.setAdmin(admin);
@@ -71,7 +72,7 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
 
             return managerResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm quyền quản lý thất bại!" + e.getMessage());
+            throw new BadRequestException("Thêm quyền quản lý thất bại!" + e.getMessage());
         }
     }
 
@@ -79,7 +80,7 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
     @Transactional
     public ManagerResponse removeRoleManager(String username, String usernameCustomer) {
         if (!managerRepository.existsByManagerUsername(usernameCustomer)) {
-            throw new IllegalArgumentException("Nhân viên không có quyền quản lý!");
+            throw new BadRequestException("Nhân viên không có quyền quản lý!");
         }
 
         Customer admin = customerService.getCustomerByUsername(username);
@@ -101,7 +102,7 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
 
             return managerResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa quyền quản lý thất bại!" + e.getMessage());
+            throw new BadRequestException("Xóa quyền quản lý thất bại!" + e.getMessage());
         }
     }
 
@@ -159,11 +160,11 @@ public class ManagerAdminServiceImpl implements IManagerAdminService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
 
         if (!manager.getAdmin().getCustomerId().equals(adminId)) {
-            throw new IllegalArgumentException("Bạn không có quyền xóa quản lý này!");
+            throw new BadRequestException("Bạn không có quyền xóa quản lý này!");
         }
 
         if (manager.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Nhân viên đã bị xóa quyền quản lý!");
+            throw new BadRequestException("Nhân viên đã bị xóa quyền quản lý!");
         }
 
         return manager;

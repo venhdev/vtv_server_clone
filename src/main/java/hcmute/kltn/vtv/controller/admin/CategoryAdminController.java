@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.data.admin.response.AllCategoryAdminResponse;
 import hcmute.kltn.vtv.model.data.admin.response.CategoryAdminResponse;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.service.admin.ICategoryAdminService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class CategoryAdminController {
     public ResponseEntity<CategoryAdminResponse> getCategoryParentByAdmin(
             @PathVariable("categoryId") Long categoryId) {
         if (categoryId == null || categoryId == 0)
-            throw new IllegalArgumentException("Mã danh mục không hợp lệ!");
+            throw new BadRequestException("Mã danh mục không hợp lệ!");
         return ResponseEntity.ok(categoryAdminService.getCategoryParent(categoryId));
     }
 
@@ -43,7 +44,7 @@ public class CategoryAdminController {
             @RequestBody CategoryAdminRequest request) {
         request.validate();
         if (request.getCategoryId() == null || request.getCategoryId() == 0)
-            throw new IllegalArgumentException("Mã danh mục không hợp lệ!");
+            throw new BadRequestException("Mã danh mục không hợp lệ!");
         return ResponseEntity.ok(categoryAdminService.updateCategoryParent(request));
     }
 
@@ -51,7 +52,7 @@ public class CategoryAdminController {
     public ResponseEntity<CategoryAdminResponse> updateStatusCategoryParentByAdmin(
             @RequestParam Long categoryId, @RequestParam Status status) {
         if (categoryId == null || categoryId == 0)
-            throw new IllegalArgumentException("Mã danh mục không hợp lệ!");
+            throw new BadRequestException("Mã danh mục không hợp lệ!");
         return ResponseEntity.ok(categoryAdminService.updateStatusCategoryParent(categoryId, status));
     }
 

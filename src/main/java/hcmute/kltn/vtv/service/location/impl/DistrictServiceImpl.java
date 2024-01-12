@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.location.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.location.ListDistrictResponse;
 import hcmute.kltn.vtv.model.dto.location_dto.DistrictDTO;
 import hcmute.kltn.vtv.model.entity.location.District;
@@ -19,7 +20,7 @@ public class DistrictServiceImpl implements IDistrictService {
     @Override
     public ListDistrictResponse getAllDistrictByProvinceCode(String provinceCode) {
         List<District> districts = districtRepository.findAllByProvince_ProvinceCode(provinceCode)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new BadRequestException(
                         "Không tìm thấy quận huyện nào có mã tỉnh thành phố là " + provinceCode));
 
         List<DistrictDTO> districtDTOs = new ArrayList<>();

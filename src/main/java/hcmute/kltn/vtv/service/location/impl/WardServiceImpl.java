@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.location.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.location.ListWardResponse;
 import hcmute.kltn.vtv.model.dto.location_dto.WardDTO;
 import hcmute.kltn.vtv.model.entity.location.Ward;
@@ -19,7 +20,7 @@ public class WardServiceImpl implements IWardService {
     @Override
     public ListWardResponse getAllWardByDistrictCode(String districtCode) {
         List<Ward> wards = wardRepository.findAllByDistrict_DistrictCode(districtCode)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new BadRequestException(
                         "Không tìm thấy phường xã nào có mã quận huyện là " + districtCode));
         List<WardDTO> wardDTOs = new ArrayList<>();
         if (!wards.isEmpty()) {

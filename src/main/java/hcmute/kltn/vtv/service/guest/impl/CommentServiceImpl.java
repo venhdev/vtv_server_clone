@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListCommentResponse;
 import hcmute.kltn.vtv.model.dto.CommentDTO;
 import hcmute.kltn.vtv.model.entity.vtc.Comment;
@@ -27,7 +28,7 @@ public class CommentServiceImpl implements ICommentService {
         reviewCustomerService.checkReview(reviewId);
 
         List<Comment> comments = commentRepository.findAllByReviewReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không có bình luận nào cho đánh giá này."));
+                .orElseThrow(() -> new BadRequestException("Không có bình luận nào cho đánh giá này."));
 
         // System.out.println("CommentDTO.convertEntitiesToDTOs(comments) = " +
         // CommentDTO.convertEntitiesToDTOs(comments));
@@ -40,7 +41,7 @@ public class CommentServiceImpl implements ICommentService {
         reviewCustomerService.checkReview(reviewId);
 
         List<Comment> comments = commentRepository.findAllByReviewReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không có bình luận nào cho đánh giá này."));
+                .orElseThrow(() -> new BadRequestException("Không có bình luận nào cho đánh giá này."));
 
         return listCommentResponse(comments, reviewId);
     }

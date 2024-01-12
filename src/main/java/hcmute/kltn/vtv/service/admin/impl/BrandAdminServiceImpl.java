@@ -12,6 +12,7 @@ import hcmute.kltn.vtv.repository.BrandRepository;
 import hcmute.kltn.vtv.repository.ProductRepository;
 import hcmute.kltn.vtv.service.admin.IBrandAdminService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -47,7 +48,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
 
         Brand brand = brandRepository.findByName(request.getName());
         if (brand != null) {
-            throw new IllegalArgumentException("Tên thương hiệu đã tồn tại!");
+            throw new BadRequestException("Tên thương hiệu đã tồn tại!");
         }
 
         brand = modelMapper.map(request, Brand.class);
@@ -69,7 +70,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm thương hiệu thất bại!");
+            throw new BadRequestException("Thêm thương hiệu thất bại!");
         }
     }
 
@@ -77,7 +78,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
     public BrandAdminResponse getBrandById(Long brandId) {
 
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thương hiệu!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy thương hiệu!"));
 
         BrandDTO brandDTO = modelMapper.map(brand, BrandDTO.class);
 
@@ -95,7 +96,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
 
         List<Brand> brands = brandRepository.findAllByAdminOnly(true);
         if (brands == null || brands.isEmpty()) {
-            throw new IllegalArgumentException("Không có thương hiệu nào!");
+            throw new BadRequestException("Không có thương hiệu nào!");
         }
 
         List<BrandDTO> brandDTOs = BrandDTO.convertToListDTO(brands);
@@ -114,7 +115,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
     public BrandAdminResponse updateBrandAdmin(BrandAdminRequest request) {
 
         Brand brand = brandRepository.findById(request.getBrandId())
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thương hiệu!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy thương hiệu!"));
         if (!brand.getCustomer().getUsername().equals(request.getUsername())) {
             throw new UnauthorizedAccessException("Bạn không có quyền sửa thương hiệu này!");
         }
@@ -122,7 +123,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
         if (!request.getName().equals(brand.getName())) {
             Brand brandCheck = brandRepository.findByName(request.getName());
             if (brandCheck != null) {
-                throw new IllegalArgumentException("Tên thương hiệu đã tồn tại!");
+                throw new BadRequestException("Tên thương hiệu đã tồn tại!");
             }
         }
 
@@ -145,7 +146,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật thương hiệu thất bại!");
+            throw new BadRequestException("Cập nhật thương hiệu thất bại!");
         }
     }
 
@@ -154,15 +155,15 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
     public BrandAdminResponse updateStatusBrandAdmin(Long brandId, String username, Status status) {
 
         Brand brand = brandRepository.findById(brandId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thương hiệu!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy thương hiệu!"));
         if (!brand.getCustomer().getUsername().equals(username)) {
             throw new UnauthorizedAccessException("Bạn không có quyền sửa thương hiệu này!");
         }
         if (brand.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Thương hiệu đã bị xóa!");
+            throw new BadRequestException("Thương hiệu đã bị xóa!");
         }
         if (status == Status.DELETED && !productRepository.existsByBrandBrandId(brand.getBrandId())) {
-            throw new IllegalArgumentException("Thương hiệu đã có sản phẩm!");
+            throw new BadRequestException("Thương hiệu đã có sản phẩm!");
         }
 
         brand.setStatus(status);
@@ -180,7 +181,7 @@ public class BrandAdminServiceImpl implements IBrandAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật trạng thái thương hiệu thất bại!");
+            throw new BadRequestException("Cập nhật trạng thái thương hiệu thất bại!");
         }
     }
 

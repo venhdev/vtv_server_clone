@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.OrderItemResponse;
 import hcmute.kltn.vtv.model.entity.vtc.*;
 import hcmute.kltn.vtv.model.extra.Status;
@@ -35,7 +36,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
     @Override
     public OrderItemResponse getOrderItemByOrderItemId(Long orderItemId) {
         OrderItem orderItem = orderItemRepository.findById(orderItemId)
-                .orElseThrow(() -> new IllegalArgumentException("Mã đơn hàng không tồn tại!"));
+                .orElseThrow(() -> new BadRequestException("Mã đơn hàng không tồn tại!"));
 
         OrderItemResponse response = new OrderItemResponse();
         response.setOrderItemId(orderItem.getOrderItemId());
@@ -86,7 +87,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
 
             if (cart.getProductVariant().getStatus() == Status.DELETED ||
                     cart.getProductVariant().getProduct().getStatus() == Status.DELETED) {
-                throw new IllegalArgumentException("Sản phẩm đã bị xóa!");
+                throw new BadRequestException("Sản phẩm đã bị xóa!");
             }
 
             cart.setStatus(Status.ORDER);
@@ -94,7 +95,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
             try {
                 cartRepository.save(cart);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật trạng thái giỏ hàng thất bại!");
+                throw new BadRequestException("Cập nhật trạng thái giỏ hàng thất bại!");
             }
 
             ProductVariant productVariant = cart.getProductVariant();
@@ -103,7 +104,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
             try {
                 productVariantRepository.save(productVariant);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật số lượng sản phẩm thất bại!");
+                throw new BadRequestException("Cập nhật số lượng sản phẩm thất bại!");
             }
 
             Product product = productVariant.getProduct();
@@ -111,7 +112,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
             try {
                 productRepository.save(product);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật số lượng sản phẩm đã bán thất bại!");
+                throw new BadRequestException("Cập nhật số lượng sản phẩm đã bán thất bại!");
             }
 
             orderItem.setOrder(order);
@@ -119,7 +120,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
                 OrderItem item = orderItemRepository.save(orderItem);
                 orderItems.add(item);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật đơn hàng thất bại!");
+                throw new BadRequestException("Cập nhật đơn hàng thất bại!");
             }
 
         }
@@ -144,7 +145,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
                 cartRepository.save(cart);
                 orderItems.add(orderItem);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật trạng thái giỏ hàng thất bại!");
+                throw new BadRequestException("Cập nhật trạng thái giỏ hàng thất bại!");
             }
 
         }

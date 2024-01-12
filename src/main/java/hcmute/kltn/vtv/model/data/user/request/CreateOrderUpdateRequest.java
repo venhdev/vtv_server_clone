@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 import java.util.List;
@@ -23,33 +24,30 @@ public class CreateOrderUpdateRequest {
 
     public void validate() {
         if (cartIds == null || cartIds.isEmpty()) {
-            throw new IllegalArgumentException("Giỏ hàng không được để trống!");
+            throw new BadRequestException("Giỏ hàng không được để trống!");
         }
 
         if (addressId == null) {
-            throw new IllegalArgumentException("Địa chỉ không được để trống!");
+            throw new BadRequestException("Địa chỉ không được để trống!");
         }
 
         if (paymentMethod == null || paymentMethod.isEmpty()) {
-            throw new IllegalArgumentException("Phương thức thanh toán không được để trống! ");
+            throw new BadRequestException("Phương thức thanh toán không được để trống! ");
         }
         if (!paymentMethod.equals("COD")) {
-            throw new IllegalArgumentException("Phương thanh toán không hợp lệ! Hiện tai chỉ hỗ trợ COD");
+            throw new BadRequestException("Phương thanh toán không hợp lệ! Hiện tai chỉ hỗ trợ COD");
         }
 
         if (shippingMethod == null || shippingMethod.isEmpty()) {
-            throw new IllegalArgumentException("Phương thức vận chuyển không được để trống.");
+            throw new BadRequestException("Phương thức vận chuyển không được để trống.");
         }
 
         if (!shippingMethod.equals("GHN") &&
                 !shippingMethod.equals("GHTK") &&
                 !shippingMethod.equals("EXPRESS")) {
-            throw new IllegalArgumentException("Phương thức vận chuyển không hợp lệ! Hiện tại chỉ hỗ trợ GHN, GHTK, EXPRESS");
+            throw new BadRequestException(
+                    "Phương thức vận chuyển không hợp lệ! Hiện tại chỉ hỗ trợ GHN, GHTK, EXPRESS");
         }
-
-
-        
-
 
         trim();
     }

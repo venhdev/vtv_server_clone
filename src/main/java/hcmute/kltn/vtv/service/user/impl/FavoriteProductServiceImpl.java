@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.FavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ProductResponse;
@@ -46,7 +47,7 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
 
         boolean isExist = favoriteProductRepository.existsByCustomerUsernameAndProductProductId(username, productId);
         if (isExist) {
-            throw new IllegalArgumentException("Sản phẩm đã có trong danh sách yêu thích.");
+            throw new BadRequestException("Sản phẩm đã có trong danh sách yêu thích.");
         }
 
         Customer customer = customerService.getCustomerByUsername(username);
@@ -68,7 +69,7 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
             response.setCode(200);
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm sản phẩm vào danh sách yêu thích thất bại!");
+            throw new BadRequestException("Thêm sản phẩm vào danh sách yêu thích thất bại!");
         }
 
     }
@@ -76,10 +77,10 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
     @Override
     public ProductResponse getProductByFavoriteProductId(Long favoriteProductId, String username) {
         FavoriteProduct favoriteProduct = favoriteProductRepository.findById(favoriteProductId)
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm yêu thích không tồn tại."));
+                .orElseThrow(() -> new BadRequestException("Sản phẩm yêu thích không tồn tại."));
 
         if (!favoriteProduct.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Sản phẩm yêu thích không thuộc sở hữu của bạn.");
+            throw new BadRequestException("Sản phẩm yêu thích không thuộc sở hữu của bạn.");
         }
 
         ProductDTO productDTO = modelMapper.map(favoriteProduct.getProduct(), ProductDTO.class);
@@ -100,7 +101,7 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
 
         Customer customer = customerService.getCustomerByUsername(username);
         List<FavoriteProduct> listFavoriteProduct = favoriteProductRepository.findByCustomer(customer)
-                .orElseThrow(() -> new IllegalArgumentException("Không có sản phẩm yêu thích nào!"));
+                .orElseThrow(() -> new BadRequestException("Không có sản phẩm yêu thích nào!"));
 
         listFavoriteProduct.sort(Comparator.comparing(FavoriteProduct::getCreateAt).reversed());
         List<FavoriteProductDTO> favoriteProductDTOs = FavoriteProductDTO.convertToListDTO(listFavoriteProduct);
@@ -119,10 +120,10 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
     @Override
     public FavoriteProductResponse deleteFavoriteProduct(Long favoriteProductId, String username) {
         FavoriteProduct favoriteProduct = favoriteProductRepository.findById(favoriteProductId)
-                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm yêu thích không tồn tại."));
+                .orElseThrow(() -> new BadRequestException("Sản phẩm yêu thích không tồn tại."));
 
         if (!favoriteProduct.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Sản phẩm yêu thích không thuộc sở hữu của bạn.");
+            throw new BadRequestException("Sản phẩm yêu thích không thuộc sở hữu của bạn.");
         }
 
         try {
@@ -133,7 +134,7 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
             response.setCode(200);
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa sản phẩm yêu thích thất bại.");
+            throw new BadRequestException("Xóa sản phẩm yêu thích thất bại.");
         }
     }
 

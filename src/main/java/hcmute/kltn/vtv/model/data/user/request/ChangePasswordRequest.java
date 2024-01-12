@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 @Getter
@@ -19,11 +20,11 @@ public class ChangePasswordRequest {
     public void validate() {
 
         if (oldPassword == null || oldPassword.isEmpty()) {
-            throw new IllegalArgumentException("Mật khẩu cũ không được để trống.");
+            throw new BadRequestException("Mật khẩu cũ không được để trống.");
         }
 
         if (newPassword == null || newPassword.isEmpty()) {
-            throw new IllegalArgumentException("Mật khẩu mới không được để trống.");
+            throw new BadRequestException("Mật khẩu mới không được để trống.");
         }
 
         trim();

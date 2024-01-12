@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.vendor;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
@@ -89,7 +90,7 @@ public class ProductShopController {
             HttpServletRequest httpServletRequest) {
         int maxLimit = Math.toIntExact(limit);
         if (maxLimit <= 0) {
-            throw new IllegalArgumentException("Số lượng sản phẩm bán chạy nhất phải lớn hơn 0!");
+            throw new BadRequestException("Số lượng sản phẩm bán chạy nhất phải lớn hơn 0!");
         }
         String username = (String) httpServletRequest.getAttribute("username");
         return ResponseEntity.ok(productService.getBestSellingProducts(maxLimit, username));
@@ -110,10 +111,10 @@ public class ProductShopController {
             throw new NotFoundException("Giá sản phẩm không được để trống!");
         }
         if (minPrice <= 0 || maxPrice <= 0) {
-            throw new IllegalArgumentException("Giá sản phẩm không được nhỏ hơn hoặc bằng 0!");
+            throw new BadRequestException("Giá sản phẩm không được nhỏ hơn hoặc bằng 0!");
         }
         if (minPrice >= maxPrice) {
-            throw new IllegalArgumentException("Giá sản phẩm tối thiểu phải nhỏ hơn hoặc bằng giá sản phẩm tối đa!");
+            throw new BadRequestException("Giá sản phẩm tối thiểu phải nhỏ hơn hoặc bằng giá sản phẩm tối đa!");
         }
     }
 

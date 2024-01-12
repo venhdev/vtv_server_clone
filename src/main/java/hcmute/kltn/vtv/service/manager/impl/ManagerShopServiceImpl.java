@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListShopManagerResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerShopResponse;
 import hcmute.kltn.vtv.model.dto.ShopDTO;
@@ -100,7 +101,7 @@ public class ManagerShopServiceImpl implements IManagerShopService {
         int totalPage = (int) Math.ceil((double) totalShop / size);
 
         Page<Shop> shops = shopRepository.findAllByStatus(status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách cửa hàng"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách cửa hàng"));
 
         return listShopManagerResponse(shops.getContent(),
                 size, page, totalPage, "Lấy danh sách cửa hàng theo trạng thái thành công!");
@@ -113,7 +114,7 @@ public class ManagerShopServiceImpl implements IManagerShopService {
 
         Page<Shop> shops = shopRepository
                 .findAllByNameContainsAndStatusOrderByName(name, status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy danh sách cửa hàng"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách cửa hàng"));
 
         return listShopManagerResponse(shops.getContent(),
                 size, page, totalPage, "Lấy danh sách cửa hàng theo tên thành công!");

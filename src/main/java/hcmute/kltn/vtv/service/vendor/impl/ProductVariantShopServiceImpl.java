@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductVariantRequest;
 import hcmute.kltn.vtv.model.entity.vtc.Attribute;
 import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
@@ -92,7 +93,7 @@ public class ProductVariantShopServiceImpl implements IProductVariantShopService
         if (!request.getSku().equals(productVariant.getSku()) && productVariantRepository
                 .existsBySkuAndProductProductId(request.getSku(),
                         productVariant.getProduct().getProductId())) {
-            throw new IllegalArgumentException("Mã biến thể sản phẩm đã tồn tại trong sản phẩm!");
+            throw new BadRequestException("Mã biến thể sản phẩm đã tồn tại trong sản phẩm!");
         }
 
         productVariant.setSku(request.getSku());

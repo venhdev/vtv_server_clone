@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.guest;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ShopDetailResponse;
 import hcmute.kltn.vtv.service.guest.IFollowedGuestService;
 import hcmute.kltn.vtv.service.guest.IShopDetailService;
@@ -26,7 +27,7 @@ public class ShopDetailController {
     public ResponseEntity<ShopDetailResponse> getShopDetailByShopId(@PathVariable Long shopId,
             HttpServletRequest request) {
         if (shopId == null) {
-            throw new IllegalArgumentException("Mã cửa hàng không được để trống!");
+            throw new BadRequestException("Mã cửa hàng không được để trống!");
         }
         String username = (String) request.getAttribute("username");
         return ResponseEntity.ok(shopDetailService.getShopDetailByShopId(shopId, username));
@@ -35,7 +36,7 @@ public class ShopDetailController {
     @GetMapping("/count-followed/{shopId}")
     public ResponseEntity<Integer> countFollowedShop(@PathVariable Long shopId) {
         if (shopId == null) {
-            throw new IllegalArgumentException("Mã cửa hàng không được để trống!");
+            throw new BadRequestException("Mã cửa hàng không được để trống!");
         }
         return ResponseEntity.ok(followedGuestService.countFollowedShop(shopId));
     }

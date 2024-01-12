@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.RegisterShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.request.UpdateShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ShopResponse;
@@ -41,7 +42,7 @@ public class ShopServiceImpl implements IShopService {
         checkEmailAndPhoneAndUsername(request.getEmail(), request.getPhone(), request.getUsername());
 
         if (shopRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Tên cửa hàng đã được sử dụng!");
+            throw new BadRequestException("Tên cửa hàng đã được sử dụng!");
         }
 
         // Shop shop = modelMapper.map(request, Shop.class);
@@ -82,7 +83,7 @@ public class ShopServiceImpl implements IShopService {
             return shopResponse;
 
         } catch (Exception e) {
-            throw new IllegalArgumentException("Đăng ký cửa hàng thất bại!");
+            throw new BadRequestException("Đăng ký cửa hàng thất bại!");
         }
 
     }
@@ -141,7 +142,7 @@ public class ShopServiceImpl implements IShopService {
             shopResponse.setStatus("ok");
             return shopResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật cửa hàng thất bại!");
+            throw new BadRequestException("Cập nhật cửa hàng thất bại!");
         }
     }
 
@@ -168,32 +169,32 @@ public class ShopServiceImpl implements IShopService {
             shopResponse.setStatus("ok");
             return shopResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật trạng thái cửa hàng thất bại!");
+            throw new BadRequestException("Cập nhật trạng thái cửa hàng thất bại!");
         }
     }
 
     @Override
     public Shop getShopByUsername(String username) {
         return shopRepository.findByCustomerUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("Tài khoản chưa đăng ký cửa hàng!"));
+                .orElseThrow(() -> new BadRequestException("Tài khoản chưa đăng ký cửa hàng!"));
     }
 
     private void checkEmailAndPhoneAndUsernameInShop(String email, String phone, String username) {
         Shop shop = shopRepository.findByCustomer_Username(username);
 
         if (shop == null) {
-            throw new IllegalArgumentException("Tài khoản chưa đăng ký cửa hàng!");
+            throw new BadRequestException("Tài khoản chưa đăng ký cửa hàng!");
         } else {
             // Check if email is used by a shop other than the current shop
             Shop shopByEmail = shopRepository.findByEmail(email);
             if (shopByEmail != null && !shopByEmail.getEmail().equals(shop.getEmail())) {
-                throw new IllegalArgumentException("Email đã được sử dụng ở một cửa hàng khác!");
+                throw new BadRequestException("Email đã được sử dụng ở một cửa hàng khác!");
             }
 
             // Check if phone is used by a shop other than the current shop
             Shop shopByPhone = shopRepository.findByPhone(phone);
             if (shopByPhone != null && !shopByPhone.getPhone().equals(shop.getPhone())) {
-                throw new IllegalArgumentException("Số điện thoại đã được sử dụng ở một cửa hàng khác!");
+                throw new BadRequestException("Số điện thoại đã được sử dụng ở một cửa hàng khác!");
             }
         }
     }
@@ -203,7 +204,7 @@ public class ShopServiceImpl implements IShopService {
         try {
             return customerRepository.save(customer);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật quyền cho tài khoản thất bại!");
+            throw new BadRequestException("Cập nhật quyền cho tài khoản thất bại!");
         }
 
     }
@@ -212,19 +213,19 @@ public class ShopServiceImpl implements IShopService {
         // Check if the email is already used by a shop
         Shop shop = shopRepository.findByEmail(email);
         if (shop != null) {
-            throw new IllegalArgumentException("Email đã được sử dụng ở một cửa hàng khác!");
+            throw new BadRequestException("Email đã được sử dụng ở một cửa hàng khác!");
         }
 
         // Check if the phone is already used by a shop
         shop = shopRepository.findByPhone(phone);
         if (shop != null) {
-            throw new IllegalArgumentException("Số điện thoại đã được sử dụng ở một cửa hàng khác!");
+            throw new BadRequestException("Số điện thoại đã được sử dụng ở một cửa hàng khác!");
         }
 
         // Check if the username is already used by a customer
         shop = shopRepository.findByCustomer_Username(username);
         if (shop != null) {
-            throw new IllegalArgumentException("Tài khoản đã được sử dụng ở một cửa hàng khác!");
+            throw new BadRequestException("Tài khoản đã được sử dụng ở một cửa hàng khác!");
         }
 
     }

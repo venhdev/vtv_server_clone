@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.user;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.FollowedShopResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFollowedShopResponse;
 import hcmute.kltn.vtv.service.user.IFollowedShopService;
@@ -21,7 +22,7 @@ public class FollowedShopController {
     public ResponseEntity<FollowedShopResponse> addNewFollowedShop(@RequestParam Long shopId,
             HttpServletRequest request) {
         if (shopId == null) {
-            throw new IllegalArgumentException("Mã cửa hàng không được để trống!");
+            throw new BadRequestException("Mã cửa hàng không được để trống!");
         }
         String username = (String) request.getAttribute("username");
         FollowedShopResponse response = followedShopService.addNewFollowedShop(shopId, username);
@@ -39,7 +40,7 @@ public class FollowedShopController {
             @PathVariable("followedShopId") Long followedShopId,
             HttpServletRequest request) {
         if (followedShopId == null) {
-            throw new IllegalArgumentException("Mã cửa hàng theo dõi không được để trống!");
+            throw new BadRequestException("Mã cửa hàng theo dõi không được để trống!");
         }
         String username = (String) request.getAttribute("username");
 

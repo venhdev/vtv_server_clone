@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.user;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ReviewRequest;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
 import hcmute.kltn.vtv.repository.ReviewRepository;
@@ -33,7 +34,7 @@ public class ReviewCustomerController {
     @GetMapping("/detail/by-order-item/{orderItemId}")
     public ResponseEntity<ReviewResponse> getReviewDetailByOrderItemId(@PathVariable Long orderItemId) {
         if (orderItemId == null) {
-            throw new IllegalArgumentException("Mã đánh giá không được để trống!");
+            throw new BadRequestException("Mã đánh giá không được để trống!");
         }
         return ResponseEntity.ok(reviewService.getReviewByOrderItemId(orderItemId));
     }
@@ -42,7 +43,7 @@ public class ReviewCustomerController {
     public ResponseEntity<ReviewResponse> deleteReview(@PathVariable Long reviewId,
             HttpServletRequest request) {
         if (reviewId == null) {
-            throw new IllegalArgumentException("Mã đánh giá không được để trống!");
+            throw new BadRequestException("Mã đánh giá không được để trống!");
         }
         String username = (String) request.getAttribute("username");
         return ResponseEntity.ok(reviewService.deleteReview(reviewId, username));
@@ -51,7 +52,7 @@ public class ReviewCustomerController {
     @GetMapping("exist/{orderItemId}")
     public ResponseEntity<Boolean> checkReviewExist(@PathVariable Long orderItemId) {
         if (orderItemId == null) {
-            throw new IllegalArgumentException("Mã đánh giá không được để trống!");
+            throw new BadRequestException("Mã đánh giá không được để trống!");
         }
         return ResponseEntity.ok(reviewRepository.existsByOrderItemOrderItemId(orderItemId));
     }

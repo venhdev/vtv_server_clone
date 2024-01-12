@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ProductResponse;
 import hcmute.kltn.vtv.service.guest.IFavoriteProductGuestService;
 import hcmute.kltn.vtv.service.guest.IProductService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
@@ -128,10 +129,10 @@ public class ProductController {
             throw new NotFoundException("Giá sản phẩm không được để trống!");
         }
         if (minPrice <= 0 || maxPrice <= 0) {
-            throw new IllegalArgumentException("Giá sản phẩm không được nhỏ hơn hoặc bằng 0!");
+            throw new BadRequestException("Giá sản phẩm không được nhỏ hơn hoặc bằng 0!");
         }
         if (minPrice >= maxPrice) {
-            throw new IllegalArgumentException("Giá sản phẩm tối thiểu phải nhỏ hơn hoặc bằng giá sản phẩm tối đa!");
+            throw new BadRequestException("Giá sản phẩm tối thiểu phải nhỏ hơn hoặc bằng giá sản phẩm tối đa!");
         }
     }
 

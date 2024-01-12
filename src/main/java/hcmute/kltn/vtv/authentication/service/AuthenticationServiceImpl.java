@@ -14,10 +14,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.TokenType;
 import hcmute.kltn.vtv.repository.CustomerRepository;
 import hcmute.kltn.vtv.repository.TokenRepository;
-import hcmute.kltn.vtv.util.exception.DuplicateEntryException;
-import hcmute.kltn.vtv.util.exception.JwtException;
-import hcmute.kltn.vtv.util.exception.NotFoundException;
-import hcmute.kltn.vtv.util.exception.UnauthorizedAccessException;
+import hcmute.kltn.vtv.util.exception.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -123,7 +120,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     public LogoutResponse logout(String refreshToken) {
 
         if (refreshToken == null) {
-            throw new IllegalArgumentException("Token không được null. Đăng xuất thất bại.");
+            throw new BadRequestException("Token không được null. Đăng xuất thất bại.");
         }
 
         var storedToken = tokenRepository.findByToken(refreshToken);

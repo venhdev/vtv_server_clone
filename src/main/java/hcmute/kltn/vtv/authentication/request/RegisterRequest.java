@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.authentication.request;
 
 import hcmute.kltn.vtv.model.extra.EmailValidator;
-import hcmute.kltn.vtv.util.exception.IllegalArgumentException;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 import java.util.Date;
@@ -32,25 +32,25 @@ public class RegisterRequest {
 
     public void validate() {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Mật khẩu không được để trống.");
+            throw new BadRequestException("Mật khẩu không được để trống.");
         }
 
         if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email không được để trống.");
+            throw new BadRequestException("Email không được để trống.");
         } else if (!EmailValidator.isValidEmail(email)) {
-            throw new IllegalArgumentException("Email không hợp lệ.");
+            throw new BadRequestException("Email không hợp lệ.");
         }
 
         if (fullName == null || fullName.isEmpty()) {
-            throw new IllegalArgumentException("Tên đầy đủ không được để trống.");
+            throw new BadRequestException("Tên đầy đủ không được để trống.");
         }
 
         if (birthday == null) {
-            throw new IllegalArgumentException("Ngày sinh không được để trống.");
+            throw new BadRequestException("Ngày sinh không được để trống.");
         }
 
         trim();

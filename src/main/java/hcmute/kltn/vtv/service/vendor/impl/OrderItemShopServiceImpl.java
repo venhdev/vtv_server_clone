@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.entity.vtc.Cart;
 import hcmute.kltn.vtv.model.entity.vtc.Order;
 import hcmute.kltn.vtv.model.entity.vtc.OrderItem;
@@ -61,7 +62,7 @@ public class OrderItemShopServiceImpl implements IOrderItemShopService {
                 orderItem.setCart(cartRepository.save(cart));
                 orderItems.add(orderItem);
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật trạng thái đơn hàng thất bại!");
+                throw new BadRequestException("Cập nhật trạng thái đơn hàng thất bại!");
             }
         }
         return orderItems;

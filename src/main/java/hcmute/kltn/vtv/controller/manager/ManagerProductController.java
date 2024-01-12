@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.manager;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerProductResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerProductResponse;
 import hcmute.kltn.vtv.service.manager.IManagerProductService;
@@ -23,7 +24,7 @@ public class ManagerProductController {
             HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
         if (productId == null || productId <= 0) {
-            throw new IllegalArgumentException("Mã sản phẩm không hợp lệ");
+            throw new BadRequestException("Mã sản phẩm không hợp lệ");
         }
         return ResponseEntity.ok(managerProductService.lockProductByProductId(productId, username, note.trim()));
     }
@@ -34,7 +35,7 @@ public class ManagerProductController {
             HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
         if (productId == null || productId <= 0) {
-            throw new IllegalArgumentException("Mã sản phẩm không hợp lệ");
+            throw new BadRequestException("Mã sản phẩm không hợp lệ");
         }
         return ResponseEntity.ok(managerProductService.unLockProductByProductId(productId, username, note.trim()));
     }
@@ -52,7 +53,7 @@ public class ManagerProductController {
             @PathVariable String productName) {
         managerProductService.checkRequestPageParams(page, size);
         if (productName == null || productName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên sản phẩm không hợp lệ");
+            throw new BadRequestException("Tên sản phẩm không hợp lệ");
         }
         return ResponseEntity
                 .ok(managerProductService.getListManagerProductByProductName(page, size, productName.trim()));

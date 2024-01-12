@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -18,28 +19,27 @@ public class CategoryShopRequest {
 
     public void validate() {
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên danh mục không được để trống!");
+            throw new BadRequestException("Tên danh mục không được để trống!");
         }
 
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả danh mục không được để trống!");
+            throw new BadRequestException("Mô tả danh mục không được để trống!");
         }
 
         if (this.image == null || this.image.isEmpty()) {
-            throw new IllegalArgumentException("Hình ảnh danh mục không được để trống!");
+            throw new BadRequestException("Hình ảnh danh mục không được để trống!");
         }
 
         if (this.parentId == null) {
-            throw new IllegalArgumentException("Mã danh mục cha không được để trống!");
+            throw new BadRequestException("Mã danh mục cha không được để trống!");
         }
 
         trim();
     }
 
-
     public void validateUpdate() {
         if (this.categoryId == null) {
-            throw new IllegalArgumentException("Mã danh mục không được để trống!");
+            throw new BadRequestException("Mã danh mục không được để trống!");
         }
 
         validate();
@@ -51,6 +51,5 @@ public class CategoryShopRequest {
         this.image = this.image.trim();
         this.username = this.username.trim();
     }
-
 
 }

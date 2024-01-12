@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListReviewResponse;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
 import hcmute.kltn.vtv.model.dto.ReviewDTO;
@@ -45,7 +46,7 @@ public class ReviewServiceImpl implements IReviewService {
     public ListReviewResponse getReviewsByProductId(Long productId) {
 
         List<Review> reviews = reviewRepository.findAllByProductProductIdAndStatus(productId, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đánh giá nào!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
         return listReviewResponse(reviews, "Lấy danh sách đánh giá thành công!", productId);
     }
@@ -55,7 +56,7 @@ public class ReviewServiceImpl implements IReviewService {
 
         List<Review> reviews = reviewRepository
                 .findAllByProductProductIdAndRatingAndStatus(productId, rating, Status.ACTIVE)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đánh giá nào!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
         return listReviewResponse(reviews, "Lấy danh sách đánh giá theo xếp hạng thành công!", productId);
     }
@@ -64,7 +65,7 @@ public class ReviewServiceImpl implements IReviewService {
     public ListReviewResponse getReviewsByProductIdAndImageNotNull(Long productId) {
 
         List<Review> reviews = reviewRepository.findAllByProductProductIdAndImageNotNull(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đánh giá nào!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
         return listReviewResponse(reviews, "Lấy danh sách đánh giá có hình ảnh thành công!", productId);
     }
@@ -78,7 +79,7 @@ public class ReviewServiceImpl implements IReviewService {
     public float countAverageRatingByProductId(Long productId) {
 
         List<Review> reviews = reviewRepository.findAllByProductProductIdAndImageNotNull(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đánh giá nào!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
         return averageRating(reviews);
     }

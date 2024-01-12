@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.AttributeRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.AttributeResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListAttributeResponse;
@@ -50,7 +51,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
                     attributeRequest.getName(),
                     attributeRequest.getValue(),
                     shop.getShopId())
-                    .orElseThrow(() -> new IllegalArgumentException("Thuộc tính không tồn tại!"));
+                    .orElseThrow(() -> new BadRequestException("Thuộc tính không tồn tại!"));
 
             AttributeResponse attributeResponse = new AttributeResponse();
             attributeResponse.setStatus("error");
@@ -80,7 +81,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
             return attributeResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm thuộc tính thất bại!");
+            throw new BadRequestException("Thêm thuộc tính thất bại!");
         }
 
     }
@@ -105,7 +106,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
         List<Attribute> attributes = attributeRepository.findAllByShop_ShopIdAndActive(shop.getShopId(), true);
         if (attributes.isEmpty()) {
-            throw new IllegalArgumentException("Cửa hàng không có thuộc tính!");
+            throw new BadRequestException("Cửa hàng không có thuộc tính!");
         }
         attributes.sort(Comparator.comparing(Attribute::getName).thenComparing(Attribute::getValue));
         List<AttributeDTO> attributeDTOs = AttributeDTO.convertToListDTO(attributes);
@@ -142,7 +143,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
             return attributeResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật thuộc tính thất bại!");
+            throw new BadRequestException("Cập nhật thuộc tính thất bại!");
         }
     }
 
@@ -152,7 +153,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
         Shop shop = shopService.getShopByUsername(username);
         Attribute attribute = checkAttributeInShop(attributeId, shop.getShopId());
         if (!active && attribute.isUsedInProductVariants()) {
-            throw new IllegalArgumentException("Thuộc tính đã được sử dụng trong sản phẩm nên không thể khóa!");
+            throw new BadRequestException("Thuộc tính đã được sử dụng trong sản phẩm nên không thể khóa!");
         }
         attribute.setActive(active);
         attribute.setUpdateAt(LocalDateTime.now());
@@ -169,7 +170,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
             return attributeResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException(message + " thuộc tính thất bại!");
+            throw new BadRequestException(message + " thuộc tính thất bại!");
         }
     }
 
@@ -179,7 +180,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
         Shop shop = shopService.getShopByUsername(username);
         Attribute attribute = checkAttributeInShop(attributeId, shop.getShopId());
         if (attribute.isUsedInProductVariants()) {
-            throw new IllegalArgumentException("Thuộc tính đã được sử dụng trong sản phẩm nên không thể xóa!");
+            throw new BadRequestException("Thuộc tính đã được sử dụng trong sản phẩm nên không thể xóa!");
         }
 
         try {
@@ -193,7 +194,7 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
             return attributeResponse;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa thuộc tính thất bại trong cửa hàng!");
+            throw new BadRequestException("Xóa thuộc tính thất bại trong cửa hàng!");
         }
     }
 
@@ -204,12 +205,12 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
         if (attributeIds != null) {
             attributeIds.forEach(attributeId -> {
                 Attribute attribute = attributeRepository.findById(attributeId)
-                        .orElseThrow(() -> new IllegalArgumentException("Mã thuộc tính không tồn tại!"));
+                        .orElseThrow(() -> new BadRequestException("Mã thuộc tính không tồn tại!"));
                 if (!attribute.isActive()) {
-                    throw new IllegalArgumentException("Mã thuộc tính đã bị khóa trong cửa hàng!");
+                    throw new BadRequestException("Mã thuộc tính đã bị khóa trong cửa hàng!");
                 }
                 if (!attribute.getShop().getShopId().equals(shopId)) {
-                    throw new IllegalArgumentException("Mã thuộc tính không tồn tại trong cửa hàng!");
+                    throw new BadRequestException("Mã thuộc tính không tồn tại trong cửa hàng!");
                 }
 
                 attributes.add(attributeRepository.findByAttributeId(attributeId));
@@ -222,10 +223,10 @@ public class AttributeShopServiceImpl implements IAttributeShopService {
 
     private Attribute checkAttributeInShop(Long attributeId, Long shopId) {
         Attribute attribute = attributeRepository.findById(attributeId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thuộc tính!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy thuộc tính!"));
 
         if (!attribute.getShop().getShopId().equals(shopId)) {
-            throw new IllegalArgumentException("Không tìm thấy thuộc tính trong cửa hàng!");
+            throw new BadRequestException("Không tìm thấy thuộc tính trong cửa hàng!");
         }
         return attribute;
     }

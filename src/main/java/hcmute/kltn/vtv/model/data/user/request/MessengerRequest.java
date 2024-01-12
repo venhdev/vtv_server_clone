@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 @Getter
@@ -17,15 +18,15 @@ public class MessengerRequest {
     public void validate() {
 
         if (content == null || content.isEmpty()) {
-            throw new IllegalArgumentException("Nội dung không được để trống.");
+            throw new BadRequestException("Nội dung không được để trống.");
         }
 
         if (sender == null || sender.isEmpty()) {
-            throw new IllegalArgumentException("Người gửi không được để trống.");
+            throw new BadRequestException("Người gửi không được để trống.");
         }
 
         if (receiver == null || receiver.isEmpty()) {
-            throw new IllegalArgumentException("Người nhận không được để trống.");
+            throw new BadRequestException("Người nhận không được để trống.");
         }
 
         trim();

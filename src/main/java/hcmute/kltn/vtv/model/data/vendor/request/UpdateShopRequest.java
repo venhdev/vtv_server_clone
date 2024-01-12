@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
 import hcmute.kltn.vtv.model.extra.EmailValidator;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -36,59 +37,59 @@ public class UpdateShopRequest {
 
     public void validate() {
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên cửa hàng không được để trống!");
+            throw new BadRequestException("Tên cửa hàng không được để trống!");
         }
 
         if (this.address == null || this.address.isEmpty()) {
-            throw new IllegalArgumentException("Địa chỉ cửa hàng không được để trống!");
+            throw new BadRequestException("Địa chỉ cửa hàng không được để trống!");
         }
 
         if (this.province == null || this.province.isEmpty()) {
-            throw new IllegalArgumentException("Tỉnh/Thành phố không được để trống!");
+            throw new BadRequestException("Tỉnh/Thành phố không được để trống!");
         }
 
         if (this.district == null || this.district.isEmpty()) {
-            throw new IllegalArgumentException("Quận/Huyện không được để trống!");
+            throw new BadRequestException("Quận/Huyện không được để trống!");
         }
 
         if (this.ward == null || this.ward.isEmpty()) {
-            throw new IllegalArgumentException("Phường/Xã không được để trống!");
+            throw new BadRequestException("Phường/Xã không được để trống!");
         }
 
         if (this.phone == null || this.phone.isEmpty()) {
-            throw new IllegalArgumentException("Số điện thoại cửa hàng không được để trống!");
+            throw new BadRequestException("Số điện thoại cửa hàng không được để trống!");
         }
 
         if (this.email == null || this.email.isEmpty()) {
-            throw new IllegalArgumentException("Email cửa hàng không được để trống!");
+            throw new BadRequestException("Email cửa hàng không được để trống!");
         }
 
         if (!EmailValidator.isValidEmail(email)) {
-            throw new IllegalArgumentException("Email không hợp lệ.");
+            throw new BadRequestException("Email không hợp lệ.");
         }
 
         if (this.username == null || this.username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống!");
+            throw new BadRequestException("Tài khoản không được để trống!");
         }
 
         if (this.openTime == null || this.openTime.isEmpty()) {
-            throw new IllegalArgumentException("Giờ mở cửa không được để trống!");
+            throw new BadRequestException("Giờ mở cửa không được để trống!");
         }
 
         if (this.closeTime == null || this.closeTime.isEmpty()) {
-            throw new IllegalArgumentException("Giờ đóng cửa không được để trống!");
+            throw new BadRequestException("Giờ đóng cửa không được để trống!");
         }
 
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả cửa hàng không được để trống!");
+            throw new BadRequestException("Mô tả cửa hàng không được để trống!");
         }
 
         if (!Pattern.matches("[0-9]+", this.getPhone())) {
-            throw new IllegalArgumentException("Số điện thoại chỉ được chứa ký tự số.");
+            throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
         }
 
         if (this.getPhone().length() < 9 || this.getPhone().length() > 11) {
-            throw new IllegalArgumentException("Số điện thoại không hợp lệ.");
+            throw new BadRequestException("Số điện thoại không hợp lệ.");
         }
 
         trim();

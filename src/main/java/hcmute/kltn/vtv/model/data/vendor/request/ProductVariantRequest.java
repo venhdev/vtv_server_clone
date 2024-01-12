@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -27,24 +28,24 @@ public class ProductVariantRequest {
 
     public void validate() {
         if (sku == null || sku.isEmpty()) {
-            throw new IllegalArgumentException("Mã biến thể sản phẩm không được để trống!");
+            throw new BadRequestException("Mã biến thể sản phẩm không được để trống!");
         }
         if (price == null) {
-            throw new IllegalArgumentException("Giá sản phẩm không được để trống!");
+            throw new BadRequestException("Giá sản phẩm không được để trống!");
         }
         if (quantity == 0) {
-            throw new IllegalArgumentException("Số lượng sản phẩm không được để trống!");
+            throw new BadRequestException("Số lượng sản phẩm không được để trống!");
         }
 
         if (price < 0) {
-            throw new IllegalArgumentException("Giá sản phẩm không được nhỏ hơn 0!");
+            throw new BadRequestException("Giá sản phẩm không được nhỏ hơn 0!");
         }
         if (quantity < 0) {
-            throw new IllegalArgumentException("Số lượng sản phẩm không được nhỏ hơn 0!");
+            throw new BadRequestException("Số lượng sản phẩm không được nhỏ hơn 0!");
         }
 
         if (containsDuplicate(attributeIds)) {
-            throw new IllegalArgumentException("Có mã thuộc tính trùng lặp trong danh sách thuộc tính!");
+            throw new BadRequestException("Có mã thuộc tính trùng lặp trong danh sách thuộc tính!");
         }
 
         trim();
@@ -52,12 +53,11 @@ public class ProductVariantRequest {
 
     public void validateUpdate() {
         if (productVariantId == null) {
-            throw new IllegalArgumentException("Mã biến thể sản phẩm không được để trống!");
+            throw new BadRequestException("Mã biến thể sản phẩm không được để trống!");
         }
         validate();
 
     }
-
 
     private boolean containsDuplicate(List<Long> list) {
         Set<Long> set = new HashSet<>();

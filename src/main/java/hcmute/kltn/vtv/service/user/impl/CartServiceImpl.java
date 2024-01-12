@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.CartRequest;
 import hcmute.kltn.vtv.model.data.user.response.CartResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListCartResponse;
@@ -68,7 +69,7 @@ public class CartServiceImpl implements ICartService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm sản phẩm vào giỏ hàng thất bại.");
+            throw new BadRequestException("Thêm sản phẩm vào giỏ hàng thất bại.");
         }
     }
 
@@ -102,7 +103,7 @@ public class CartServiceImpl implements ICartService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật giỏ hàng thất bại." + e.getMessage());
+            throw new BadRequestException("Cập nhật giỏ hàng thất bại." + e.getMessage());
         }
     }
 
@@ -112,7 +113,7 @@ public class CartServiceImpl implements ICartService {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy giỏ hàng."));
         if (!cart.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Không thể xóa sản phẩm khỏi giỏ hàng của người khác.");
+            throw new BadRequestException("Không thể xóa sản phẩm khỏi giỏ hàng của người khác.");
         }
 
         try {
@@ -128,7 +129,7 @@ public class CartServiceImpl implements ICartService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa sản phẩm khỏi giỏ hàng thất bại.");
+            throw new BadRequestException("Xóa sản phẩm khỏi giỏ hàng thất bại.");
         }
     }
 
@@ -187,7 +188,7 @@ public class CartServiceImpl implements ICartService {
 
             return getListCartResponse(username, cartsUpdate, message);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Xóa giỏ hàng thất bại.");
+            throw new BadRequestException("Xóa giỏ hàng thất bại.");
         }
     }
 
@@ -230,15 +231,15 @@ public class CartServiceImpl implements ICartService {
 
         if (productVariant.getStatus() == Status.DELETED ||
                 productVariant.getProduct().getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Sản phẩm đã bị xóa. " + productVariant.getProduct().getProductId());
+            throw new BadRequestException("Sản phẩm đã bị xóa. " + productVariant.getProduct().getProductId());
         }
 
         if (productVariant.getQuantity() <= 0) {
-            throw new IllegalArgumentException("Sản phẩm đã hết hàng.");
+            throw new BadRequestException("Sản phẩm đã hết hàng.");
         }
 
         if (productVariant.getQuantity() < quantity) {
-            throw new IllegalArgumentException("Số lượng sản phẩm trong kho không đủ.");
+            throw new BadRequestException("Số lượng sản phẩm trong kho không đủ.");
         }
 
         return productVariant;

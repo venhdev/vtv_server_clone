@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.location;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.location.ListWardResponse;
 import hcmute.kltn.vtv.service.location.IWardService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class WardController {
     @GetMapping("/get-all-by-district-code/{districtCode}")
     public ResponseEntity<ListWardResponse> getAllWardByDistrictCode(@PathVariable String districtCode) {
         if (districtCode == null || districtCode.isEmpty()) {
-            throw new IllegalArgumentException("Mã quận huyện không được để trống.");
+            throw new BadRequestException("Mã quận huyện không được để trống.");
         }
         ListWardResponse response = wardService.getAllWardByDistrictCode(districtCode);
         return ResponseEntity.ok(response);

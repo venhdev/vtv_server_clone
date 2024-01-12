@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.admin.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.admin.request.VoucherAdminRequest;
 import hcmute.kltn.vtv.model.data.admin.response.ListVoucherAdminResponse;
 import hcmute.kltn.vtv.model.data.admin.response.VoucherAdminResponse;
@@ -33,7 +34,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     public VoucherAdminResponse addNewVoucherAdmin(VoucherAdminRequest request) {
         Customer customer = customerService.getCustomerByUsername(request.getUsername());
         if (voucherRepository.existsByCodeAndShopNull(request.getCode())) {
-            throw new IllegalArgumentException("Mã giảm giá đã tồn tại trong hệ thống.");
+            throw new BadRequestException("Mã giảm giá đã tồn tại trong hệ thống.");
         }
         Voucher voucher = VoucherAdminRequest.convertCreateToVoucher(request);
         voucher.setCustomer(customer);
@@ -42,7 +43,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
 
             return voucherAdminResponse(voucher, "Thêm mới mã giảm giá thành công.", "success");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm mới mã giảm giá thất bại!");
+            throw new BadRequestException("Thêm mới mã giảm giá thất bại!");
         }
     }
 
@@ -54,7 +55,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     @Override
     public ListVoucherAdminResponse getListVoucherAdmin(String username) {
         List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatusNot(Status.DELETED)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherAdminResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", username);
     }
@@ -62,7 +63,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     @Override
     public ListVoucherAdminResponse getListVoucherAdminByUsername(String username) {
         List<Voucher> vouchers = voucherRepository.findAllByCustomerUsernameAndStatusNot(username, Status.DELETED)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherAdminResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", username);
     }
@@ -70,7 +71,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     @Override
     public ListVoucherAdminResponse getListVoucherAdminByStatus(String username, Status status) {
         List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatus(status)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherAdminResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", username);
     }
@@ -78,7 +79,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     @Override
     public ListVoucherAdminResponse getListVoucherAdminByType(String username, VoucherType type) {
         List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatusNotAndType(Status.DELETED, type)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherAdminResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", username);
     }
@@ -88,14 +89,14 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     public VoucherAdminResponse updateVoucherAdmin(VoucherAdminRequest request, String username) {
         Voucher voucher = getVoucherUpdate(request.getVoucherId(), username);
         if (!voucher.getCode().equals(request.getCode()) && checkVoucherCode(request.getCode())) {
-            throw new IllegalArgumentException("Mã giảm giá đã tồn tại trong hệ thống.");
+            throw new BadRequestException("Mã giảm giá đã tồn tại trong hệ thống.");
         }
         if (voucher.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Mã giảm giá đã bị xóa!");
+            throw new BadRequestException("Mã giảm giá đã bị xóa!");
         }
 
         if (voucher.getQuantityUsed() > 0) {
-            throw new IllegalArgumentException("Mã giảm giá đã được sử dụng!");
+            throw new BadRequestException("Mã giảm giá đã được sử dụng!");
         }
 
         VoucherAdminRequest.convertUpdateToVoucher(request, voucher);
@@ -105,7 +106,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
 
             return voucherAdminResponse(voucher, "Cập nhật mã giảm giá thành công.", "success");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật mã giảm giá thất bại!");
+            throw new BadRequestException("Cập nhật mã giảm giá thất bại!");
         }
     }
 
@@ -115,11 +116,11 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
         Voucher voucher = getVoucherUpdate(voucherId, username);
         if (status != Status.ACTIVE && status != Status.INACTIVE && status != Status.DELETED
                 && status != Status.CANCEL) {
-            throw new IllegalArgumentException("Trạng thái không hợp lệ!");
+            throw new BadRequestException("Trạng thái không hợp lệ!");
         }
 
         if (voucher.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Mã giảm giá đã bị xóa!");
+            throw new BadRequestException("Mã giảm giá đã bị xóa!");
         }
         voucher.setStatus(status);
 
@@ -128,7 +129,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
 
             return voucherAdminResponse(voucher, "Cập nhật trạng thái mã giảm giá thành công.", "success");
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật trạng thái mã giảm giá thất bại!");
+            throw new BadRequestException("Cập nhật trạng thái mã giảm giá thất bại!");
         }
     }
 
@@ -137,10 +138,10 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
         Voucher voucher = getVoucherByVoucherId(voucherId);
 
         // if(voucher.getStartDate().before(new Date())){
-        // throw new IllegalArgumentException("Mã giảm giá chưa có hiệu lực!");
+        // throw new BadRequestException("Mã giảm giá chưa có hiệu lực!");
         // }
         // if (voucher.getEndDate().after(new Date())) {
-        // throw new IllegalArgumentException("Mã giảm giá đã hết hạn!");
+        // throw new BadRequestException("Mã giảm giá đã hết hạn!");
         // }
 
         Instant now = Instant.now(); // Sử dụng Instant thay vì Date
@@ -150,19 +151,19 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
         if (voucherStartDate.isAfter(now)) { // So sánh theo Instant
             System.out.println("Voucher start date: " + voucher.getStartDate());
             System.out.println("start date: " + Date.from(now)); // Chuyển Instant về Date nếu cần
-            throw new IllegalArgumentException("Mã giảm giá chưa có hiệu lực!");
+            throw new BadRequestException("Mã giảm giá chưa có hiệu lực!");
         }
 
         if (voucherEndDate.isBefore(now)) {
-            throw new IllegalArgumentException("Mã giảm giá đã hết hạn!");
+            throw new BadRequestException("Mã giảm giá đã hết hạn!");
         }
 
         if (voucher.getStatus() == Status.DELETED) {
-            throw new IllegalArgumentException("Mã giảm giá đã bị xóa!");
+            throw new BadRequestException("Mã giảm giá đã bị xóa!");
         }
 
         if (voucher.getQuantityUsed().equals(voucher.getQuantity())) {
-            throw new IllegalArgumentException("Mã giảm giá đã hết lượt sử dụng!");
+            throw new BadRequestException("Mã giảm giá đã hết lượt sử dụng!");
         }
 
         return voucher;
@@ -171,7 +172,7 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
     private Voucher getVoucherUpdate(Long voucherId, String username) {
         Voucher voucher = getVoucherByVoucherId(voucherId);
         if (!voucher.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Bạn không có quyền cập nhật mã giảm giá này!");
+            throw new BadRequestException("Bạn không có quyền cập nhật mã giảm giá này!");
         }
         return voucher;
     }
@@ -205,12 +206,12 @@ public class VoucherAdminServiceImpl implements IVoucherAdminService {
 
     private Voucher getVoucherByVoucherId(Long voucherId) {
         Voucher voucher = voucherRepository.findById(voucherId)
-                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy mã giảm giá!"));
+                .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
         if (voucher == null) {
-            throw new IllegalArgumentException("Mã giảm giá không tồn tại!");
+            throw new BadRequestException("Mã giảm giá không tồn tại!");
         }
         if (voucher.getCustomer() == null) {
-            throw new IllegalArgumentException("Mã giảm giá không thuộc quyền quản lý của hệ thống!");
+            throw new BadRequestException("Mã giảm giá không thuộc quyền quản lý của hệ thống!");
         }
 
         return voucher;

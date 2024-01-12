@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.AddressRequest;
 import hcmute.kltn.vtv.model.data.user.request.AddressStatusRequest;
 import hcmute.kltn.vtv.model.data.user.response.AddressResponse;
@@ -65,7 +66,7 @@ public class AddressServiceImpl implements IAddressService {
 
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Thêm địa chỉ mới thất bại.");
+            throw new BadRequestException("Thêm địa chỉ mới thất bại.");
         }
 
     }
@@ -73,11 +74,11 @@ public class AddressServiceImpl implements IAddressService {
     @Override
     public AddressResponse getAddressById(String addressId, String username) {
         if (addressId == null || addressId.isEmpty()) {
-            throw new IllegalArgumentException("Mã địa chỉ không được để trống.");
+            throw new BadRequestException("Mã địa chỉ không được để trống.");
         }
 
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         Long id = Long.valueOf(addressId);
@@ -126,7 +127,7 @@ public class AddressServiceImpl implements IAddressService {
             response.setMessage("Cập nhật địa chỉ của khách hàng: " + customer.getFullName() + " thành công.");
             return response;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật địa chỉ mới thất bại.");
+            throw new BadRequestException("Cập nhật địa chỉ mới thất bại.");
         }
 
     }
@@ -160,18 +161,18 @@ public class AddressServiceImpl implements IAddressService {
 
                 return response;
             } catch (Exception e) {
-                throw new IllegalArgumentException("Cập nhật trạng thái địa chỉ mới thất bại.");
+                throw new BadRequestException("Cập nhật trạng thái địa chỉ mới thất bại.");
             }
 
         } else {
-            throw new IllegalArgumentException("Địa chỉ không thuộc về khách hàng này.");
+            throw new BadRequestException("Địa chỉ không thuộc về khách hàng này.");
         }
     }
 
     @Override
     public ListAddressResponse getAllAddress(String username) {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         Customer customer = customerService.getCustomerByUsername(username);
@@ -225,11 +226,11 @@ public class AddressServiceImpl implements IAddressService {
                 .orElseThrow(() -> new NotFoundException("Địa chỉ không tồn tại."));
 
         if (!address.getCustomer().getUsername().equals(username)) {
-            throw new IllegalArgumentException("Địa chỉ không thuộc về khách hàng này.");
+            throw new BadRequestException("Địa chỉ không thuộc về khách hàng này.");
         }
 
         if (address.getStatus().equals(Status.DELETED)) {
-            throw new IllegalArgumentException("Địa chỉ đã bị xóa.");
+            throw new BadRequestException("Địa chỉ đã bị xóa.");
         }
 
         return address;
@@ -245,7 +246,7 @@ public class AddressServiceImpl implements IAddressService {
         } else if (request.getStatus().equals(Status.INACTIVE)) {
             address.setStatus(Status.INACTIVE);
         } else {
-            throw new IllegalArgumentException("Trạng thái không hợp lệ.");
+            throw new BadRequestException("Trạng thái không hợp lệ.");
         }
     }
 
@@ -271,7 +272,7 @@ public class AddressServiceImpl implements IAddressService {
                 try {
                     addressRepository.save(address);
                 } catch (Exception e) {
-                    throw new IllegalArgumentException("Cập nhật trạng thái địa chỉ mới thất bại.");
+                    throw new BadRequestException("Cập nhật trạng thái địa chỉ mới thất bại.");
                 }
             }
         }

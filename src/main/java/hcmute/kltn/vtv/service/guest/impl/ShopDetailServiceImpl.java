@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ShopDetailResponse;
 import hcmute.kltn.vtv.model.dto.CategoryDTO;
 import hcmute.kltn.vtv.model.dto.ProductDTO;
@@ -42,7 +43,7 @@ public class ShopDetailServiceImpl implements IShopDetailService {
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new NotFoundException("Cửa hàng không tồn tại!"));
         if (shop.getStatus() != Status.ACTIVE) {
-            throw new IllegalArgumentException("Cửa hàng đã bị khóa!");
+            throw new BadRequestException("Cửa hàng đã bị khóa!");
         }
 
         List<Product> products = productRepository.findByCategoryShopShopIdAndStatus(shopId, Status.ACTIVE)

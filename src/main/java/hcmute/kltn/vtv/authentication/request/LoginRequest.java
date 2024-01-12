@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.authentication.request;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 
 @Getter
@@ -15,11 +16,11 @@ public class LoginRequest {
 
     public void validate() {
         if (username == null || username.isEmpty()) {
-            throw new IllegalArgumentException("Tài khoản không được để trống.");
+            throw new BadRequestException("Tài khoản không được để trống.");
         }
 
         if (password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Mật khẩu không được để trống.");
+            throw new BadRequestException("Mật khẩu không được để trống.");
         }
 
         trim();

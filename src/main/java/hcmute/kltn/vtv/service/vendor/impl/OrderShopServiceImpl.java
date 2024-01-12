@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
@@ -239,7 +240,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
             return orderResponse(username, save, message, false);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật trạng thái đơn hàng thất bại! " + e.getMessage());
+            throw new BadRequestException("Cập nhật trạng thái đơn hàng thất bại! " + e.getMessage());
         }
 
     }
@@ -262,16 +263,16 @@ public class OrderShopServiceImpl implements IOrderShopService {
     private void checkStatus(Order order, Status status) {
 
         if (order.getStatus().equals(Status.CANCEL)) {
-            throw new IllegalArgumentException("Đơn hàng đã bị hủy!");
+            throw new BadRequestException("Đơn hàng đã bị hủy!");
         }
         if (order.getStatus().equals(Status.COMPLETED)) {
-            throw new IllegalArgumentException("Đơn hàng đã được giao!");
+            throw new BadRequestException("Đơn hàng đã được giao!");
         }
         if (order.getStatus().equals(Status.RETURNED)) {
-            throw new IllegalArgumentException("Đơn hàng đã được trả!");
+            throw new BadRequestException("Đơn hàng đã được trả!");
         }
         if (order.getStatus().equals(Status.REFUNDED)) {
-            throw new IllegalArgumentException("Đơn hàng đã được hoàn tiền!");
+            throw new BadRequestException("Đơn hàng đã được hoàn tiền!");
         }
 
     }

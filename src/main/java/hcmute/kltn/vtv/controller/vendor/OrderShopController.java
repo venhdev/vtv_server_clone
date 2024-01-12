@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.vendor;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
@@ -69,7 +70,7 @@ public class OrderShopController {
             String username = (String) httpServletRequest.getAttribute("username");
             return ResponseEntity.ok(orderShopService.getOrdersOnSameDay(username, date));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
+            throw new BadRequestException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
         }
     }
 
@@ -89,13 +90,13 @@ public class OrderShopController {
             // Kiểm tra xem khoảng thời gian có trong vòng 30 ngày không
             long daysBetween = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
             if (daysBetween > 30) {
-                throw new IllegalArgumentException("Khoảng thời gian không được vượt quá 30 ngày.");
+                throw new BadRequestException("Khoảng thời gian không được vượt quá 30 ngày.");
             }
 
             String username = (String) httpServletRequest.getAttribute("username");
             return ResponseEntity.ok(orderShopService.getOrdersBetweenDate(username, startDate, endDate));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
+            throw new BadRequestException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
         }
     }
 
@@ -110,7 +111,7 @@ public class OrderShopController {
             String username = (String) httpServletRequest.getAttribute("username");
             return ResponseEntity.ok(orderShopService.getOrdersOnSameDayByStatus(username, date, status));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
+            throw new BadRequestException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
         }
     }
 
@@ -131,14 +132,14 @@ public class OrderShopController {
             // Kiểm tra xem khoảng thời gian có trong vòng 30 ngày không
             long daysBetween = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
             if (daysBetween > 30) {
-                throw new IllegalArgumentException("Khoảng thời gian không được vượt quá 30 ngày.");
+                throw new BadRequestException("Khoảng thời gian không được vượt quá 30 ngày.");
             }
 
             String username = (String) httpServletRequest.getAttribute("username");
             return ResponseEntity
                     .ok(orderShopService.getOrdersBetweenDateByStatus(username, startDate, endDate, status));
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
+            throw new BadRequestException("Ngày không đúng định dạng! Định dạng ngày là dd-MM-yyyy");
         }
     }
 

@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.admin.request;
 
-
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -24,39 +24,39 @@ public class BrandAdminRequest {
 
     private String username;
 
-    public  void validate(){
+    public void validate() {
 
         if (this.name == null || this.name.isEmpty()) {
-            throw new IllegalArgumentException("Tên thương hiệu không được để trống!");
+            throw new BadRequestException("Tên thương hiệu không được để trống!");
         }
 
         if (this.description == null || this.description.isEmpty()) {
-            throw new IllegalArgumentException("Mô tả thương hiệu không được để trống!");
+            throw new BadRequestException("Mô tả thương hiệu không được để trống!");
         }
 
         if (this.information == null || this.information.isEmpty()) {
-            throw new IllegalArgumentException("Thông tin thương hiệu không được để trống!");
+            throw new BadRequestException("Thông tin thương hiệu không được để trống!");
         }
 
         if (this.origin == null || this.origin.isEmpty()) {
-            throw new IllegalArgumentException("Xuất xứ thương hiệu không được để trống!");
+            throw new BadRequestException("Xuất xứ thương hiệu không được để trống!");
         }
 
         if (this.image == null || this.image.isEmpty()) {
-            throw new IllegalArgumentException("Hình ảnh thương hiệu không được để trống!");
+            throw new BadRequestException("Hình ảnh thương hiệu không được để trống!");
         }
 
         if (this.username == null || this.username.isEmpty()) {
-            throw new IllegalArgumentException("Tên đăng nhập không được để trống!");
+            throw new BadRequestException("Tên đăng nhập không được để trống!");
         }
 
         trim();
 
     }
 
-    public void checkBrandId(){
+    public void checkBrandId() {
         if (this.brandId == null || this.brandId == 0) {
-            throw new IllegalArgumentException("Mã thương hiệu không hợp lệ!");
+            throw new BadRequestException("Mã thương hiệu không hợp lệ!");
         }
     }
 
