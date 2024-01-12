@@ -26,12 +26,6 @@ public class VoucherShopRequest {
 
     private Long discount;
 
-    private Long minPrice;
-
-    private Long maxPrice;
-
-    private Long maxDiscount;
-
     private Long quantity;
 
     private Date startDate;
@@ -61,18 +55,6 @@ public class VoucherShopRequest {
         if (this.discount == 0) {
             throw new BadRequestException("Giá trị giảm giá không được bằng 0%");
         }
-        // if (this.minPrice == null) {
-        // throw new BadRequestException("Giá trị đơn hàng tối thiểu không được để
-        // trống");
-        // }
-        // if (this.maxPrice == null) {
-        // throw new BadRequestException("Giá trị đơn hàng tối đa không được để
-        // trống");
-        // }
-        // if (this.maxDiscount == null) {
-        // throw new BadRequestException("Giá trị giảm giá tối đa không được để
-        // trống");
-        // }
         if (this.quantity == null) {
             throw new BadRequestException("Số lượng giảm giá không được để trống");
         }
@@ -85,20 +67,14 @@ public class VoucherShopRequest {
         if (this.endDate == null) {
             throw new BadRequestException("Ngày kết thúc không được để trống");
         }
-        // if (this.minPrice < 0 || this.maxPrice < 0 || this.maxDiscount < 0 ||
-        // this.quantity < 0) {
-        // throw new BadRequestException("Giá trị không được nhỏ hơn 0");
-        // }
+
         if (this.startDate.after(this.endDate)) {
             throw new BadRequestException("Ngày bắt đầu không được sau ngày kết thúc");
         }
         if (this.startDate.after(new Date())) {
             throw new BadRequestException("Ngày bắt đầu không được sau ngày hiện tại");
         }
-        // if(this.endDate.equals(this.startDate)){
-        // throw new BadRequestException("Ngày bắt đầu không được trùng ngày kết
-        // thúc");
-        // }
+
 
     }
 
@@ -115,10 +91,7 @@ public class VoucherShopRequest {
         if (this.type.equals("percent") && this.discount > 100) {
             throw new BadRequestException("Giá trị giảm giá không được lớn hơn 100%");
         }
-        // if(this.type.equals("percent") && this.discount > this.maxDiscount){
-        // throw new BadRequestException("Giá trị giảm giá không được lớn hơn giá
-        // trị giảm giá tối đa");
-        // }
+
 
         trim();
     }
@@ -138,9 +111,6 @@ public class VoucherShopRequest {
         voucher.setName(request.getName());
         voucher.setDescription(request.getDescription());
         voucher.setDiscount(request.getDiscount());
-        voucher.setMinPrice(request.getMinPrice());
-        voucher.setMaxPrice(request.getMaxPrice());
-        voucher.setMaxDiscount(request.getMaxDiscount());
         voucher.setQuantity(request.getQuantity());
         voucher.setStartDate(request.getStartDate());
         voucher.setEndDate(request.getEndDate());
@@ -158,9 +128,6 @@ public class VoucherShopRequest {
         voucher.setName(request.getName());
         voucher.setDescription(request.getDescription());
         voucher.setDiscount(request.getDiscount());
-        voucher.setMinPrice(request.getMinPrice());
-        voucher.setMaxPrice(request.getMaxPrice());
-        voucher.setMaxDiscount(request.getMaxDiscount());
         voucher.setQuantity(request.getQuantity());
         voucher.setStartDate(request.getStartDate());
         voucher.setEndDate(request.getEndDate());
@@ -174,7 +141,7 @@ public class VoucherShopRequest {
         if (type.equals("percent")) {
             return VoucherType.PERCENTAGE_SHOP;
         } else {
-            return VoucherType.AMOUNT_SHOP;
+            return VoucherType.MONEY_SHOP;
         }
     }
 

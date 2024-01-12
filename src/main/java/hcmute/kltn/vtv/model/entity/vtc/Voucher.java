@@ -32,12 +32,6 @@ public class Voucher {
 
     private Long discount;
 
-    private Long minPrice;
-
-    private Long maxPrice;
-
-    private Long maxDiscount;
-
     private Long quantity;
 
     private Date startDate;

@@ -4,8 +4,8 @@ public enum VoucherType {
 
     PERCENTAGE_SHOP,
     PERCENTAGE_SYSTEM,
-    AMOUNT_SHOP,
-    AMOUNT_SYSTEM,
+    MONEY_SHOP,
+    MONEY_SYSTEM,
     FIXED_SHOP,
     SHIPPING,
 

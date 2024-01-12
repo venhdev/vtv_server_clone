@@ -26,12 +26,6 @@ public class VoucherDTO {
 
     private Long discount;
 
-    private Long minPrice;
-
-    private Long maxPrice;
-
-    private Long maxDiscount;
-
     private Long quantity;
 
     private Date startDate;
@@ -50,9 +44,6 @@ public class VoucherDTO {
         voucherDTO.setName(voucher.getName());
         voucherDTO.setDescription(voucher.getDescription());
         voucherDTO.setDiscount(voucher.getDiscount());
-        voucherDTO.setMinPrice(voucher.getMinPrice());
-        voucherDTO.setMaxPrice(voucher.getMaxPrice());
-        voucherDTO.setMaxDiscount(voucher.getMaxDiscount());
         voucherDTO.setQuantity(voucher.getQuantity());
         voucherDTO.setStartDate(voucher.getStartDate());
         voucherDTO.setEndDate(voucher.getEndDate());
@@ -63,16 +54,14 @@ public class VoucherDTO {
                 voucher.getType().equals(VoucherType.PERCENTAGE_SYSTEM)) {
             voucherDTO.setType("Giảm theo phần trăm");
         }
-        if (voucher.getType().equals(VoucherType.AMOUNT_SHOP) ||
-                voucher.getType().equals(VoucherType.AMOUNT_SYSTEM)) {
+        if (voucher.getType().equals(VoucherType.MONEY_SHOP) ||
+                voucher.getType().equals(VoucherType.MONEY_SYSTEM)) {
             voucherDTO.setType("Giảm theo tiền");
         }
         if (voucher.getType().equals(VoucherType.SHIPPING)) {
             voucherDTO.setType("Giảm phí vận chuyển");
         }
-        // if (voucher.getType().equals(VoucherType.FREE_SHIP)){
-        // voucherDTO.setType("Miễn phí vận chuyển");
-        // }
+
 
         return voucherDTO;
     }
