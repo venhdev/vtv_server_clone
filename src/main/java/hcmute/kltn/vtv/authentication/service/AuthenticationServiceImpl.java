@@ -168,11 +168,11 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             HttpServletResponse response)
             throws IOException {
         if (refreshToken == null) {
-            throw new JwtException("Refresh token không tồn tại.");
+            throw new BadRequestException("Refresh token không tồn tại.");
         }
 
         if (jwtService.isTokenExpired(refreshToken)) {
-            throw new JwtException("Refresh token đã hết hạn.");
+            throw new BadRequestException("Refresh token đã hết hạn.");
         }
 
         // Validate and extract username from refreshToken
@@ -199,7 +199,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                 throw new NotFoundException("Tài khoản không tồn tại.");
             }
         } else {
-            throw new JwtException("Lỗi xác thực token.");
+            throw new BadRequestException("Lỗi xác thực token.");
         }
         return null;
     }

@@ -16,23 +16,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    @ExceptionHandler(InvalidPasswordException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, 400, "Thông báo", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
+
 
     @ExceptionHandler(DuplicateEntryException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateEntryException(DuplicateEntryException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, 409, "Thông báo", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ErrorResponse> handleRefreshTokenException(JwtException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, 400, "Thông báo", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
 
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ResponseEntity<ErrorResponse> handleTokenExpiredException(UnauthorizedAccessException ex) {
@@ -40,25 +31,7 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
-    @ExceptionHandler(InvalidOtpException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidOtpException(InvalidOtpException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, 400, "Thông báo", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
 
-    @ExceptionHandler(EmailSendingException.class)
-    public ResponseEntity<ErrorResponse> handleEmailSendingException(EmailSendingException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, 500, "Thông báo",
-                ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-
-    @ExceptionHandler(SaveFailedException.class)
-    public ResponseEntity<ErrorResponse> handleSaveFailedException(SaveFailedException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, 500, "Thông báo",
-                ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-    }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequestException(BadRequestException ex) {
@@ -67,7 +40,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<ErrorResponse> handleEmailSendingException(InternalServerErrorException ex) {
+    public ResponseEntity<ErrorResponse> handleBadRequestException(InternalServerErrorException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, 500, "Thông báo",
                 ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

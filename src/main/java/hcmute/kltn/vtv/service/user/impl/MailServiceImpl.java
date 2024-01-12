@@ -7,7 +7,6 @@ import hcmute.kltn.vtv.model.entity.vtc.Customer;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.user.IMailService;
 import hcmute.kltn.vtv.service.user.IOtpService;
-import hcmute.kltn.vtv.util.exception.EmailSendingException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -35,7 +34,7 @@ public class MailServiceImpl implements IMailService {
             mimeMessageHelper.setText(mail.getMailContent());
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
         } catch (MessagingException e) {
-            throw new EmailSendingException("Gửi email thất bại. " + e.getMessage());
+            throw new BadRequestException("Gửi email thất bại. " + e.getMessage());
         }
     }
 
@@ -58,7 +57,7 @@ public class MailServiceImpl implements IMailService {
 
         try {
             sendEmail(mail);
-        } catch (EmailSendingException e) {
+        } catch (BadRequestException e) {
             throw new RuntimeException("Có lỗi xảy ra khi gửi email: " + e.getMessage());
         }
 
@@ -89,7 +88,7 @@ public class MailServiceImpl implements IMailService {
 
         try {
             sendEmail(mail);
-        } catch (EmailSendingException e) {
+        } catch (BadRequestException e) {
             throw new RuntimeException("Có lỗi xảy ra khi gửi email: " + e.getMessage());
         }
         return true;

@@ -15,8 +15,8 @@ import hcmute.kltn.vtv.service.vendor.ICategoryShopService;
 import hcmute.kltn.vtv.service.vendor.IProductShopService;
 import hcmute.kltn.vtv.service.vendor.IProductVariantShopService;
 import hcmute.kltn.vtv.service.vendor.IShopService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
-import hcmute.kltn.vtv.util.exception.SaveFailedException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ public class ProductShopServiceImpl implements IProductShopService {
 
             return productResponse;
         } catch (Exception e) {
-            throw new SaveFailedException("Thêm sản phẩm mới trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Thêm sản phẩm mới trong cửa hàng thất bại!");
         }
     }
 
@@ -283,7 +283,7 @@ public class ProductShopServiceImpl implements IProductShopService {
 
             return productResponse;
         } catch (Exception e) {
-            throw new SaveFailedException("Thêm sản phẩm mới trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Thêm sản phẩm mới trong cửa hàng thất bại!");
         }
     }
 
@@ -318,7 +318,7 @@ public class ProductShopServiceImpl implements IProductShopService {
 
             return productResponse;
         } catch (Exception e) {
-            throw new SaveFailedException("Cập nhật trạng thái sản phẩm trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Cập nhật trạng thái sản phẩm trong cửa hàng thất bại!");
         }
 
     }
@@ -353,7 +353,7 @@ public class ProductShopServiceImpl implements IProductShopService {
 
             return productResponse;
         } catch (Exception e) {
-            throw new SaveFailedException("Khôi phục sản phẩm trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Khôi phục sản phẩm trong cửa hàng thất bại!");
         }
 
     }
@@ -456,7 +456,7 @@ public class ProductShopServiceImpl implements IProductShopService {
             try {
                 productVariantRepository.save(productVariant);
             } catch (Exception e) {
-                throw new SaveFailedException("Thêm biến thể sản phẩm thất bại!");
+                throw new InternalServerErrorException("Thêm biến thể sản phẩm thất bại!");
             }
         }
     }

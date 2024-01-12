@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.user.impl;
 
 import hcmute.kltn.vtv.service.user.IOtpService;
-import hcmute.kltn.vtv.util.exception.InvalidOtpException;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,12 +41,12 @@ public class OtpServiceImpl implements IOtpService {
         OtpDetails otpDetails = otpMap.get(username);
         if (otpDetails != null && !otpDetails.isExpired()) {
             if (otpDetails.isExpired()) {
-                throw new InvalidOtpException("OTP đã hết hạn");
+                throw new BadRequestException("OTP đã hết hạn");
             } else if (!otpDetails.getOtp().equals(otp)) {
-                throw new InvalidOtpException("OTP không hợp lệ");
+                throw new BadRequestException("OTP không hợp lệ");
             }
         } else {
-            throw new InvalidOtpException("OTP không tồn tại");
+            throw new BadRequestException("OTP không tồn tại");
         }
     }
 

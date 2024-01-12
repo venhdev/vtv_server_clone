@@ -15,8 +15,8 @@ import hcmute.kltn.vtv.service.user.impl.CustomerServiceImpl;
 import hcmute.kltn.vtv.service.vendor.ICategoryShopService;
 import hcmute.kltn.vtv.service.vendor.IShopService;
 import hcmute.kltn.vtv.util.exception.DuplicateEntryException;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
-import hcmute.kltn.vtv.util.exception.SaveFailedException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +83,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Thêm danh mục trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Thêm danh mục trong cửa hàng thất bại!");
         }
     }
 
@@ -163,7 +163,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Cập nhật danh mục trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Cập nhật danh mục trong cửa hàng thất bại!");
         }
     }
 
@@ -173,10 +173,10 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
         Category category = getCategoryShopById(categoryId, username);
 
         if (category.getStatus() == Status.DELETED) {
-            throw new SaveFailedException("Danh mục trong cửa hàng này đã xóa trước đó!");
+            throw new InternalServerErrorException("Danh mục trong cửa hàng này đã xóa trước đó!");
         }
         if (productRepository.countByCategoryCategoryId(categoryId) > 0) {
-            throw new SaveFailedException("Danh mục trong cửa hàng này đang có sản phẩm không thể cập nhật!");
+            throw new InternalServerErrorException("Danh mục trong cửa hàng này đang có sản phẩm không thể cập nhật!");
         }
 
         category.setStatus(status);
@@ -197,7 +197,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Cập nhật trạng thái danh mục trong cửa hàng thất bại!");
+            throw new InternalServerErrorException("Cập nhật trạng thái danh mục trong cửa hàng thất bại!");
         }
     }
 

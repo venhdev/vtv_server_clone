@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.service.admin.impl;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.model.data.admin.CategoryAdminDTO;
 import hcmute.kltn.vtv.model.data.admin.request.CategoryAdminRequest;
 import hcmute.kltn.vtv.model.data.admin.response.AllCategoryAdminResponse;
@@ -9,7 +10,6 @@ import hcmute.kltn.vtv.model.entity.vtc.Category;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.CategoryRepository;
 import hcmute.kltn.vtv.service.admin.ICategoryAdminService;
-import hcmute.kltn.vtv.util.exception.SaveFailedException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Thêm danh mục từ admin thất bại!");
+            throw new InternalServerErrorException("Thêm danh mục từ admin thất bại!");
         }
     }
 
@@ -130,7 +130,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Cập nhật danh mục thất bại!");
+            throw new InternalServerErrorException("Cập nhật danh mục thất bại!");
         }
     }
 
@@ -170,7 +170,7 @@ public class CategoryAdminServiceImpl implements ICategoryAdminService {
 
             return response;
         } catch (Exception e) {
-            throw new SaveFailedException("Cập nhật danh mục thất bại!");
+            throw new InternalServerErrorException("Cập nhật danh mục thất bại!");
         }
     }
 
