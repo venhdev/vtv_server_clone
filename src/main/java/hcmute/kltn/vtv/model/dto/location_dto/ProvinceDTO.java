@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.location_dto;
 
-import hcmute.tlcn.vtc.model.entity.location.Province;
+import hcmute.kltn.vtv.model.entity.location.Province;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -15,23 +15,23 @@ public class ProvinceDTO {
 
     private String provinceCode;
     private String name;
-//    private String nameEn;
-//    private String fullName;
-//    private String fullNameEn;
-//    private String codeName;
-//    private Integer administrativeRegionId;
-//    private Integer administrativeUnitId;
+    // private String nameEn;
+    // private String fullName;
+    // private String fullNameEn;
+    // private String codeName;
+    // private Integer administrativeRegionId;
+    // private Integer administrativeUnitId;
 
     public static ProvinceDTO convertEntityToDTO(Province entity) {
         ProvinceDTO dto = new ProvinceDTO();
         dto.setProvinceCode(entity.getProvinceCode());
         dto.setName(entity.getName());
-//        dto.setNameEn(entity.getNameEn());
-//        dto.setFullName(entity.getFullName());
-//        dto.setFullNameEn(entity.getFullNameEn());
-//        dto.setCodeName(entity.getCodeName());
-//        dto.setAdministrativeRegionId(entity.getAdministrativeRegion().getAdministrativeRegionId());
-//        dto.setAdministrativeUnitId(entity.getAdministrativeUnit().getAdministrativeUnitId());
+        // dto.setNameEn(entity.getNameEn());
+        // dto.setFullName(entity.getFullName());
+        // dto.setFullNameEn(entity.getFullNameEn());
+        // dto.setCodeName(entity.getCodeName());
+        // dto.setAdministrativeRegionId(entity.getAdministrativeRegion().getAdministrativeRegionId());
+        // dto.setAdministrativeUnitId(entity.getAdministrativeUnit().getAdministrativeUnitId());
         return dto;
     }
 
@@ -44,7 +44,7 @@ public class ProvinceDTO {
         provinceDTOs.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
         return provinceDTOs;
-//        return entities.stream().map(ProvinceDTO::convertEntityToDTO).toList();
+        // return entities.stream().map(ProvinceDTO::convertEntityToDTO).toList();
     }
 
 }

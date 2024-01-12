@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.admin.response;
 
-import hcmute.tlcn.vtc.model.dto.BrandDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.BrandDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;

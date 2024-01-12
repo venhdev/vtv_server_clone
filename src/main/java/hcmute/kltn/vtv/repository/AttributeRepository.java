@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Attribute;
+import hcmute.kltn.vtv.model.entity.vtc.Attribute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +18,8 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
     boolean existsByAttributeIdAndActive(Long attributeId, boolean active);
 
-//    Optional<Attribute> findByProductAttributeIdAndShop_ShopId(Long productAttributeId, Long shopId);
+    // Optional<Attribute> findByProductAttributeIdAndShop_ShopId(Long
+    // productAttributeId, Long shopId);
 
     List<Attribute> findAllByShop_ShopId(Long shopId);
 
@@ -27,7 +28,5 @@ public interface AttributeRepository extends JpaRepository<Attribute, Long> {
     List<Attribute> findAllByShop_ShopIdAndName(Long shopId, String name);
 
     List<Attribute> findAllByAttributeIdIn(List<Long> attributeIds);
-
-
 
 }

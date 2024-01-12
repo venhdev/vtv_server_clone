@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.location;
 
-import hcmute.tlcn.vtc.model.dto.location_dto.WardDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.location_dto.WardDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListWardResponse  extends ResponseAbstract {
+public class ListWardResponse extends ResponseAbstract {
 
     private int count;
     private String districtCode;

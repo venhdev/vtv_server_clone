@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.manager.Manager;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.manager.Manager;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,6 @@ public class ManagerDTO {
     private Status status;
     private Long customerId;
     private String username;
-
 
     public static ManagerDTO convertEntityToDTO(Manager manager) {
         ManagerDTO managerDTO = new ManagerDTO();

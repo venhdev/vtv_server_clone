@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
-import hcmute.tlcn.vtc.model.extra.EmailValidator;
+import hcmute.kltn.vtv.model.extra.EmailValidator;
 import lombok.*;
 
 import java.util.Date;
@@ -19,9 +19,8 @@ public class ProfileCustomerRequest {
 
     private String fullName;
 
-//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    // @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date birthday;
-
 
     private boolean gender;
 
@@ -42,7 +41,6 @@ public class ProfileCustomerRequest {
         }
 
         trim();
-
 
     }
 

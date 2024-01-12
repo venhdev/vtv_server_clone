@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Brand;
+import hcmute.kltn.vtv.model.entity.vtc.Brand;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +15,5 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     List<Brand> findAllByAdminOnly(boolean adminOnly);
 
     Optional<Brand> findByBrandIdAndCustomerUsername(Long brandId, String username);
-
-
-
-
 
 }

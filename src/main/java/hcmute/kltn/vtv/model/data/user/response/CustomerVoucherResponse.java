@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.tlcn.vtc.model.dto.VoucherDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.VoucherDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter
@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerVoucherResponse  extends ResponseAbstract {
+public class CustomerVoucherResponse extends ResponseAbstract {
     private String username;
     private VoucherDTO voucherDTO;
 }

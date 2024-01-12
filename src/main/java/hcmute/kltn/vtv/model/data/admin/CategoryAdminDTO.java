@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.admin;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Category;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Category;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
@@ -36,7 +36,6 @@ public class CategoryAdminDTO {
             categoryAdminDTOS.add(categoryAdminDTO);
         }
         return categoryAdminDTOS;
-
 
     }
 }

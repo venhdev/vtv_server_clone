@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Cart;
+import hcmute.kltn.vtv.model.entity.vtc.Cart;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,6 @@ public class CartDTO {
 
     private ProductVariantDTO productVariantDTO;
 
-
     public static CartDTO convertEntityToDTO(Cart cart) {
         ProductDTO productDTO = ProductDTO.convertEntityToDTO(cart.getProductVariant().getProduct());
         CartDTO cartDTO = new CartDTO();
@@ -43,7 +42,6 @@ public class CartDTO {
         return cartDTO;
     }
 
-
     public static List<CartDTO> convertToListDTO(List<Cart> carts) {
         List<CartDTO> cartDTOs = new ArrayList<>();
         for (Cart cart : carts) {
@@ -56,7 +54,6 @@ public class CartDTO {
             cartDTO.setProductId(cart.getProductVariant().getProduct().getProductId());
             cartDTO.setProductName(cart.getProductVariant().getProduct().getName());
             cartDTO.setProductImage(cart.getProductVariant().getProduct().getImage());
-
 
             cartDTOs.add(cartDTO);
         }

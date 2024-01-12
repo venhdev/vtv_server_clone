@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-
-import hcmute.tlcn.vtc.model.entity.vtc.Product;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Product;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Data
 @ToString
@@ -38,24 +36,23 @@ public class ProductDTO {
 
     private List<ProductVariantDTO> productVariantDTOs;
 
-
     public static List<ProductDTO> convertToListDTO(List<Product> products) {
         List<ProductDTO> productDTOs = new ArrayList<>();
-        //ModelMapper modelMapper = new ModelMapper();
+        // ModelMapper modelMapper = new ModelMapper();
 
         for (Product product : products) {
-            //ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+            // ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
             ProductDTO productDTO = convertEntityToDTO(product);
 
-           // productDTO.setProductVariantDTOs(ProductVariantDTO.convertToListDTO(product.getProductVariants()));
+            // productDTO.setProductVariantDTOs(ProductVariantDTO.convertToListDTO(product.getProductVariants()));
             productDTOs.add(productDTO);
         }
         return productDTOs;
     }
 
     public static ProductDTO convertEntityToDTO(Product product) {
-        //ModelMapper modelMapper = new ModelMapper();
-        //ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+        // ModelMapper modelMapper = new ModelMapper();
+        // ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
         ProductDTO productDTO = new ProductDTO();
         productDTO.setProductId(product.getProductId());
         productDTO.setName(product.getName());
@@ -68,14 +65,9 @@ public class ProductDTO {
         productDTO.setBrandId(product.getBrand() != null ? product.getBrand().getBrandId() : null);
         productDTO.setProductVariantDTOs(ProductVariantDTO.convertToListDTO(product.getProductVariants()));
 
-
-//        System.out.println("productDTO: " + productDTO.toString());
+        // System.out.println("productDTO: " + productDTO.toString());
 
         return productDTO;
     }
-
-
-
-
 
 }

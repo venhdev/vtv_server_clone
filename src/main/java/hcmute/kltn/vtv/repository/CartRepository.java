@@ -1,7 +1,7 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Cart;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Cart;
+import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +13,11 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     boolean existsByCartIdAndCustomerUsername(Long cartId, String username);
 
-    boolean existsByProductVariantProductVariantIdAndCustomerUsernameAndStatus(Long productVariantId, String username, Status status);
+    boolean existsByProductVariantProductVariantIdAndCustomerUsernameAndStatus(Long productVariantId, String username,
+            Status status);
 
-    Optional<Cart> findByProductVariantProductVariantIdAndCustomerUsernameAndStatus(Long productVariantId, String username, Status status);
+    Optional<Cart> findByProductVariantProductVariantIdAndCustomerUsernameAndStatus(Long productVariantId,
+            String username, Status status);
 
     Optional<Cart> findByCustomerUsernameAndCartId(String username, Long cartId);
 
@@ -25,7 +27,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     Optional<List<Cart>> findAllByCustomerUsernameAndStatus(String username, Status status);
 
-    Optional<List<Cart>> findAllByCustomerUsernameAndStatusAndCartIdIn(String username, Status status, List<Long> cartIds);
+    Optional<List<Cart>> findAllByCustomerUsernameAndStatusAndCartIdIn(String username, Status status,
+            List<Long> cartIds);
 
-    Optional<List<Cart>> findAllByCustomerUsernameAndProductVariantProductCategoryShopShopIdAndStatus(String username, Long shopId, Status status);
+    Optional<List<Cart>> findAllByCustomerUsernameAndProductVariantProductCategoryShopShopIdAndStatus(String username,
+            Long shopId, Status status);
 }

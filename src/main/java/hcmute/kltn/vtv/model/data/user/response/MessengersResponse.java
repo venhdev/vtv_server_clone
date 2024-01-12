@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.tlcn.vtc.model.dto.MessengerDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.MessengerDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessengersResponse  extends ResponseAbstract {
+public class MessengersResponse extends ResponseAbstract {
 
     private String username;
 

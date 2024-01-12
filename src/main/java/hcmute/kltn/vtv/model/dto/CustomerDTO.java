@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Customer;
-import hcmute.tlcn.vtc.model.extra.Role;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.extra.Role;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
@@ -26,16 +26,14 @@ public class CustomerDTO {
 
     private String fullName;
 
-//    private String phone;
+    // private String phone;
 
     private Date birthday;
-
 
     private Status status;
 
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
 
     public static CustomerDTO convertEntityToDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
@@ -58,6 +56,5 @@ public class CustomerDTO {
         customerDTOs.sort(Comparator.comparing(CustomerDTO::getFullName).reversed());
         return customerDTOs;
     }
-
 
 }

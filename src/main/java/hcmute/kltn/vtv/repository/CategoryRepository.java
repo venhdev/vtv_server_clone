@@ -1,8 +1,7 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Category;
-import hcmute.tlcn.vtc.model.entity.vtc.Product;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Category;
+import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,16 +27,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findAllByShopShopId(Long shopId);
 
-
     List<Category> findAllByShopCustomerUsernameAndStatus(String username, Status status);
-
 
     Optional<List<Category>> findAllByShopShopIdAndStatus(Long shopId, Status status);
 
     Optional<List<Category>> findAllByParentCategoryIdAndStatus(Long categoryId, Status status);
-
-
-
-
 
 }

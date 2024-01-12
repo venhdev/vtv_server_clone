@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
-import hcmute.tlcn.vtc.model.extra.EmailValidator;
+import hcmute.kltn.vtv.model.extra.EmailValidator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -88,9 +88,10 @@ public class RegisterShopRequest {
             throw new IllegalArgumentException("Ảnh đại diện không được để trống!");
         }
 
-//        if (this.status == null || Status.isValidStatus(String.valueOf(this.status))) {
-//            throw new IllegalArgumentException("Trạng thái không hợp lệ!");
-//        }
+        // if (this.status == null || Status.isValidStatus(String.valueOf(this.status)))
+        // {
+        // throw new IllegalArgumentException("Trạng thái không hợp lệ!");
+        // }
 
         if (!Pattern.matches("[0-9]+", this.getPhone())) {
             throw new IllegalArgumentException("Số điện thoại chỉ được chứa ký tự số.");

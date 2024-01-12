@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 

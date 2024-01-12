@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
 @Getter

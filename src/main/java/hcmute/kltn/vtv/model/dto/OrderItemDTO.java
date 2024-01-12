@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.OrderItem;
+import hcmute.kltn.vtv.model.entity.vtc.OrderItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +27,11 @@ public class OrderItemDTO {
 
     private Long price;
 
-
-
-    public static OrderItemDTO convertEntityToDTO(OrderItem orderItem){
-        ProductVariantDTO productVariantDTO = ProductVariantDTO.convertEntityToDTO(orderItem.getCart().getProductVariant());
+    public static OrderItemDTO convertEntityToDTO(OrderItem orderItem) {
+        ProductVariantDTO productVariantDTO = ProductVariantDTO
+                .convertEntityToDTO(orderItem.getCart().getProductVariant());
         OrderItemDTO orderItemDTO = new OrderItemDTO();
-        if (orderItem.getOrderItemId() != null){
+        if (orderItem.getOrderItemId() != null) {
             orderItemDTO.setOrderItemId(orderItem.getOrderItemId());
             orderItemDTO.setOrderId(orderItem.getOrder().getOrderId());
         }
@@ -44,13 +43,13 @@ public class OrderItemDTO {
         return orderItemDTO;
     }
 
-    public static List<OrderItemDTO> convertListEntityToListDTO(List<OrderItem> orderItems){
+    public static List<OrderItemDTO> convertListEntityToListDTO(List<OrderItem> orderItems) {
 
-        if (orderItems == null){
+        if (orderItems == null) {
             return null;
         }
         List<OrderItemDTO> orderItemDTOs = new ArrayList<>();
-        for (OrderItem orderItem : orderItems){
+        for (OrderItem orderItem : orderItems) {
             OrderItemDTO orderItemDTO = convertEntityToDTO(orderItem);
             orderItemDTOs.add(orderItemDTO);
         }

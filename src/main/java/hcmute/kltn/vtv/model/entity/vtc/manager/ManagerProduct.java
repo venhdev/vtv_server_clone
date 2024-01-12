@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.entity.vtc.manager;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Customer;
-import hcmute.tlcn.vtc.model.entity.vtc.Product;
+import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.entity.vtc.Product;
 import jakarta.persistence.*;
 import lombok.*;
 

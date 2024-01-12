@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import hcmute.tlcn.vtc.model.extra.Role;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Role;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,8 +50,6 @@ public class Customer implements UserDetails {
     @Column(name = "role", nullable = false)
     private Set<Role> roles = new HashSet<>();
 
-
-
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @ToString.Exclude
@@ -62,11 +60,9 @@ public class Customer implements UserDetails {
     @ToString.Exclude
     private List<FavoriteProduct> favoriteProducts;
 
-
     public void addRole(Role role) {// Convert the string to the Role enum
         roles.add(role);
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

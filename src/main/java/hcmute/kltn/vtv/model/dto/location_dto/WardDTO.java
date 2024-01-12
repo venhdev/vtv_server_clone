@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.location_dto;
 
-import hcmute.tlcn.vtc.model.entity.location.Ward;
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -14,23 +14,23 @@ import java.util.List;
 public class WardDTO {
     private String wardCode;
     private String name;
-//    private String nameEn;
-//    private String fullName;
-//    private String fullNameEn;
-//    private String codeName;
-//    private Integer administrativeUnitId;
-//    private String districtCode;
+    // private String nameEn;
+    // private String fullName;
+    // private String fullNameEn;
+    // private String codeName;
+    // private Integer administrativeUnitId;
+    // private String districtCode;
 
     public static WardDTO convertEntityToDTO(Ward entity) {
         WardDTO dto = new WardDTO();
         dto.setWardCode(entity.getWardCode());
         dto.setName(entity.getName());
-//        dto.setNameEn(entity.getNameEn());
-//        dto.setFullName(entity.getFullName());
-//        dto.setFullNameEn(entity.getFullNameEn());
-//        dto.setCodeName(entity.getCodeName());
-//        dto.setAdministrativeUnitId(entity.getAdministrativeUnit().getAdministrativeUnitId());
-//        dto.setDistrictCode(entity.getDistrict().getDistrictCode());
+        // dto.setNameEn(entity.getNameEn());
+        // dto.setFullName(entity.getFullName());
+        // dto.setFullNameEn(entity.getFullNameEn());
+        // dto.setCodeName(entity.getCodeName());
+        // dto.setAdministrativeUnitId(entity.getAdministrativeUnit().getAdministrativeUnitId());
+        // dto.setDistrictCode(entity.getDistrict().getDistrictCode());
         return dto;
     }
 
@@ -42,7 +42,7 @@ public class WardDTO {
         wardDTOs.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         return wardDTOs;
 
-//        return entities.stream().map(WardDTO::convertEntityToDTO).toList();
+        // return entities.stream().map(WardDTO::convertEntityToDTO).toList();
     }
 
 }

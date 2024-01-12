@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.location;
 
-import hcmute.tlcn.vtc.model.dto.location_dto.ProvinceDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.location_dto.ProvinceDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;

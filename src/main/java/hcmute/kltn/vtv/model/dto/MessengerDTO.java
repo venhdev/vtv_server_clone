@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-
-import hcmute.tlcn.vtc.model.entity.vtc.Messenger;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Messenger;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ public class MessengerDTO {
 
     private String usernameReceiver;
 
-
     public static MessengerDTO convertEntityToDTO(Messenger messenger) {
         MessengerDTO messengerDTO = new MessengerDTO();
         messengerDTO.setMessengerId(messenger.getMessengerId());
@@ -45,7 +43,6 @@ public class MessengerDTO {
         messengerDTO.setUsernameReceiver(messenger.getRomChat().getReceiver());
         return messengerDTO;
     }
-
 
     public static List<MessengerDTO> convertEntitiesToDTOs(List<Messenger> messengers) {
         List<MessengerDTO> messengerDTOs = new ArrayList<>();

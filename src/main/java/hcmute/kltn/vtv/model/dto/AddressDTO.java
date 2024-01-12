@@ -1,12 +1,11 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Address;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Address;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -31,12 +30,10 @@ public class AddressDTO {
 
     private Status status;
 
-
-
-//    public static Address convertToEntity(AddressDTO addressDTO) {
-//        ModelMapper modelMapper = new ModelMapper();
-//        return modelMapper.map(addressDTO, Address.class);
-//    }
+    // public static Address convertToEntity(AddressDTO addressDTO) {
+    // ModelMapper modelMapper = new ModelMapper();
+    // return modelMapper.map(addressDTO, Address.class);
+    // }
 
     public static AddressDTO convertEntityToDTO(Address address) {
         AddressDTO addressDTO = new AddressDTO();
@@ -74,6 +71,5 @@ public class AddressDTO {
         address.setStatus(addressDTO.getStatus());
         return address;
     }
-
 
 }

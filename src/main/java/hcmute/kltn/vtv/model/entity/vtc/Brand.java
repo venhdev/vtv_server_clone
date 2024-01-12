@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -45,8 +45,8 @@ public class Brand {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-//    @OneToMany(mappedBy = "brand")
-//    @JsonIgnore
-//    private List<Product> products;
+    // @OneToMany(mappedBy = "brand")
+    // @JsonIgnore
+    // private List<Product> products;
 
 }

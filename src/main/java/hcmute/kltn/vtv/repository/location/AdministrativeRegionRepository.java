@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository.location;
+package hcmute.kltn.vtv.repository.location;
 
-import hcmute.tlcn.vtc.model.entity.location.AdministrativeRegion;
+import hcmute.kltn.vtv.model.entity.location.AdministrativeRegion;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdministrativeRegionRepository extends JpaRepository<AdministrativeRegion, Integer> {

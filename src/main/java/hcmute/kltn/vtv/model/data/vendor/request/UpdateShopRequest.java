@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.request;
 
-import hcmute.tlcn.vtc.model.extra.EmailValidator;
+import hcmute.kltn.vtv.model.extra.EmailValidator;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;

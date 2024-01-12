@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Category;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Category;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-    @AllArgsConstructor
+@AllArgsConstructor
 public class CategoryDTO {
 
     private Long categoryId;

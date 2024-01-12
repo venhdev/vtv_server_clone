@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,9 +40,7 @@ public class ProductVariant {
     private Product product;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "product_variant_attribute", joinColumns =
-    @JoinColumn(name = "product_variant_id", nullable = true), inverseJoinColumns =
-    @JoinColumn(name = "attribute_id", nullable = true))
+    @JoinTable(name = "product_variant_attribute", joinColumns = @JoinColumn(name = "product_variant_id", nullable = true), inverseJoinColumns = @JoinColumn(name = "attribute_id", nullable = true))
     private List<Attribute> attributes;
 
 }

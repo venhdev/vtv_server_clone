@@ -1,7 +1,7 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Customer;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,15 +12,14 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-//    Customer findByUsername(String username);
-//    Customer findByEmail(String email);
+    // Customer findByUsername(String username);
+    // Customer findByEmail(String email);
 
     Optional<Customer> findByEmail(String email);
 
     Optional<Customer> findByUsername(String username);
 
     Optional<Customer> findByUsernameAndStatus(String username, Status status);
-
 
     int countAllByStatus(Status status);
 
@@ -33,7 +32,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Page<Customer>> findAllByStatusOrderByCreateAtAsc(Status status, Pageable pageable);
 
     Optional<Page<Customer>> findAllByStatusOrderByCreateAtDesc(Status status, Pageable pageable);
-
 
     int countAllByFullNameContainingAndStatus(String fullName, Status status);
 

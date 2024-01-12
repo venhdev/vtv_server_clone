@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.tlcn.vtc.model.dto.OrderDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.OrderDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter
@@ -14,6 +14,5 @@ public class OrderResponse extends ResponseAbstract {
     private String username;
 
     private OrderDTO orderDTO;
-
 
 }

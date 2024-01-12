@@ -1,4 +1,4 @@
-package hcmute.tlcn.vtc.util;
+package hcmute.kltn.vtv.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

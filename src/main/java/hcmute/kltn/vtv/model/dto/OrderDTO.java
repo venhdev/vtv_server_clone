@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-
-import hcmute.tlcn.vtc.model.entity.vtc.Order;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Order;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +85,5 @@ public class OrderDTO {
 
         return orderDTO;
     }
-
 
 }

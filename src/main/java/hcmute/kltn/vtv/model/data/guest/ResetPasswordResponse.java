@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.guest;
 
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter

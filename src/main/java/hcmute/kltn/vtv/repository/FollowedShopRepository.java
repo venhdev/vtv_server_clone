@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.FollowedShop;
+import hcmute.kltn.vtv.model.entity.vtc.FollowedShop;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

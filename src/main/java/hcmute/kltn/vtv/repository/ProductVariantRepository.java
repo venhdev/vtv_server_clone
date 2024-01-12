@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.ProductVariant;
+import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,5 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     List<ProductVariant> findAllByProductProductId(Long productId);
 
     ProductVariant getProductByProductVariantId(Long productVariantId);
-
-
 
 }

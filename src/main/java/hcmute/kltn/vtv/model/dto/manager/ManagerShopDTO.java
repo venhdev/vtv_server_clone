@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
-import hcmute.tlcn.vtc.model.entity.vtc.manager.ManagerShop;
+import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerShop;
 import lombok.*;
 
 import java.util.Comparator;
@@ -22,8 +22,7 @@ public class ManagerShopDTO {
     private Long shopId;
     private String shopName;
 
-
-    public static ManagerShopDTO convertEntityToDTO(ManagerShop managerShop){
+    public static ManagerShopDTO convertEntityToDTO(ManagerShop managerShop) {
         ManagerShopDTO managerShopDTO = new ManagerShopDTO();
         managerShopDTO.setManagerShopId(managerShop.getManagerShopId());
         managerShopDTO.setNote(managerShop.getNote());
@@ -37,16 +36,14 @@ public class ManagerShopDTO {
         return managerShopDTO;
     }
 
-
-    public static List<ManagerShopDTO> convertEntitiesToDTOs(List<ManagerShop> managerShops){
+    public static List<ManagerShopDTO> convertEntitiesToDTOs(List<ManagerShop> managerShops) {
         List<ManagerShopDTO> managerShopDTOs = new java.util.ArrayList<>();
-        for(ManagerShop managerShop : managerShops){
+        for (ManagerShop managerShop : managerShops) {
             managerShopDTOs.add(convertEntityToDTO(managerShop));
         }
         managerShopDTOs.sort(Comparator.comparing(ManagerShopDTO::getShopName));
 
         return managerShopDTOs;
     }
-
 
 }

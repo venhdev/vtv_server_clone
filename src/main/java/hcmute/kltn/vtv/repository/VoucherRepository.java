@@ -1,9 +1,9 @@
-package hcmute.tlcn.vtc.repository;
+package hcmute.kltn.vtv.repository;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Shop;
-import hcmute.tlcn.vtc.model.entity.vtc.Voucher;
-import hcmute.tlcn.vtc.model.extra.Status;
-import hcmute.tlcn.vtc.model.extra.VoucherType;
+import hcmute.kltn.vtv.model.entity.vtc.Shop;
+import hcmute.kltn.vtv.model.entity.vtc.Voucher;
+import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.VoucherType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -26,7 +26,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     Optional<Voucher> findByCodeAndShopShopIdAndStatusNot(String code, Long shopId, Status status);
 
-
     Optional<List<Voucher>> findAllByShopShopIdAndStatus(Long shopId, Status status);
 
     Optional<List<Voucher>> findAllByCustomerUsernameAndStatusNot(String username, Status status);
@@ -35,11 +34,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     Optional<List<Voucher>> findAllByShopNullAndStatusNot(Status status);
 
-
     Optional<List<Voucher>> findAllByShopAndStatus(Shop shop, Status status);
 
     Optional<List<Voucher>> findAllByShopNullAndStatus(Status status);
-
 
     Optional<List<Voucher>> findAllByShopAndStatusNotAndType(Shop shop, Status status, VoucherType type);
 
@@ -54,7 +51,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
             "JOIN customer c ON cv.customer_id = c.customer_id " +
             "WHERE c.username = ?1 AND cv.used = ?2", nativeQuery = true)
     Optional<List<Voucher>> getAllByUsernameAndUsed(String username, boolean used);
-
-
 
 }

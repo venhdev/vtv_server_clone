@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository.manager;
+package hcmute.kltn.vtv.repository.manager;
 
-import hcmute.tlcn.vtc.model.entity.vtc.manager.ManagerProduct;
+import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerProduct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +19,8 @@ public interface ManagerProductRepository extends JpaRepository<ManagerProduct, 
 
     int countAllByLockAndProductNameContains(boolean lock, String productName);
 
-    Optional<Page<ManagerProduct>> findAllByLockAndProductNameContains(boolean lock, String productName, Pageable pageable);
+    Optional<Page<ManagerProduct>> findAllByLockAndProductNameContains(boolean lock, String productName,
+            Pageable pageable);
 
     boolean existsByProduct_ProductId(Long productId);
 }

@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.VoucherOrder;
+import hcmute.kltn.vtv.model.entity.vtc.VoucherOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class VoucherOrderDTO {
     private String voucherName;
 
     private boolean type; // true: voucher system, false: voucher shop
-
 
     private Long orderId;
 

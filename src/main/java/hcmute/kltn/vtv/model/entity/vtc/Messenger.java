@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,27 +26,23 @@ public class Messenger {
 
     private Date date;
 
-/*    private String time;
-
-    @PrePersist
-    public void prePersist() {
-        // Set the time property with the current timestamp when a new entity is persisted.
-        this.time = LocalDateTime.now().toString();
-    }*/
+    /*
+     * private String time;
+     * 
+     * @PrePersist
+     * public void prePersist() {
+     * // Set the time property with the current timestamp when a new entity is
+     * persisted.
+     * this.time = LocalDateTime.now().toString();
+     * }
+     */
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customer  customer;
+    private Customer customer;
 
     @ManyToOne
     @JoinColumn(name = "romchat_id")
     private RomChat romChat;
-
-
-
-
-
-
-
 
 }

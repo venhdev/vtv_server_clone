@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.location;
 
-import hcmute.tlcn.vtc.model.dto.location_dto.DistrictDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.location_dto.DistrictDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter
@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class DistrictResponse  extends ResponseAbstract {
+public class DistrictResponse extends ResponseAbstract {
 
     private DistrictDTO districtDTO;
 }

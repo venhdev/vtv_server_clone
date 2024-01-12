@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.entity.vtc.manager;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Customer;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,7 +26,6 @@ public class Manager {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")

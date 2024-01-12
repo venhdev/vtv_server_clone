@@ -1,9 +1,8 @@
 package hcmute.kltn.vtv.model.data.paging.response;
 
-
-import hcmute.tlcn.vtc.model.dto.OrderDTO;
-import hcmute.tlcn.vtc.model.dto.ShopDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.OrderDTO;
+import hcmute.kltn.vtv.model.dto.ShopDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;

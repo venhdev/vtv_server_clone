@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
-
-import hcmute.tlcn.vtc.model.dto.ProductDTO;
-import hcmute.tlcn.vtc.model.entity.vtc.manager.ManagerProduct;
+import hcmute.kltn.vtv.model.dto.ProductDTO;
+import hcmute.kltn.vtv.model.entity.vtc.manager.ManagerProduct;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -26,8 +25,7 @@ public class ManagerProductDTO {
     private String productName;
     private ProductDTO productDTO;
 
-
-    public static ManagerProductDTO convertEntityToDTO(ManagerProduct managerProduct){
+    public static ManagerProductDTO convertEntityToDTO(ManagerProduct managerProduct) {
         ManagerProductDTO managerProductDTO = new ManagerProductDTO();
         managerProductDTO.setManagerProductId(managerProduct.getManagerProductId());
         managerProductDTO.setNote(managerProduct.getNote());
@@ -40,12 +38,12 @@ public class ManagerProductDTO {
         return managerProductDTO;
     }
 
-    public static List<ManagerProductDTO> convertListEntitiesToListDTOs(List<ManagerProduct> managerProducts){
+    public static List<ManagerProductDTO> convertListEntitiesToListDTOs(List<ManagerProduct> managerProducts) {
         List<ManagerProductDTO> managerProductDTOs = new ArrayList<>();
-        for (ManagerProduct managerProduct : managerProducts){
+        for (ManagerProduct managerProduct : managerProducts) {
             managerProductDTOs.add(convertEntityToDTO(managerProduct));
         }
-        if (managerProductDTOs.isEmpty()){
+        if (managerProductDTOs.isEmpty()) {
             return Collections.emptyList();
         }
         managerProductDTOs.sort(Comparator.comparing(ManagerProductDTO::getProductName));

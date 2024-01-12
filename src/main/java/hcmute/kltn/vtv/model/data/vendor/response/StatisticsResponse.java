@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.vendor.response;
 
-import hcmute.tlcn.vtc.model.dto.StatisticsDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.StatisticsDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.Date;

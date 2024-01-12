@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.tlcn.vtc.model.dto.FollowedShopDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.FollowedShopDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;

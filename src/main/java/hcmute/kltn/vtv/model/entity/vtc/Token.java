@@ -1,7 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
-
-import hcmute.tlcn.vtc.model.extra.TokenType;
+import hcmute.kltn.vtv.model.extra.TokenType;
 import jakarta.persistence.*;
 import lombok.*;
 

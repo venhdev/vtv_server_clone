@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Comment;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Comment;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ public class CommentDTO {
 
     private String shopName;
 
-
     public static CommentDTO convertEntityToDTO(Comment comment) {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setCommentId(comment.getCommentId());
@@ -39,14 +38,14 @@ public class CommentDTO {
         if (comment.getShopName() != null) {
             commentDTO.setShopName(comment.getShopName());
         }
-//        commentDTO.setShopName(comment.getShopName().isEmpty() ? null : comment.getShopName());
+        // commentDTO.setShopName(comment.getShopName().isEmpty() ? null :
+        // comment.getShopName());
         return commentDTO;
     }
 
-
     public static List<CommentDTO> convertEntitiesToDTOs(List<Comment> comments) {
         List<CommentDTO> commentDTOs = new ArrayList<>();
-//        comments.forEach(comment -> commentDTOs.add(convertEntityToDTO(comment)));
+        // comments.forEach(comment -> commentDTOs.add(convertEntityToDTO(comment)));
         for (Comment comment : comments) {
             if (comment.getStatus() == Status.ACTIVE) {
                 commentDTOs.add(convertEntityToDTO(comment));

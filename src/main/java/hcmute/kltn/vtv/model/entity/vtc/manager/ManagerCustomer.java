@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.entity.vtc.manager;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.entity.vtc.Customer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 public class ManagerCustomer {
-
-
 
     @Id
     @Column(nullable = false, updatable = false)

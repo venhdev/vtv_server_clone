@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Review;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Review;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,6 @@ public class ReviewDTO {
 
     private List<CommentDTO> commentDTOs;
 
-
     public static ReviewDTO convertEntityToDTO(Review review) {
 
         ReviewDTO reviewDTO = new ReviewDTO();
@@ -51,14 +50,13 @@ public class ReviewDTO {
         reviewDTO.setUsername(review.getCustomer().getUsername());
         reviewDTO.setOrderItemId(review.getOrderItem().getOrderItemId());
         reviewDTO.setCreatedAt(Date.from(review.getCreateAt().atZone(ZoneId.systemDefault()).toInstant()));
-//        if (review.getComments() != null) {
-//            reviewDTO.setCommentDTOs(CommentDTO.convertEntitiesToDTOs(review.getComments()));
-//        }
-//        reviewDTO.setCountComment(reviewDTO.getCommentDTOs().size());
+        // if (review.getComments() != null) {
+        // reviewDTO.setCommentDTOs(CommentDTO.convertEntitiesToDTOs(review.getComments()));
+        // }
+        // reviewDTO.setCountComment(reviewDTO.getCommentDTOs().size());
 
         return reviewDTO;
     }
-
 
     public static List<ReviewDTO> convertEntitiesToDTOs(List<Review> reviews) {
         List<ReviewDTO> reviewDTOs = new ArrayList<>();

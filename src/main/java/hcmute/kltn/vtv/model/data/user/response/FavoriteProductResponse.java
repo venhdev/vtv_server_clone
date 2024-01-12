@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.tlcn.vtc.model.dto.FavoriteProductDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.FavoriteProductDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter
@@ -12,6 +12,5 @@ import lombok.*;
 public class FavoriteProductResponse extends ResponseAbstract {
 
     private FavoriteProductDTO favoriteProductDTO;
-
 
 }

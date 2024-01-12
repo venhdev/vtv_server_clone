@@ -1,9 +1,9 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.FavoriteProduct;
-import hcmute.tlcn.vtc.model.entity.vtc.Product;
-import hcmute.tlcn.vtc.model.entity.vtc.ProductVariant;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.FavoriteProduct;
+import hcmute.kltn.vtv.model.entity.vtc.Product;
+import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
@@ -29,7 +29,6 @@ public class FavoriteProductDTO {
         return favoriteProductDTO;
     }
 
-
     public static List<FavoriteProductDTO> convertToListDTO(List<FavoriteProduct> favoriteProducts) {
 
         List<FavoriteProductDTO> favoriteProductDTOS = new ArrayList<>();
@@ -43,7 +42,6 @@ public class FavoriteProductDTO {
 
     }
 
-
     private static ProductDTO getProductToDTO(Product product) {
         ModelMapper modelMapper = new ModelMapper();
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
@@ -54,6 +52,5 @@ public class FavoriteProductDTO {
         productDTO.setProductVariantDTOs(ProductVariantDTO.convertToListDTO(activeProductVariants));
         return productDTO;
     }
-
 
 }

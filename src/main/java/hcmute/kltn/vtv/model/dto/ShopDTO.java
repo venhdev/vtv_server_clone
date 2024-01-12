@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.Shop;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.Shop;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +44,7 @@ public class ShopDTO {
 
     private Long customerId;
 
-    //  private CustomerDTO customerDTO;
-
+    // private CustomerDTO customerDTO;
 
     public static ShopDTO convertEntityToDTO(Shop shop) {
         ShopDTO shopDTO = new ShopDTO();
@@ -72,7 +71,7 @@ public class ShopDTO {
         for (Shop shop : shops) {
             shopDTOs.add(convertEntityToDTO(shop));
         }
-        //shopDTOs.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
+        // shopDTOs.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
         return shopDTOs;
     }
 }

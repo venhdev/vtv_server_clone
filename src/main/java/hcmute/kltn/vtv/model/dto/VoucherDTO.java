@@ -1,9 +1,8 @@
 package hcmute.kltn.vtv.model.dto;
 
-
-import hcmute.tlcn.vtc.model.entity.vtc.Voucher;
-import hcmute.tlcn.vtc.model.extra.Status;
-import hcmute.tlcn.vtc.model.extra.VoucherType;
+import hcmute.kltn.vtv.model.entity.vtc.Voucher;
+import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.model.extra.VoucherType;
 import lombok.*;
 
 import java.util.*;
@@ -43,7 +42,6 @@ public class VoucherDTO {
 
     private String type;
 
-
     public static VoucherDTO convertEntityToDTO(Voucher voucher) {
         VoucherDTO voucherDTO = new VoucherDTO();
         voucherDTO.setVoucherId(voucher.getVoucherId());
@@ -72,13 +70,12 @@ public class VoucherDTO {
         if (voucher.getType().equals(VoucherType.SHIPPING)) {
             voucherDTO.setType("Giảm phí vận chuyển");
         }
-//        if (voucher.getType().equals(VoucherType.FREE_SHIP)){
-//            voucherDTO.setType("Miễn phí vận chuyển");
-//        }
+        // if (voucher.getType().equals(VoucherType.FREE_SHIP)){
+        // voucherDTO.setType("Miễn phí vận chuyển");
+        // }
 
         return voucherDTO;
     }
-
 
     public static List<VoucherDTO> convertToListDTO(List<Voucher> vouchers) {
         List<VoucherDTO> voucherDTOs = new ArrayList<>();
@@ -106,5 +103,3 @@ public class VoucherDTO {
     }
 
 }
-
-

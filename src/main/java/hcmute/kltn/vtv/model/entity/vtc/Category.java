@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.entity.vtc;
 
-import hcmute.tlcn.vtc.model.data.vendor.request.CategoryShopRequest;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.data.vendor.request.CategoryShopRequest;
+import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,10 +44,11 @@ public class Category {
     // @JsonIgnore
     private Category parent;
 
-//    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Category> children;
+    // @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, fetch =
+    // FetchType.EAGER)
+    // private List<Category> children;
 
-    public static Category convertToEntity(CategoryShopRequest request){
+    public static Category convertToEntity(CategoryShopRequest request) {
         Category category = new Category();
         category.setName(request.getName());
         category.setDescription(request.getDescription());

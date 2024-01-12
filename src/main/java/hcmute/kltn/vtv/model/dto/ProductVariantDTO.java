@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto;
 
-import hcmute.tlcn.vtc.model.entity.vtc.ProductVariant;
-import hcmute.tlcn.vtc.model.extra.Status;
+import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
+import hcmute.kltn.vtv.model.extra.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +36,6 @@ public class ProductVariantDTO {
 
     private List<AttributeDTO> attributeDTOs;
 
-
-
     public static ProductVariantDTO convertEntityToDTO(ProductVariant productVariant) {
         ProductVariantDTO productVariantDTO = new ProductVariantDTO();
         productVariantDTO.setProductVariantId(productVariant.getProductVariantId());
@@ -54,27 +52,25 @@ public class ProductVariantDTO {
         return productVariantDTO;
     }
 
-
     public static List<ProductVariantDTO> convertToListDTO(List<ProductVariant> productVariants) {
         List<ProductVariantDTO> productVariantDTOs = new ArrayList<>();
 
         for (ProductVariant productVariant : productVariants) {
 
             ProductVariantDTO productVariantDTO = convertEntityToDTO(productVariant);
-//            ProductVariantDTO productVariantDTO = new ProductVariantDTO();
-//            productVariantDTO.setProductVariantId(productVariant.getProductVariantId());
-//            productVariantDTO.setSku(productVariant.getSku());
-//            productVariantDTO.setImage(productVariant.getImage());
-//            productVariantDTO.setPrice(productVariant.getPrice());
-//            productVariantDTO.setQuantity(productVariant.getQuantity());
-//            productVariantDTO.setStatus(productVariant.getStatus());
-//            productVariantDTO.setAttributeDTOs(AttributeDTO.convertToListDTO(productVariant.getAttributes()));
-//            productVariantDTO.setProductId(productVariant.getProduct().getProductId());
+            // ProductVariantDTO productVariantDTO = new ProductVariantDTO();
+            // productVariantDTO.setProductVariantId(productVariant.getProductVariantId());
+            // productVariantDTO.setSku(productVariant.getSku());
+            // productVariantDTO.setImage(productVariant.getImage());
+            // productVariantDTO.setPrice(productVariant.getPrice());
+            // productVariantDTO.setQuantity(productVariant.getQuantity());
+            // productVariantDTO.setStatus(productVariant.getStatus());
+            // productVariantDTO.setAttributeDTOs(AttributeDTO.convertToListDTO(productVariant.getAttributes()));
+            // productVariantDTO.setProductId(productVariant.getProduct().getProductId());
 
             productVariantDTOs.add(productVariantDTO);
         }
         return productVariantDTOs;
     }
-
 
 }

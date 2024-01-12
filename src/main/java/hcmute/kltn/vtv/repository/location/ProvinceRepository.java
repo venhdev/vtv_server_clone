@@ -1,7 +1,6 @@
-package hcmute.tlcn.vtc.repository.location;
+package hcmute.kltn.vtv.repository.location;
 
-import hcmute.tlcn.vtc.model.entity.location.AdministrativeRegion;
-import hcmute.tlcn.vtc.model.entity.location.Province;
+import hcmute.kltn.vtv.model.entity.location.Province;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,8 +15,5 @@ public interface ProvinceRepository extends JpaRepository<Province, String> {
     Optional<List<Province>> findAllByAdministrativeUnit_AdministrativeUnitId(Integer administrativeUnitId);
 
     Optional<Province> findByProvinceCode(String provinceCode);
-
-
-
 
 }

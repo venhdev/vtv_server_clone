@@ -1,10 +1,9 @@
-package hcmute.tlcn.vtc.repository.location;
+package hcmute.kltn.vtv.repository.location;
 
-import hcmute.tlcn.vtc.model.entity.location.AdministrativeUnit;
+import hcmute.kltn.vtv.model.entity.location.AdministrativeUnit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

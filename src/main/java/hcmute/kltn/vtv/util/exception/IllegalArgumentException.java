@@ -1,4 +1,4 @@
-package hcmute.tlcn.vtc.util.exception;
+package hcmute.kltn.vtv.util.exception;
 
 public class IllegalArgumentException extends RuntimeException {
     public IllegalArgumentException(String message) {

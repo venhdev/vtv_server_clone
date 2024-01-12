@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.guest;
 
-import hcmute.tlcn.vtc.model.dto.ReviewDTO;
-import hcmute.tlcn.vtc.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.model.dto.ReviewDTO;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.List;

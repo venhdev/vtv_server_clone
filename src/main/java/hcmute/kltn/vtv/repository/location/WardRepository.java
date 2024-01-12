@@ -1,6 +1,6 @@
-package hcmute.tlcn.vtc.repository.location;
+package hcmute.kltn.vtv.repository.location;
 
-import hcmute.tlcn.vtc.model.entity.location.Ward;
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
