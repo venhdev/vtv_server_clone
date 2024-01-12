@@ -40,6 +40,8 @@ public class OrderDTO {
 
     private Long paymentTotal;
 
+    private String codeWard;
+
     private Status status;
 
     private AddressDTO addressDTO;
@@ -78,6 +80,7 @@ public class OrderDTO {
         orderDTO.setOrderDate(order.getOrderDate());
         orderDTO.setTotalPrice(order.getTotalPrice());
         orderDTO.setShippingFee(order.getShippingFee());
+        orderDTO.setCodeWard(order.getCodeWard());
 
         orderDTO.setOrderItemDTOs(OrderItemDTO.convertListEntityToListDTO(order.getOrderItems()));
         orderDTO.setAddressDTO(AddressDTO.convertEntityToDTO(order.getAddress()));

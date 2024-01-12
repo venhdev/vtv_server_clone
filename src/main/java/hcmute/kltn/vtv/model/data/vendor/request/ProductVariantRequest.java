@@ -20,6 +20,8 @@ public class ProductVariantRequest {
 
     private String image;
 
+    private Long originalPrice;
+
     private Long price;
 
     private int quantity;
@@ -30,16 +32,31 @@ public class ProductVariantRequest {
         if (sku == null || sku.isEmpty()) {
             throw new BadRequestException("Mã biến thể sản phẩm không được để trống!");
         }
+
+        if (originalPrice == null) {
+            throw new BadRequestException("Giá gốc sản phẩm không được để trống!");
+        }
+
+        if (originalPrice < 0) {
+            throw new BadRequestException("Giá gốc sản phẩm không được nhỏ hơn 0!");
+        }
+
+        if (originalPrice < price) {
+            throw new BadRequestException("Giá gốc sản phẩm không được nhỏ hơn giá bán!");
+        }
+
         if (price == null) {
             throw new BadRequestException("Giá sản phẩm không được để trống!");
-        }
-        if (quantity == 0) {
-            throw new BadRequestException("Số lượng sản phẩm không được để trống!");
         }
 
         if (price < 0) {
             throw new BadRequestException("Giá sản phẩm không được nhỏ hơn 0!");
         }
+
+        if (quantity == 0) {
+            throw new BadRequestException("Số lượng sản phẩm không được để trống!");
+        }
+
         if (quantity < 0) {
             throw new BadRequestException("Số lượng sản phẩm không được nhỏ hơn 0!");
         }

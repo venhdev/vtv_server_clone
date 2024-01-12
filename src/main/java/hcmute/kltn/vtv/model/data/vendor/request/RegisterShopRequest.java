@@ -22,6 +22,8 @@ public class RegisterShopRequest {
 
     private String ward;
 
+    private String codeWard;
+
     private String phone;
 
     private String email;
@@ -57,6 +59,10 @@ public class RegisterShopRequest {
             throw new BadRequestException("Phường/Xã không được để trống!");
         }
 
+        if (this.codeWard == null || this.codeWard.isEmpty()) {
+            throw new BadRequestException("Mã phường/Xã không được để trống!");
+        }
+
         if (this.phone == null || this.phone.isEmpty()) {
             throw new BadRequestException("Số điện thoại cửa hàng không được để trống!");
         }
@@ -89,11 +95,6 @@ public class RegisterShopRequest {
             throw new BadRequestException("Ảnh đại diện không được để trống!");
         }
 
-        // if (this.status == null || Status.isValidStatus(String.valueOf(this.status)))
-        // {
-        // throw new BadRequestException("Trạng thái không hợp lệ!");
-        // }
-
         if (!Pattern.matches("[0-9]+", this.getPhone())) {
             throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
         }
@@ -115,6 +116,10 @@ public class RegisterShopRequest {
         this.openTime = this.openTime.trim();
         this.closeTime = this.closeTime.trim();
         this.username = this.username.trim();
+        this.province = this.province.trim();
+        this.district = this.district.trim();
+        this.ward = this.ward.trim();
+        this.codeWard = this.codeWard.trim();
     }
 
 }

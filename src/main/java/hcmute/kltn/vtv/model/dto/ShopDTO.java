@@ -28,6 +28,8 @@ public class ShopDTO {
 
     private String ward;
 
+    private String codeWard;
+
     private String phone;
 
     private String email;
@@ -54,6 +56,7 @@ public class ShopDTO {
         shopDTO.setProvince(shop.getProvince());
         shopDTO.setDistrict(shop.getDistrict());
         shopDTO.setWard(shop.getWard());
+        shopDTO.setCodeWard(shop.getCodeWard());
         shopDTO.setPhone(shop.getPhone());
         shopDTO.setEmail(shop.getEmail());
         shopDTO.setAvatar(shop.getAvatar());

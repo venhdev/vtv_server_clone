@@ -31,6 +31,8 @@ public class Address {
 
     private String phone;
 
+    private String codeWard;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 

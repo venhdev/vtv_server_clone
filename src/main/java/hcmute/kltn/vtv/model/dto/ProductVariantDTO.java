@@ -22,6 +22,8 @@ public class ProductVariantDTO {
 
     private String image;
 
+    private Long originalPrice;
+
     private Long price;
 
     private int quantity;
@@ -41,6 +43,7 @@ public class ProductVariantDTO {
         productVariantDTO.setProductVariantId(productVariant.getProductVariantId());
         productVariantDTO.setSku(productVariant.getSku());
         productVariantDTO.setImage(productVariant.getImage());
+        productVariantDTO.setOriginalPrice(productVariant.getOriginalPrice());
         productVariantDTO.setPrice(productVariant.getPrice());
         productVariantDTO.setQuantity(productVariant.getQuantity());
         productVariantDTO.setStatus(productVariant.getStatus());

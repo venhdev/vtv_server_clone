@@ -24,8 +24,10 @@ public class Product {
 
     private String image;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String information;
 
     private Long sold;

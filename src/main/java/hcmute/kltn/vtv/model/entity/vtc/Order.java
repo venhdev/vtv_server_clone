@@ -46,6 +46,8 @@ public class Order {
 
     private String shippingMethod;
 
+    private String codeWard;
+
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;

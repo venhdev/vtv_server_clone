@@ -27,6 +27,8 @@ public class OrderRequest {
 
     private String note;
 
+    private String codeWard;
+
     public static void validate(OrderRequest request) {
 
         if (request.getCartIds() == null || request.getCartIds().isEmpty()) {
@@ -54,6 +56,10 @@ public class OrderRequest {
                     "Phương thức vận chuyển không hợp lệ! Hiện tại chỉ hỗ trợ GHN, GHTK, EXPRESS");
         }
 
+        if (request.getCodeWard() == null || request.getCodeWard().isEmpty()) {
+            throw new BadRequestException("Mã phường xã không được để trống!");
+        }
+
         request.trim();
     }
 
@@ -62,6 +68,7 @@ public class OrderRequest {
         this.note = this.note.trim();
         this.paymentMethod = this.paymentMethod.trim();
         this.shippingMethod = this.shippingMethod.trim();
+        this.codeWard = this.codeWard.trim();
     }
 
 }

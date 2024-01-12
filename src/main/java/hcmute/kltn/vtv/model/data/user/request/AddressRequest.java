@@ -35,6 +35,8 @@ public class AddressRequest {
 
     private Status status;
 
+    private String codeWard;
+
     public void validate() {
 
         if (username == null || username.isEmpty()) {
@@ -71,6 +73,10 @@ public class AddressRequest {
 
         if (phone.length() < 9 || phone.length() > 11) {
             throw new BadRequestException("Số điện thoại không hợp lệ.");
+        }
+
+        if (codeWard == null || codeWard.isEmpty()) {
+            throw new BadRequestException("Mã xã/phường không được để trống.");
         }
 
         // if (addressDTO.getProvince() == null || addressDTO.getProvince().isEmpty()) {

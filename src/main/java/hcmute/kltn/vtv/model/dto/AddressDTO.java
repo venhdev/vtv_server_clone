@@ -30,10 +30,7 @@ public class AddressDTO {
 
     private Status status;
 
-    // public static Address convertToEntity(AddressDTO addressDTO) {
-    // ModelMapper modelMapper = new ModelMapper();
-    // return modelMapper.map(addressDTO, Address.class);
-    // }
+    private String codeWard;
 
     public static AddressDTO convertEntityToDTO(Address address) {
         AddressDTO addressDTO = new AddressDTO();
@@ -45,6 +42,7 @@ public class AddressDTO {
         addressDTO.setFullName(address.getFullName());
         addressDTO.setPhone(address.getPhone());
         addressDTO.setStatus(address.getStatus());
+        addressDTO.setCodeWard(address.getCodeWard());
         return addressDTO;
 
     }

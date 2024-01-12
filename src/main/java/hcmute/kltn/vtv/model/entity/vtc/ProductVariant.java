@@ -24,6 +24,8 @@ public class ProductVariant {
 
     private String image;
 
+    private Long originalPrice;
+
     private Long price;
 
     private int quantity;

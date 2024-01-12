@@ -29,6 +29,8 @@ public class Shop {
 
     private String ward;
 
+    private String codeWard;
+
     private String phone;
 
     private String email;
