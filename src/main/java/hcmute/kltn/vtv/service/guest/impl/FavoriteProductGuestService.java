@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
-import hcmute.kltn.vtv.repository.FavoriteProductRepository;
+import hcmute.kltn.vtv.repository.user.FavoriteProductRepository;
 import hcmute.kltn.vtv.service.guest.IFavoriteProductGuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

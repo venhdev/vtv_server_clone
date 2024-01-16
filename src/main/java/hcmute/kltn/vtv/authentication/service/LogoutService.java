@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.authentication.service;
 
-import hcmute.kltn.vtv.repository.TokenRepository;
+import hcmute.kltn.vtv.repository.user.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

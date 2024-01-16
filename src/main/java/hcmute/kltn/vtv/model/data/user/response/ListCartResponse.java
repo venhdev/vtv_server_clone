@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.kltn.vtv.model.dto.ListCartByShopDTO;
+import hcmute.kltn.vtv.model.dto.user.ListCartByShopDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

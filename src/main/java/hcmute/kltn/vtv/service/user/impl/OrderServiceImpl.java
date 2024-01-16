@@ -1,13 +1,13 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.model.entity.user.*;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.CreateOrderUpdateRequest;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
-import hcmute.kltn.vtv.model.dto.OrderDTO;
-import hcmute.kltn.vtv.model.entity.vtc.*;
+import hcmute.kltn.vtv.model.dto.user.OrderDTO;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.OrderRepository;
+import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.user.*;
 import hcmute.kltn.vtv.shippingstrategy.GiaoHangHoaTocShipping;
 import hcmute.kltn.vtv.shippingstrategy.GiaoHangNhanhShipping;

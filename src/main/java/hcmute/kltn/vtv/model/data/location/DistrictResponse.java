@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.location;
 
-import hcmute.kltn.vtv.model.dto.location_dto.DistrictDTO;
+import hcmute.kltn.vtv.model.dto.location.DistrictDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

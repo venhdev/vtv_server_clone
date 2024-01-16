@@ -2,7 +2,7 @@ package hcmute.kltn.vtv.configuration;
 
 import hcmute.kltn.vtv.authentication.request.RegisterRequest;
 import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
-import hcmute.kltn.vtv.repository.CustomerRepository;
+import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

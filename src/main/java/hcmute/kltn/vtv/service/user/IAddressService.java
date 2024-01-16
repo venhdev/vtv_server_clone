@@ -4,7 +4,7 @@ import hcmute.kltn.vtv.model.data.user.request.AddressRequest;
 import hcmute.kltn.vtv.model.data.user.request.AddressStatusRequest;
 import hcmute.kltn.vtv.model.data.user.response.AddressResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListAddressResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Address;
+import hcmute.kltn.vtv.model.entity.user.Address;
 
 public interface IAddressService {
     AddressResponse addNewAddress(AddressRequest request);

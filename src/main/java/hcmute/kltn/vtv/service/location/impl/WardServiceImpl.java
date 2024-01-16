@@ -2,7 +2,7 @@ package hcmute.kltn.vtv.service.location.impl;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.location.ListWardResponse;
-import hcmute.kltn.vtv.model.dto.location_dto.WardDTO;
+import hcmute.kltn.vtv.model.dto.location.WardDTO;
 import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.repository.location.WardRepository;
 import hcmute.kltn.vtv.service.location.IWardService;

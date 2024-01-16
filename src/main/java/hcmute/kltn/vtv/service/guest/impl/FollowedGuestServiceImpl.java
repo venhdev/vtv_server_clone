@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
-import hcmute.kltn.vtv.repository.FollowedShopRepository;
+import hcmute.kltn.vtv.repository.user.FollowedShopRepository;
 import hcmute.kltn.vtv.service.guest.IFollowedGuestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

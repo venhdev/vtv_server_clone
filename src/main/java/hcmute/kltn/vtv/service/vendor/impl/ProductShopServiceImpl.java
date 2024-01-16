@@ -1,15 +1,18 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.repository.vtv.AttributeRepository;
+import hcmute.kltn.vtv.repository.vtv.BrandRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductVariantRepository;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ProductResponse;
-import hcmute.kltn.vtv.model.dto.ProductDTO;
-import hcmute.kltn.vtv.model.dto.ProductVariantDTO;
-import hcmute.kltn.vtv.model.entity.vtc.*;
+import hcmute.kltn.vtv.model.dto.vtv.ProductDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ProductVariantDTO;
+import hcmute.kltn.vtv.model.entity.vtv.*;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.*;
 import hcmute.kltn.vtv.service.guest.IReviewService;
 import hcmute.kltn.vtv.service.vendor.ICategoryShopService;
 import hcmute.kltn.vtv.service.vendor.IProductShopService;

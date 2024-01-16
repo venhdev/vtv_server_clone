@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.manager.response;
 
-import hcmute.kltn.vtv.model.dto.ShopDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

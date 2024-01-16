@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
-import hcmute.kltn.vtv.repository.CommentRepository;
-import hcmute.kltn.vtv.repository.ReviewRepository;
+import hcmute.kltn.vtv.repository.user.CommentRepository;
+import hcmute.kltn.vtv.repository.user.ReviewRepository;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.vendor.ICommentShopService;
 import lombok.RequiredArgsConstructor;

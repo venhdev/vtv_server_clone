@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.request;
 
-import hcmute.kltn.vtv.model.dto.AddressDTO;
+import hcmute.kltn.vtv.model.dto.user.AddressDTO;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;

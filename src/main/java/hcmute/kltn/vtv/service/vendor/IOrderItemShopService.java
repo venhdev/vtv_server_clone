@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.vendor;
 
-import hcmute.kltn.vtv.model.entity.vtc.Order;
-import hcmute.kltn.vtv.model.entity.vtc.OrderItem;
+import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.OrderItem;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.transaction.annotation.Transactional;
 

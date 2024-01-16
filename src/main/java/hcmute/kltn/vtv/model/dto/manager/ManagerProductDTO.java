@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
-import hcmute.kltn.vtv.model.dto.ProductDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ProductDTO;
 import hcmute.kltn.vtv.model.entity.manager.ManagerProduct;
 import lombok.*;
 

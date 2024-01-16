@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.service.user;
 
 import hcmute.kltn.vtv.model.data.user.response.OrderItemResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Order;
-import hcmute.kltn.vtv.model.entity.vtc.OrderItem;
+import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.OrderItem;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

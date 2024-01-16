@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.user;
 
-import hcmute.kltn.vtv.model.entity.vtc.Order;
-import hcmute.kltn.vtv.model.entity.vtc.VoucherOrder;
+import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.VoucherOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface IVoucherOrderService {

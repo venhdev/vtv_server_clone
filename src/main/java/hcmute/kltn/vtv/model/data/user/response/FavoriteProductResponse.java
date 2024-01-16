@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.kltn.vtv.model.dto.FavoriteProductDTO;
+import hcmute.kltn.vtv.model.dto.user.FavoriteProductDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

@@ -2,8 +2,8 @@ package hcmute.kltn.vtv.service.user.impl;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.ForgotPasswordResponse;
-import hcmute.kltn.vtv.model.dto.MailDTO;
-import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.dto.user.MailDTO;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.user.IMailService;
 import hcmute.kltn.vtv.service.user.IOtpService;

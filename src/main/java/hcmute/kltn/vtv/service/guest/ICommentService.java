@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.guest;
 
 import hcmute.kltn.vtv.model.data.guest.ListCommentResponse;
-import hcmute.kltn.vtv.model.dto.CommentDTO;
+import hcmute.kltn.vtv.model.dto.user.CommentDTO;
 
 import java.util.List;
 

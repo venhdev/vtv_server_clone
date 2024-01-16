@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.vendor;
 
 import hcmute.kltn.vtv.model.data.vendor.request.ProductVariantRequest;
-import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
+import hcmute.kltn.vtv.model.entity.vtv.ProductVariant;
 
 import java.util.List;
 

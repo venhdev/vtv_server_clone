@@ -1,13 +1,13 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
-import hcmute.kltn.vtv.model.entity.vtc.Cart;
-import hcmute.kltn.vtv.model.entity.vtc.Order;
-import hcmute.kltn.vtv.model.entity.vtc.OrderItem;
+import hcmute.kltn.vtv.model.entity.user.Cart;
+import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.OrderItem;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.CartRepository;
-import hcmute.kltn.vtv.repository.OrderItemRepository;
-import hcmute.kltn.vtv.repository.OrderRepository;
+import hcmute.kltn.vtv.repository.user.CartRepository;
+import hcmute.kltn.vtv.repository.user.OrderItemRepository;
+import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.admin.IVoucherAdminService;
 import hcmute.kltn.vtv.service.user.*;
 import hcmute.kltn.vtv.service.vendor.IOrderItemShopService;

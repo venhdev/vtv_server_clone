@@ -5,7 +5,7 @@ import hcmute.kltn.vtv.model.data.user.request.ForgotPasswordRequest;
 import hcmute.kltn.vtv.model.data.user.request.ProfileCustomerRequest;
 import hcmute.kltn.vtv.model.data.user.response.ForgotPasswordResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 
 public interface ICustomerService {
     Customer getCustomerByUsername(String username);

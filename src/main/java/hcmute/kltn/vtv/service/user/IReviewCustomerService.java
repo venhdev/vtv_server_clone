@@ -2,7 +2,7 @@ package hcmute.kltn.vtv.service.user;
 
 import hcmute.kltn.vtv.model.data.user.request.ReviewRequest;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Review;
+import hcmute.kltn.vtv.model.entity.user.Review;
 
 public interface IReviewCustomerService {
     ReviewResponse addNewReview(ReviewRequest request, String username);

@@ -1,11 +1,11 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.repository.vtv.ProductVariantRepository;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductVariantRequest;
-import hcmute.kltn.vtv.model.entity.vtc.Attribute;
-import hcmute.kltn.vtv.model.entity.vtc.ProductVariant;
+import hcmute.kltn.vtv.model.entity.vtv.Attribute;
+import hcmute.kltn.vtv.model.entity.vtv.ProductVariant;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.*;
 import hcmute.kltn.vtv.service.vendor.IAttributeShopService;
 import hcmute.kltn.vtv.service.vendor.IProductVariantShopService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
-import hcmute.kltn.vtv.repository.CategoryRepository;
+import hcmute.kltn.vtv.repository.vtv.CategoryRepository;
 import hcmute.kltn.vtv.service.manager.IManagerCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

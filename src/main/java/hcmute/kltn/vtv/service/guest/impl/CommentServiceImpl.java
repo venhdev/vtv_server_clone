@@ -2,10 +2,10 @@ package hcmute.kltn.vtv.service.guest.impl;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListCommentResponse;
-import hcmute.kltn.vtv.model.dto.CommentDTO;
-import hcmute.kltn.vtv.model.entity.vtc.Comment;
+import hcmute.kltn.vtv.model.dto.user.CommentDTO;
+import hcmute.kltn.vtv.model.entity.user.Comment;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.CommentRepository;
+import hcmute.kltn.vtv.repository.user.CommentRepository;
 import hcmute.kltn.vtv.service.guest.ICommentService;
 import hcmute.kltn.vtv.service.user.IReviewCustomerService;
 import lombok.RequiredArgsConstructor;

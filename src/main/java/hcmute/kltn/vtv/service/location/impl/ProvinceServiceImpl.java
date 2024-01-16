@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.location.impl;
 
 import hcmute.kltn.vtv.model.data.location.ListProvinceResponse;
-import hcmute.kltn.vtv.model.dto.location_dto.ProvinceDTO;
+import hcmute.kltn.vtv.model.dto.location.ProvinceDTO;
 import hcmute.kltn.vtv.model.entity.location.Province;
 import hcmute.kltn.vtv.repository.location.ProvinceRepository;
 import hcmute.kltn.vtv.service.location.IProvinceService;

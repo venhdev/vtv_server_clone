@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.model.data.guest;
 
-import hcmute.kltn.vtv.model.dto.CategoryDTO;
-import hcmute.kltn.vtv.model.dto.ProductDTO;
-import hcmute.kltn.vtv.model.dto.ShopDTO;
+import hcmute.kltn.vtv.model.dto.vtv.CategoryDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ProductDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

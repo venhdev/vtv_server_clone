@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.admin;
 
-import hcmute.kltn.vtv.model.entity.vtc.Category;
+import hcmute.kltn.vtv.model.entity.vtv.Category;
 import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 import org.modelmapper.ModelMapper;

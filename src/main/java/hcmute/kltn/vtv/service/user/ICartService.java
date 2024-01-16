@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.service.user;
 import hcmute.kltn.vtv.model.data.user.request.CartRequest;
 import hcmute.kltn.vtv.model.data.user.response.CartResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListCartResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Cart;
+import hcmute.kltn.vtv.model.entity.user.Cart;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

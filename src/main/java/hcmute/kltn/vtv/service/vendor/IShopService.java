@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.service.vendor;
 import hcmute.kltn.vtv.model.data.vendor.request.RegisterShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.request.UpdateShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ShopResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Shop;
+import hcmute.kltn.vtv.model.entity.vtv.Shop;
 import hcmute.kltn.vtv.model.extra.Status;
 
 public interface IShopService {

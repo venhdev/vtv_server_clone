@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.guest;
 
-import hcmute.kltn.vtv.model.dto.CommentDTO;
+import hcmute.kltn.vtv.model.dto.user.CommentDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

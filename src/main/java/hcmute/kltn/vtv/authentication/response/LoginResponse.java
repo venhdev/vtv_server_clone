@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.authentication.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import hcmute.kltn.vtv.model.dto.CustomerDTO;
+import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

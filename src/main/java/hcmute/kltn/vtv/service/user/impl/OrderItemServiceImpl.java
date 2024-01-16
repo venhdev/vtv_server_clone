@@ -1,13 +1,16 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.model.entity.user.Cart;
+import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.OrderItem;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.OrderItemResponse;
-import hcmute.kltn.vtv.model.entity.vtc.*;
+import hcmute.kltn.vtv.model.entity.vtv.*;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.CartRepository;
-import hcmute.kltn.vtv.repository.OrderItemRepository;
-import hcmute.kltn.vtv.repository.ProductRepository;
-import hcmute.kltn.vtv.repository.ProductVariantRepository;
+import hcmute.kltn.vtv.repository.user.CartRepository;
+import hcmute.kltn.vtv.repository.user.OrderItemRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductVariantRepository;
 import hcmute.kltn.vtv.service.user.ICartService;
 import hcmute.kltn.vtv.service.user.IOrderItemService;
 import lombok.RequiredArgsConstructor;

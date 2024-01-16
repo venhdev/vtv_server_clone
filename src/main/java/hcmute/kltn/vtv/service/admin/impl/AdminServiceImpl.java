@@ -2,9 +2,9 @@ package hcmute.kltn.vtv.service.admin.impl;
 
 import hcmute.kltn.vtv.authentication.request.RegisterRequest;
 import hcmute.kltn.vtv.authentication.response.RegisterResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Customer;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Role;
-import hcmute.kltn.vtv.repository.CustomerRepository;
+import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.service.admin.IAdminService;
 import hcmute.kltn.vtv.util.exception.DuplicateEntryException;
 import lombok.RequiredArgsConstructor;

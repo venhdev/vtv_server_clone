@@ -3,16 +3,17 @@ package hcmute.kltn.vtv.service.guest.impl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListVoucherResponse;
 import hcmute.kltn.vtv.model.data.guest.VoucherResponse;
-import hcmute.kltn.vtv.model.dto.VoucherDTO;
-import hcmute.kltn.vtv.model.entity.vtc.Voucher;
+import hcmute.kltn.vtv.model.dto.vtv.VoucherDTO;
+import hcmute.kltn.vtv.model.entity.vtv.Voucher;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.VoucherType;
-import hcmute.kltn.vtv.repository.VoucherRepository;
+import hcmute.kltn.vtv.repository.vtv.VoucherRepository;
 import hcmute.kltn.vtv.service.guest.IVoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,7 +30,11 @@ public class VoucherServiceImpl implements IVoucherService {
 
     @Override
     public ListVoucherResponse listVoucherByShopId(Long shopId) {
-        List<Voucher> vouchers = voucherRepository.findAllByShopShopIdAndStatus(shopId, Status.ACTIVE)
+        Date date = Date.from(new Date().toInstant());
+
+        List<Voucher> vouchers = voucherRepository
+                .findAllByShopShopIdAndStatusAndStartDateBeforeAndEndDateAfter(
+                        shopId, Status.ACTIVE, date, date)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá trên cửa hàng!"));
         return listVoucherResponse(vouchers, "Lấy danh sách mã giảm giá trong cửa hàng thành công.");
     }
@@ -44,7 +49,9 @@ public class VoucherServiceImpl implements IVoucherService {
 
     @Override
     public ListVoucherResponse listVoucherSystem() {
-        List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatus(Status.ACTIVE)
+        Date date = Date.from(new Date().toInstant());
+        List<Voucher> vouchers = voucherRepository.findAllByShopNullAndStatusAndStartDateBeforeAndEndDateAfter(
+                Status.ACTIVE, date, date)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
         return listVoucherResponse(vouchers, "Lấy danh sách mã giảm giá cửa hệ thống thành công.");

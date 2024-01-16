@@ -1,13 +1,15 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.repository.vtv.AttributeRepository;
+import hcmute.kltn.vtv.repository.user.CustomerRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductRepository;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.AttributeRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.AttributeResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListAttributeResponse;
-import hcmute.kltn.vtv.model.dto.AttributeDTO;
-import hcmute.kltn.vtv.model.entity.vtc.Attribute;
-import hcmute.kltn.vtv.model.entity.vtc.Shop;
-import hcmute.kltn.vtv.repository.*;
+import hcmute.kltn.vtv.model.dto.vtv.AttributeDTO;
+import hcmute.kltn.vtv.model.entity.vtv.Attribute;
+import hcmute.kltn.vtv.model.entity.vtv.Shop;
 import hcmute.kltn.vtv.service.user.impl.CustomerServiceImpl;
 import hcmute.kltn.vtv.service.vendor.IAttributeShopService;
 import hcmute.kltn.vtv.service.vendor.IShopService;

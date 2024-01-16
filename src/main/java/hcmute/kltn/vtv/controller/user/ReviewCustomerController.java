@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.controller.user;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ReviewRequest;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
-import hcmute.kltn.vtv.repository.ReviewRepository;
+import hcmute.kltn.vtv.repository.user.ReviewRepository;
 import hcmute.kltn.vtv.service.user.IReviewCustomerService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

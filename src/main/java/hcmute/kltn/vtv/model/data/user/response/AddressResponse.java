@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.kltn.vtv.model.dto.AddressDTO;
-import hcmute.kltn.vtv.model.dto.CustomerDTO;
+import hcmute.kltn.vtv.model.dto.user.AddressDTO;
+import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

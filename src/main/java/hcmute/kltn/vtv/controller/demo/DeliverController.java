@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.controller.demo;
 
 
-import hcmute.kltn.vtv.model.entity.vtc.Deliver;
-import io.swagger.v3.oas.annotations.Hidden;
+import hcmute.kltn.vtv.model.entity.shipping.Deliver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

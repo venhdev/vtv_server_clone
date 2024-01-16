@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
-import hcmute.kltn.vtv.repository.ProductVariantRepository;
+import hcmute.kltn.vtv.repository.vtv.ProductVariantRepository;
 import hcmute.kltn.vtv.service.guest.IProductVariantService;
 import hcmute.kltn.vtv.service.vendor.IAttributeShopService;
 import lombok.RequiredArgsConstructor;

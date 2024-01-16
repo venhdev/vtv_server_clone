@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.service.user.impl;
 
-import hcmute.kltn.vtv.model.entity.vtc.RomChat;
+import hcmute.kltn.vtv.model.entity.user.RomChat;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.RomChatRepository;
+import hcmute.kltn.vtv.repository.user.RomChatRepository;
 import hcmute.kltn.vtv.service.user.IRomChatService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

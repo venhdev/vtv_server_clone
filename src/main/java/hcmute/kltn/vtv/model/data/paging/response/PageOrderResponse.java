@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.data.paging.response;
 
-import hcmute.kltn.vtv.model.dto.OrderDTO;
-import hcmute.kltn.vtv.model.dto.ShopDTO;
+import hcmute.kltn.vtv.model.dto.user.OrderDTO;
+import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 

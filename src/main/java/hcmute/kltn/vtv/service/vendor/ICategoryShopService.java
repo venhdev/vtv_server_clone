@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.service.vendor;
 import hcmute.kltn.vtv.model.data.vendor.request.CategoryShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.CategoryShopResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListCategoryShopResponse;
-import hcmute.kltn.vtv.model.entity.vtc.Category;
+import hcmute.kltn.vtv.model.entity.vtv.Category;
 import hcmute.kltn.vtv.model.extra.Status;
 
 public interface ICategoryShopService {
