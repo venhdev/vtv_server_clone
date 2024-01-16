@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -22,8 +23,6 @@ public class Transport {
 
     private String wardCodeShop;
 
-    private String usernameShipper;
-
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
@@ -35,7 +34,8 @@ public class Transport {
     @JoinColumn(name = "order_id")
     private Order order;
 
-
-
-
+    @OneToMany(mappedBy = "transport",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    private List<TransportHandle> transportHandles;
 }

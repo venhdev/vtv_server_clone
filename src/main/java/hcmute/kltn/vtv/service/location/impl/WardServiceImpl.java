@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.model.dto.location_dto.WardDTO;
 import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.repository.location.WardRepository;
 import hcmute.kltn.vtv.service.location.IWardService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WardServiceImpl implements IWardService {
     private final WardRepository wardRepository;
+
+    @Override
+    public String getWardNameByWardCode(String wardCode) {
+        Ward ward = wardRepository.findByWardCode(wardCode)
+                .orElseThrow(() -> new NotFoundException(
+                        "Không tìm thấy phường xã nào có mã là: " + wardCode));
+        return ward.getName();
+    }
 
     @Override
     public ListWardResponse getAllWardByDistrictCode(String districtCode) {

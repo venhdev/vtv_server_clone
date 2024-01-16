@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.entity.vtc.Deliver;
 import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +55,19 @@ public class DeliverDTO {
         deliverDTO.setDistrictWork(deliver.getDistrictWork().getName());
         deliverDTO.setWardsWork(WardDTO.convertEntitiesToNames(deliver.getWardsWork()));
         return deliverDTO;
+    }
+
+
+    public static List<DeliverDTO> convertEntitiesToDTOs(List<Deliver> delivers) {
+        List<DeliverDTO> deliverDTOs = new ArrayList<>();
+        for (Deliver deliver : delivers) {
+            deliverDTOs.add(convertEntityToDTO(deliver));
+        }
+
+        if (!deliverDTOs.isEmpty()){
+            deliverDTOs.sort((o1, o2) -> o1.getUsernameAdded().compareTo(o2.getUsernameAdded()));
+        }
+        return deliverDTOs;
     }
 
 }

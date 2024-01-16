@@ -19,19 +19,19 @@ public class TransportDTO {
 
     private String wardCodeShop;
 
-    private String usernameShipper;
-
     private Long orderId;
 
     private TransportStatus transportStatus;
+
+    private List<TransportHandleDTO> transportHandleDTOs;
 
     public static TransportDTO convertEntityToDTO(Transport transport) {
         TransportDTO transportDTO = new TransportDTO();
         transportDTO.setTransportId(transport.getTransportId());
         transportDTO.setWardCodeShop(transport.getWardCodeShop());
-        transportDTO.setUsernameShipper(transport.getUsernameShipper());
         transportDTO.setTransportStatus(transport.getTransportStatus());
         transportDTO.setOrderId(transport.getOrder().getOrderId());
+        transportDTO.setTransportHandleDTOs(TransportHandleDTO.convertEntitiesToDTOs(transport.getTransportHandles()));
         return transportDTO;
     }
 
