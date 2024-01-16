@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.entity.shipping;
 
 import hcmute.kltn.vtv.model.entity.location.District;
 import hcmute.kltn.vtv.model.entity.location.Ward;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +13,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -33,6 +33,8 @@ public class Deliver {
 
     private String ward;
 
+    private String wardCode;
+
     private String fullAddress;
 
     private String typeWork;
@@ -46,8 +48,13 @@ public class Deliver {
 
     private LocalDateTime updateAt;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "district_code")
+    @JoinColumn(name = "code")
     private District districtWork;
 
     @ManyToMany(fetch = FetchType.EAGER)

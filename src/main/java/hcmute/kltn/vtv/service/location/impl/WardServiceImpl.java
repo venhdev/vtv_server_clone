@@ -46,4 +46,23 @@ public class WardServiceImpl implements IWardService {
 
     }
 
+    @Override
+    public List<Ward> getWardsByWardsCodeWithDistrictCode(List<String> wardsCode, String districtCode) {
+        List<Ward> wards = new ArrayList<>();
+        for (String wardCode : wardsCode) {
+            Ward ward = wardRepository.findByWardCode(wardCode)
+                    .orElseThrow(() -> new NotFoundException(
+                            "Không tìm thấy phường xã nào có mã là: " + wardCode));
+            if (!ward.getDistrict().getDistrictCode().equals(districtCode)) {
+                throw new NotFoundException("Mã phường xã " + wardCode + " không thuộc quận huyện " + districtCode);
+            }
+            wards.add(ward);
+        }
+
+        if (!wards.isEmpty()){
+            wards.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+        }
+        return wards;
+    }
+
 }

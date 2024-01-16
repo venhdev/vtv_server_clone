@@ -10,7 +10,7 @@ import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.manager.ManagerRepository;
-import hcmute.kltn.vtv.service.admin.IManagerAdminService;
+import hcmute.kltn.vtv.service.admin.IManagerRoleAdminService;
 import hcmute.kltn.vtv.service.user.impl.CustomerServiceImpl;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ManagerAdminServiceImpl implements IManagerAdminService {
+public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService {
 
     @Autowired
     private CustomerRepository customerRepository;

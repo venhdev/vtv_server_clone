@@ -17,4 +17,6 @@ public interface ICustomerService {
     ProfileCustomerResponse changePassword(ChangePasswordRequest request);
 
     ForgotPasswordResponse resetPassword(ForgotPasswordRequest request);
+
+    Customer getCustomerById(Long customerId);
 }

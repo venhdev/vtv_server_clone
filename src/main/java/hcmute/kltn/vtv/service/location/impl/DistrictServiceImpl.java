@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.model.dto.location.DistrictDTO;
 import hcmute.kltn.vtv.model.entity.location.District;
 import hcmute.kltn.vtv.repository.location.DistrictRepository;
 import hcmute.kltn.vtv.service.location.IDistrictService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,14 @@ public class DistrictServiceImpl implements IDistrictService {
         response.setMessage("Lấy danh sách quận huyện thành công.");
         response.setStatus("OK");
         return response;
+    }
+
+    @Override
+    public District getDistrictByCode(String districtCode) {
+        District district = districtRepository.findByDistrictCode(districtCode)
+                .orElseThrow(() -> new NotFoundException(
+                        "Không tìm thấy quận huyện nào có mã là " + districtCode));
+        return district;
     }
 
 }

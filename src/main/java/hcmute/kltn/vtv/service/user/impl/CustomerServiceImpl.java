@@ -144,4 +144,12 @@ public class CustomerServiceImpl implements ICustomerService {
 
     }
 
+
+    @Override
+    public Customer getCustomerById(Long customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại."));
+    }
+
+
 }

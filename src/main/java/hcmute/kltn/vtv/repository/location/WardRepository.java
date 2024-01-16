@@ -17,4 +17,6 @@ public interface WardRepository extends JpaRepository<Ward, String> {
 
     Optional<Ward> findByWardCode(String wardCode);
 
+    Optional<List<Ward>> findAllByWardCodeIn(List<String> wardCodes);
+
 }

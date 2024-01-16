@@ -48,23 +48,23 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(
-            IAuthenticationService service) {
-        Date currentDate = new Date();
-        return args -> {
-            var us1 = RegisterRequest.builder()
-                    .username("string")
-                    .fullName("To Duy Vuong")
-                    .email("conc5288@gmail.com")
-                    .password("string")
-                    .birthday(currentDate)
-                    .gender(true)
-                    .build();
-            System.out.println("user1 token: " + service.register(us1));
-
-        };
-    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(
+//            IAuthenticationService service) {
+//        Date currentDate = new Date();
+//        return args -> {
+//            var us1 = RegisterRequest.builder()
+//                    .username("string")
+//                    .fullName("To Duy Vuong")
+//                    .email("conc5288@gmail.com")
+//                    .password("string")
+//                    .birthday(currentDate)
+//                    .gender(true)
+//                    .build();
+//            System.out.println("user1 token: " + service.register(us1));
+//
+//        };
+//    }
 
     // @Bean
     // public CommandLineRunner commandLineRunner2(

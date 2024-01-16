@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.controller.admin;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.service.admin.IManagerAdminService;
+import hcmute.kltn.vtv.service.admin.IManagerRoleAdminService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerAdminController {
 
     @Autowired
-    private IManagerAdminService managerAdminService;
+    private IManagerRoleAdminService managerAdminService;
 
     @PostMapping("/add-role-manager")
     public ResponseEntity<ManagerResponse> addRoleManager(@RequestParam String usernameCustomer,

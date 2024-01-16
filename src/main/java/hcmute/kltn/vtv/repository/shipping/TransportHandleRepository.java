@@ -1,14 +1,11 @@
 package hcmute.kltn.vtv.repository.shipping;
 
-import hcmute.kltn.vtv.model.entity.shipping.Deliver;
+import hcmute.kltn.vtv.model.entity.shipping.TransportHandle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 @Repository
-public interface DeliverRepository extends JpaRepository<Deliver, UUID> {
-
-    boolean existsByCustomerCustomerId(Long customerId);
-
+public interface TransportHandleRepository extends JpaRepository<TransportHandle, UUID> {
 }

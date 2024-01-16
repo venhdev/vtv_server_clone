@@ -28,6 +28,8 @@ public class DeliverDTO {
 
     private String ward;
 
+    private String wardCode;
+
     private String fullAddress;
 
     private String typeWork;
@@ -40,6 +42,8 @@ public class DeliverDTO {
 
     private List<String> wardsWork;
 
+    private Long customerId;
+
     public static DeliverDTO convertEntityToDTO(Deliver deliver) {
         DeliverDTO deliverDTO = new DeliverDTO();
         deliverDTO.setDeliverId(deliver.getDeliverId());
@@ -48,12 +52,14 @@ public class DeliverDTO {
         deliverDTO.setProvince(deliver.getProvince());
         deliverDTO.setDistrict(deliver.getDistrict());
         deliverDTO.setWard(deliver.getWard());
+        deliverDTO.setWardCode(deliver.getWardCode());
         deliverDTO.setFullAddress(deliver.getFullAddress());
         deliverDTO.setTypeWork(deliver.getTypeWork());
         deliverDTO.setUsernameAdded(deliver.getUsernameAdded());
         deliverDTO.setStatus(deliver.getStatus());
         deliverDTO.setDistrictWork(deliver.getDistrictWork().getName());
         deliverDTO.setWardsWork(WardDTO.convertEntitiesToNames(deliver.getWardsWork()));
+        deliverDTO.setCustomerId(deliver.getCustomer().getCustomerId());
         return deliverDTO;
     }
 
