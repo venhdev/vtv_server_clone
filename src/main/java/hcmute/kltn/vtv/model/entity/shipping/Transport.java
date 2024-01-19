@@ -18,8 +18,8 @@ import java.util.UUID;
 public class Transport {
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID transportId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long transportId;
 
     private String wardCodeShop;
 

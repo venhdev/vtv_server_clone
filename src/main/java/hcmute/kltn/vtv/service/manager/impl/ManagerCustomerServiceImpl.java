@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListCustomerManagerResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
@@ -16,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -149,6 +152,20 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
                 && !sort.equals("at-desc")) {
             throw new NotFoundException(
                     "Tham số sắp xếp không hợp lệ! Tham số sắp xếp phải là name-asc, name-desc, at-asc, at-desc");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void updateRoleWithCustomer(Long customerId, Role role) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại."));
+        customer.addRole(role);
+        customer.setUpdateAt(LocalDateTime.now());
+        try {
+            customerRepository.save(customer);
+        } catch (Exception e) {
+            throw new BadRequestException("Cập nhật quyền cho tài khoản thất bại!");
         }
     }
 

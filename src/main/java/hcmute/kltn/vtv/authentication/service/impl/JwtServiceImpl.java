@@ -1,5 +1,6 @@
-package hcmute.kltn.vtv.authentication.service;
+package hcmute.kltn.vtv.authentication.service.impl;
 
+import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.repository.user.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

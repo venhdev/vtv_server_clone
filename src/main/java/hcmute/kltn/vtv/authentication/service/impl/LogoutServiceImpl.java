@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.authentication.service;
+package hcmute.kltn.vtv.authentication.service.impl;
 
 import hcmute.kltn.vtv.repository.user.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LogoutService implements LogoutHandler {
+public class LogoutServiceImpl implements LogoutHandler {
 
     private final TokenRepository tokenRepository;
 

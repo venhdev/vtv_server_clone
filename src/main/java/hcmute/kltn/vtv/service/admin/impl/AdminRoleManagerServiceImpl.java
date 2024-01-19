@@ -10,7 +10,7 @@ import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.manager.ManagerRepository;
-import hcmute.kltn.vtv.service.admin.IManagerRoleAdminService;
+import hcmute.kltn.vtv.service.admin.IAdminRoleManagerService;
 import hcmute.kltn.vtv.service.user.impl.CustomerServiceImpl;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService {
+public class AdminRoleManagerServiceImpl implements IAdminRoleManagerService {
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -36,13 +36,13 @@ public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService
 
     @Override
     @Transactional
-    public ManagerResponse addRoleManager(String username, String usernameCustomer) {
+    public ManagerResponse addRoleManager(String usernameAdded, String usernameCustomer) {
 
         if (managerRepository.existsByManagerUsernameAndStatus(usernameCustomer, Status.ACTIVE)) {
             throw new BadRequestException("Nhân viên đã có quyền quản lý!");
         }
 
-        Customer admin = customerService.getCustomerByUsername(username);
+//        Customer admin = customerService.getCustomerByUsername(username);
         Customer customer = customerService.getCustomerByUsername(usernameCustomer);
         customer.getRoles().add(Role.MANAGER);
 
@@ -50,11 +50,11 @@ public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService
         if (managerRepository.existsByManagerUsername(usernameCustomer)) {
             manager = managerRepository.findByManagerUsername(usernameCustomer)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
-            if (!manager.getAdmin().equals(admin)) {
+            if (!manager.getUsernameAdded().equals(usernameAdded)) {
                 throw new BadRequestException("Bạn không có quyền thêm quyền quản lý cho nhân viên này!");
             }
         } else {
-            manager.setAdmin(admin);
+            manager.setUsernameAdded(usernameAdded);
             manager.setManager(customer);
             manager.setCreateAt(LocalDateTime.now());
         }
@@ -78,16 +78,16 @@ public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService
 
     @Override
     @Transactional
-    public ManagerResponse removeRoleManager(String username, String usernameCustomer) {
+    public ManagerResponse removeRoleManager(String usernameAdded, String usernameCustomer) {
         if (!managerRepository.existsByManagerUsername(usernameCustomer)) {
             throw new BadRequestException("Nhân viên không có quyền quản lý!");
         }
 
-        Customer admin = customerService.getCustomerByUsername(username);
+//        Customer admin = customerService.getCustomerByUsername(username);
         Customer customer = customerService.getCustomerByUsername(usernameCustomer);
         customer.getRoles().remove(Role.MANAGER);
 
-        Manager manager = checkManager(usernameCustomer, admin.getCustomerId());
+        Manager manager = checkManager(usernameCustomer, usernameAdded);
         manager.setStatus(Status.DELETED);
         manager.setUpdateAt(LocalDateTime.now());
 
@@ -155,11 +155,11 @@ public class ManagerRoleRoleAdminServiceImpl implements IManagerRoleAdminService
         }
     }
 
-    private Manager checkManager(String usernameCustomer, Long adminId) {
+    private Manager checkManager(String usernameCustomer, String usernameAdded) {
         Manager manager = managerRepository.findByManagerUsername(usernameCustomer)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
 
-        if (!manager.getAdmin().getCustomerId().equals(adminId)) {
+        if (!manager.getUsernameAdded().equals(usernameAdded)){
             throw new BadRequestException("Bạn không có quyền xóa quản lý này!");
         }
 

@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.location.impl;
 
+import hcmute.kltn.vtv.model.data.location.LocationResponse;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.location.ListWardResponse;
 import hcmute.kltn.vtv.model.dto.location.WardDTO;
@@ -63,6 +64,18 @@ public class WardServiceImpl implements IWardService {
             wards.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
         }
         return wards;
+    }
+
+    @Override
+    public LocationResponse getLocationByWardCode(String wardCode) {
+        Ward ward = wardRepository.findByWardCode(wardCode)
+                .orElseThrow(() -> new NotFoundException(
+                        "Không tìm thấy phường xã nào có mã là: " + wardCode));
+        LocationResponse response = LocationResponse.convertWardToResponse(ward);
+        response.setCode(200);
+        response.setMessage("Lấy thông tin địa chỉ thành công.");
+        response.setStatus("OK");
+        return response;
     }
 
 }

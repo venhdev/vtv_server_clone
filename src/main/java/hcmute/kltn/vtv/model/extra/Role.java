@@ -20,13 +20,18 @@ public enum Role {
 
     ADMIN(Collections.emptySet()),
 
+    PROVIDER(Collections.emptySet()),
+
+    DELIVER(Collections.emptySet()),
+
     MANAGER(Collections.emptySet()),
 
     MANAGER_CUSTOMER(Collections.emptySet()),
 
     MANAGER_VENDOR(Collections.emptySet()),
 
-    MANAGER_DELIVER(Collections.emptySet());
+    MANAGER_SHIPPING(Collections.emptySet());
+
 
 
 

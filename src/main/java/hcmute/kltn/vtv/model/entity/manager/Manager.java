@@ -20,6 +20,8 @@ public class Manager {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long managerId;
 
+    private String usernameAdded;
+
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
@@ -31,8 +33,8 @@ public class Manager {
     @JoinColumn(name = "customer_id")
     private Customer manager;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "admin_id")
-    private Customer admin;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "admin_id")
+//    private Customer admin;
 
 }

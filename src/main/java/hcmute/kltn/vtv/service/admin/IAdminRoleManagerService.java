@@ -5,7 +5,7 @@ import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IManagerRoleAdminService {
+public interface IAdminRoleManagerService {
     @Transactional
     ManagerResponse addRoleManager(String username, String usernameCustomer);
 

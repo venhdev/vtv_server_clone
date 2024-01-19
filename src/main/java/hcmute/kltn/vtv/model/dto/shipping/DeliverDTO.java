@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class DeliverDTO {
 
-    private UUID deliverId;
+    private Long deliverId;
 
     private String phone;
 
@@ -47,8 +47,8 @@ public class DeliverDTO {
     public static DeliverDTO convertEntityToDTO(Deliver deliver) {
         DeliverDTO deliverDTO = new DeliverDTO();
         deliverDTO.setDeliverId(deliver.getDeliverId());
-        deliverDTO.setPhone(deliver.getPhone());
-        deliverDTO.setEmail(deliver.getEmail());
+//        deliverDTO.setPhone(deliver.getPhone());
+//        deliverDTO.setEmail(deliver.getEmail());
         deliverDTO.setProvince(deliver.getProvince());
         deliverDTO.setDistrict(deliver.getDistrict());
         deliverDTO.setWard(deliver.getWard());

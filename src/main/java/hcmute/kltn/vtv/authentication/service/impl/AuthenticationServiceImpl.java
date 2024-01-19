@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.authentication.service;
+package hcmute.kltn.vtv.authentication.service.impl;
 
 import hcmute.kltn.vtv.authentication.request.LoginRequest;
 import hcmute.kltn.vtv.authentication.request.RegisterRequest;
@@ -6,6 +6,8 @@ import hcmute.kltn.vtv.authentication.response.LoginResponse;
 import hcmute.kltn.vtv.authentication.response.LogoutResponse;
 import hcmute.kltn.vtv.authentication.response.RefreshTokenResponse;
 import hcmute.kltn.vtv.authentication.response.RegisterResponse;
+import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
+import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.user.Token;
@@ -76,12 +78,45 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         customer.setUpdateAt(LocalDateTime.now());
         customer.setStatus(Status.ACTIVE);
 
-        var saveCustomer = customerRepository.save(customer);
-        RegisterResponse registerResponse = modelMapper.map(saveCustomer, RegisterResponse.class);
-        registerResponse.setStatus("success");
-        registerResponse.setMessage("Đăng ký tài khoản khách hàng thành công");
+        try {
+            var saveCustomer = customerRepository.save(customer);
+            RegisterResponse registerResponse = modelMapper.map(saveCustomer, RegisterResponse.class);
+            registerResponse.setStatus("success");
+            registerResponse.setMessage("Đăng ký tài khoản khách hàng thành công");
 
-        return registerResponse;
+            return registerResponse;
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
+        }
+
+    }
+
+    @Override
+    public Customer addNewCustomer(RegisterRequest customerRequest) {
+        Optional<Customer> existingCustomer = customerRepository.findByUsername(customerRequest.getUsername());
+        if (existingCustomer.isPresent()) {
+            throw new DuplicateEntryException("Tài khoản đã tồn tại.");
+        }
+        existingCustomer = customerRepository.findByEmail(customerRequest.getEmail());
+        if (existingCustomer.isPresent()) {
+            throw new DuplicateEntryException("Email đã được đăng ký.");
+        }
+
+        Customer customer = modelMapper.map(customerRequest, Customer.class);
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.CUSTOMER); // Every customer has a CUSTOMER role
+        customer.setRoles(roles);
+        customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
+        customer.setCreateAt(LocalDateTime.now());
+        customer.setUpdateAt(LocalDateTime.now());
+        customer.setStatus(Status.ACTIVE);
+
+        try {
+            customerRepository.save(customer);
+            return customer;
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
+        }
     }
 
     @Override
@@ -165,7 +200,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public RefreshTokenResponse refreshToken(String refreshToken, HttpServletRequest request,
-            HttpServletResponse response)
+                                             HttpServletResponse response)
             throws IOException {
         if (refreshToken == null) {
             throw new BadRequestException("Refresh token không tồn tại.");

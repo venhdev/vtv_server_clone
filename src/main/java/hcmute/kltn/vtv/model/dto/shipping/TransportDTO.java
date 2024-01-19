@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TransportDTO {
 
-    private UUID transportId;
+    private Long transportId;
 
     private String wardCodeShop;
 

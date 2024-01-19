@@ -90,8 +90,16 @@ public class SecurityConfig {
             "/api/manager/vendor/**",
     };
 
-    private static final String[] MANAGER_DELIVER_ROLE = {
+    private static final String[] MANAGER_SHIPPING_ROLE = {
             "/api/manager/deliver/**",
+    };
+
+    private static final String[] DELIVER_ROLE = {
+            "/api//deliver/**",
+    };
+
+    private static final String[] PROVIDER_ROLE = {
+            "/api/provider/**",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -126,8 +134,15 @@ public class SecurityConfig {
                         .requestMatchers(MANAGER_VENDOR_ROLE)
                         .hasRole(Role.MANAGER_VENDOR.name())
 
-                        .requestMatchers(MANAGER_DELIVER_ROLE)
-                        .hasRole(Role.MANAGER_DELIVER.name())
+                        .requestMatchers(MANAGER_SHIPPING_ROLE)
+                        .hasRole(Role.MANAGER_SHIPPING.name())
+
+                        .requestMatchers(DELIVER_ROLE)
+                        .hasRole(Role.DELIVER.name())
+
+                        .requestMatchers(PROVIDER_ROLE)
+                        .hasRole(Role.PROVIDER.name())
+
 
                         .anyRequest()
                         .authenticated()

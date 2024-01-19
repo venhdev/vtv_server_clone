@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.data.manager.response;
+package hcmute.kltn.vtv.model.data.shipping.response;
 
 import hcmute.kltn.vtv.model.dto.shipping.DeliverDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
