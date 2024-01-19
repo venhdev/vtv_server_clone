@@ -26,11 +26,11 @@ public enum Role {
 
     MANAGER(Collections.emptySet()),
 
-    MANAGER_CUSTOMER(Collections.emptySet()),
+    MANAGERCUSTOMER(Collections.emptySet()),
 
-    MANAGER_VENDOR(Collections.emptySet()),
+    MANAGERVENDOR(Collections.emptySet()),
 
-    MANAGER_SHIPPING(Collections.emptySet());
+    MANAGERSHIPPING(Collections.emptySet());
 
 
 

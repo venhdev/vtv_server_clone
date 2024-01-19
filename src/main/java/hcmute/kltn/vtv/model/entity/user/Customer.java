@@ -64,6 +64,10 @@ public class Customer implements UserDetails {
         roles.add(role);
     }
 
+    public void removeRole(Role role) {// Convert the string to the Role enum
+        roles.remove(role);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()

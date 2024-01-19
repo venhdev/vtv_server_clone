@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.service.admin.impl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
-import hcmute.kltn.vtv.model.dto.user.ManagerDTO;
+import hcmute.kltn.vtv.model.dto.manager.ManagerDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.extra.Role;

@@ -285,6 +285,11 @@
     - Xem danh sách nhân viên vận chuyển theo trạng thái.
     - Xem danh sách nhân viên vận chuyển theo trạng thái và loại công việc.
 
+- Quản lý quyền nhân viên từ quyền manger:
+    - Thêm quyền nhân viên.
+    - Cập nhật quyền nhân viên.
+    - Xem danh sách quyền nhân viên theo quyền.
+    - Xóa quyền nhân viên.
 
 
 [//]: # (có thên thêmn nhà cung cấp vận chuyển)

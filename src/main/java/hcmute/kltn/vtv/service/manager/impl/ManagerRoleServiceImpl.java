@@ -1,7 +1,8 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
-import hcmute.kltn.vtv.model.dto.user.ManagerDTO;
+import hcmute.kltn.vtv.model.dto.manager.ManagerDTO;
 import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Role;
@@ -14,15 +15,18 @@ import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class ManagerRoleServiceImpl implements IManagerRoleService {
-
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -31,12 +35,11 @@ public class ManagerRoleServiceImpl implements IManagerRoleService {
     @Autowired
     private ManagerRepository managerRepository;
 
-
     @Override
     @Transactional
     public ManagerResponse managerAddRole(String usernameAdded, String usernameCustomer, Role role) {
 
-        checkRoleAdd(role);
+        checkRoleManager(role);
 
         if (managerRepository.existsByManagerUsernameAndStatus(usernameCustomer, Status.ACTIVE)) {
             throw new BadRequestException("Nhân viên đã có quyền quản lý!");
@@ -51,31 +54,141 @@ public class ManagerRoleServiceImpl implements IManagerRoleService {
             managerRepository.save(manager);
             customerRepository.save(customer);
 
-            String message = getMessageByRole(role);
+            String message = "Thêm quyền quản lý " + getMessageByRole(role) + " thành công!";
 
             return managerResponse(manager, message, "Success");
         } catch (Exception e) {
-            throw new BadRequestException("Thêm quyền quản lý thất bại!" + e.getMessage());
+            throw new BadRequestException("Thêm quyền quản lý thất bại!");
+        }
+    }
+
+    @Override
+    @Transactional
+    public ManagerResponse managerUpdateRole(String usernameAdded, String usernameCustomer, Role role) {
+
+        checkRoleManager(role);
+        Customer customer = customerService.getCustomerByUsername(usernameCustomer);
+        checkRoleCustomer(customer, role, false);
+        customer.addRole(role);
+
+        Manager manager = checkUsernameAdded(usernameAdded, customer);
+        manager.setUpdateAt(LocalDateTime.now());
+
+        try {
+            managerRepository.save(manager);
+            customerRepository.save(customer);
+
+            String message = "Cập nhật quyền quản lý " + getMessageByRole(role) + " thành công!";
+
+            return managerResponse(manager, message, "Success");
+        } catch (Exception e) {
+            throw new BadRequestException("Cập nhật quyền quản lý thất bại!");
+        }
+    }
+
+    @Override
+    @Transactional
+    public ManagerResponse managerDeleteRole(String usernameAdded, String usernameCustomer, Role role) {
+
+        checkRoleManager(role);
+        Customer customer = customerService.getCustomerByUsername(usernameCustomer);
+        checkRoleCustomer(customer, role, true);
+        customer.removeRole(role);
+
+        Manager manager = checkUsernameAdded(usernameAdded, customer);
+        manager.setUpdateAt(LocalDateTime.now());
+
+        try {
+            managerRepository.save(manager);
+            customerRepository.save(customer);
+
+            String message = "Xóa quyền quản lý " + getMessageByRole(role) + " thành công!";
+
+            return managerResponse(manager, message, "Success");
+        } catch (Exception e) {
+            throw new BadRequestException("Xóa quyền quản lý thất bại!");
+        }
+    }
+
+
+
+
+
+    @Override
+    public ListManagerPageResponse getListManagerPageByRole(Role role, int page, int size) {
+
+        checkRoleManager(role);
+        Page<Manager> managers = managerRepository
+                .findAllByManagerRolesAndStatus(role, Status.ACTIVE, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách quản lý " + getMessageByRole(role) + "!"));
+
+
+        String message = "Lấy danh sách quản lý " + getMessageByRole(role) + " thành công!";
+
+        return listManagerPageResponse(managers.getContent(), message, managers.getTotalPages(), page, size);
+    }
+
+    @Override
+    public void checkRequestPageParams(int page, int size) {
+        if (page <= 0) {
+            throw new BadRequestException("Trang phải lớn hơn 0.");
+        }
+        if (size <= 0) {
+            throw new BadRequestException("Kích thước trang phải lớn hơn 0.");
+        }
+        if (size > 500) {
+            throw new BadRequestException("Kích thước trang phải nhỏ hơn 500.");
+        }
+    }
+
+
+    private ListManagerPageResponse listManagerPageResponse(List<Manager> managers, String message,
+                                                            int totalPage, int page, int size) {
+        ListManagerPageResponse listManagerPageResponse = new ListManagerPageResponse();
+        listManagerPageResponse.setTotalPage(totalPage);
+        listManagerPageResponse.setPage(page);
+        listManagerPageResponse.setSize(size);
+        listManagerPageResponse.setCount(managers.size());
+        listManagerPageResponse.setManagerDTOs(ManagerDTO.convertEntitiesToDTOs(managers));
+        listManagerPageResponse.setStatus("OK");
+        listManagerPageResponse.setCode(200);
+        listManagerPageResponse.setMessage(message);
+
+        return listManagerPageResponse;
+
+
+    }
+
+    private void checkRoleCustomer(Customer customer, Role role, boolean isDelete) {
+        if (isDelete) {
+            if (!customer.getRoles().contains(role)) {
+                throw new BadRequestException(
+                        "Không tìm thấy quyền quản lý cần xóa! Quyền quản lý cần xóa là " + role + ".");
+            }
+        } else {
+            if (customer.getRoles().contains(role)) {
+                throw new BadRequestException("Nhân viên đã có quyền quản lý! Quyền quản lý là " + role + ".");
+            }
         }
     }
 
     private String getMessageByRole(Role role) {
-        if (role.equals(Role.MANAGER_SHIPPING)) {
-            return "Thêm quyền quản lý vận chuyển thành công!";
-        } else if (role.equals(Role.MANAGER_VENDOR)) {
-            return "Thêm quyền quản lý cửa hàng thành công!";
+        if (role.equals(Role.MANAGERSHIPPING)) {
+            return "vận chuyển";
+        } else if (role.equals(Role.MANAGERVENDOR)) {
+            return "cửa hàng";
         } else {
-            return "Thêm quyền quản lý khách hàng thành công!";
+            return "khách hàng";
         }
     }
 
-
-    private void checkRoleAdd(Role role) {
-        if (!role.equals(Role.MANAGER_SHIPPING) && !role.equals(Role.MANAGER_VENDOR) && !role.equals(Role.MANAGER_CUSTOMER)) {
-            throw new BadRequestException("Quyền quản lý không hợp lệ! Quyền quản lý phải là MANAGER_SHIPPING, MANAGER_VENDOR hoặc MANAGER_CUSTOMER.");
+    private void checkRoleManager(Role role) {
+        if (!role.equals(Role.MANAGERSHIPPING) && !role.equals(Role.MANAGERVENDOR)
+                && !role.equals(Role.MANAGERCUSTOMER)) {
+            throw new BadRequestException(
+                    "Quyền quản lý không hợp lệ! Quyền quản lý phải là MANAGER_SHIPPING, MANAGER_VENDOR hoặc MANAGER_CUSTOMER.");
         }
     }
-
 
     private ManagerResponse managerResponse(Manager manager, String message, String status) {
         ManagerResponse managerResponse = new ManagerResponse();
@@ -86,16 +199,13 @@ public class ManagerRoleServiceImpl implements IManagerRoleService {
         return managerResponse;
     }
 
+
     private Manager checkManager(String usernameAdded, Customer customer) {
 
         Manager manager = new Manager();
 
         if (managerRepository.existsByManagerUsername(customer.getUsername())) {
-            manager = managerRepository.findByManagerUsername(customer.getUsername())
-                    .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
-            if (!manager.getUsernameAdded().equals(usernameAdded)) {
-                throw new BadRequestException("Bạn không có quyền thêm quyền quản lý cho nhân viên này!");
-            }
+            manager = checkUsernameAdded(usernameAdded, customer);
         } else {
             manager.setUsernameAdded(usernameAdded);
             manager.setManager(customer);
@@ -107,5 +217,14 @@ public class ManagerRoleServiceImpl implements IManagerRoleService {
         return manager;
     }
 
+    private Manager checkUsernameAdded(String usernameAdded, Customer customer) {
+
+        Manager manager = managerRepository.findByManagerUsername(customer.getUsername())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy quản lý!"));
+        if (!manager.getUsernameAdded().equals(usernameAdded)) {
+            throw new BadRequestException("Bạn không có quyền thêm quyền quản lý cho nhân viên này!");
+        }
+        return manager;
+    }
 
 }

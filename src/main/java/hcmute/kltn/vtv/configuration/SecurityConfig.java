@@ -22,6 +22,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     private static final String[] NO_AUTH = {
             "/api/auth/**",
             "/api/customer/forgot-password",
@@ -80,18 +81,27 @@ public class SecurityConfig {
 
     private static final String[] MANAGER_ROLE = {
             "/api/manager/**",
+            "/api/manager-info/get/manger"
+
     };
 
     private static final String[] MANAGER_CUSTOMER_ROLE = {
             "/api/manager/customer/**",
+            "/api/manager-info/get/manger-customer"
+
+
     };
 
     private static final String[] MANAGER_VENDOR_ROLE = {
+
             "/api/manager/vendor/**",
+            "/api/manager-info/get/manger-vendor"
     };
 
     private static final String[] MANAGER_SHIPPING_ROLE = {
+
             "/api/manager/deliver/**",
+            "/api/manager-info/get/manger-shipping"
     };
 
     private static final String[] DELIVER_ROLE = {
@@ -129,13 +139,13 @@ public class SecurityConfig {
                         .hasRole(Role.MANAGER.name())
 
                         .requestMatchers(MANAGER_CUSTOMER_ROLE)
-                        .hasRole(Role.MANAGER_CUSTOMER.name())
+                        .hasRole(Role.MANAGERCUSTOMER.name())
 
                         .requestMatchers(MANAGER_VENDOR_ROLE)
-                        .hasRole(Role.MANAGER_VENDOR.name())
+                        .hasRole(Role.MANAGERVENDOR.name())
 
                         .requestMatchers(MANAGER_SHIPPING_ROLE)
-                        .hasRole(Role.MANAGER_SHIPPING.name())
+                        .hasRole(Role.MANAGERSHIPPING.name())
 
                         .requestMatchers(DELIVER_ROLE)
                         .hasRole(Role.DELIVER.name())
