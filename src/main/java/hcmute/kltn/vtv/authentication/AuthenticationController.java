@@ -39,8 +39,8 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout(
-            @CookieValue(name = "refreshToken") String refreshToken) {
-        return ResponseEntity.ok(customerService.logout(refreshToken));
+            @CookieValue(name = "refreshToken") String refreshToken, HttpServletResponse response) {
+        return ResponseEntity.ok(customerService.logout(refreshToken, response));
     }
 
     @PostMapping("/refresh-token")

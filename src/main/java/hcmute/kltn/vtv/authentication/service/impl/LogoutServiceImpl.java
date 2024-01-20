@@ -40,7 +40,7 @@ public class LogoutServiceImpl implements LogoutHandler {
                 tokenRepository.save(storedToken);
 
                 // Xóa refreshToken trong cookie
-                Cookie cookie = new Cookie("refreshToken", null);
+                Cookie cookie = new Cookie("refreshToken", "null");
                 cookie.setHttpOnly(true);
                 cookie.setPath("/"); // Đặt đúng path mà bạn muốn
                 cookie.setMaxAge(0); // Set thời gian sống của cookie (ví dụ: 30 ngày)

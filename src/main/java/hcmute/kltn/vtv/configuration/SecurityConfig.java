@@ -3,6 +3,7 @@ package hcmute.kltn.vtv.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.util.CustomAccessDeniedHandler;
+import hcmute.kltn.vtv.util.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -119,6 +120,8 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final ObjectMapper objectMapper;
     private final LogoutHandler logoutHandler;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint; // Thêm trường này
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -166,7 +169,9 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(accessDeniedHandler())
+                        .accessDeniedHandler(accessDeniedHandler()))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(authenticationEntryPoint) // Sử dụng AuthenticationEntryPoint tùy chỉnh
                 );
 
 

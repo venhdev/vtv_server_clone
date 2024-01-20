@@ -152,7 +152,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     @Transactional
-    public LogoutResponse logout(String refreshToken) {
+    public LogoutResponse logout(String refreshToken, HttpServletResponse response) {
 
         if (refreshToken == null) {
             throw new BadRequestException("Token không được null. Đăng xuất thất bại.");
@@ -170,10 +170,23 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         token.setExpired(true);
         token.setRevoked(true);
-        tokenRepository.save(token);
-        SecurityContextHolder.clearContext();
+        try {
+            tokenRepository.save(token);
+            SecurityContextHolder.clearContext();
 
-        return new LogoutResponse("Success", "Đăng xuất thành công", 200);
+            // Xóa refreshToken trong cookie
+            Cookie cookie = new Cookie("refreshToken", null);
+            cookie.setHttpOnly(true);
+            cookie.setPath("/"); // Đặt đúng path mà bạn muốn
+            cookie.setMaxAge(0); // Set thời gian sống của cookie (ví dụ: 30 ngày)
+            response.addCookie(cookie); // Thêm cookie vào response
+
+            return new LogoutResponse("Success", "Đăng xuất thành công", 200);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng xuất thất bại");
+
+        }
+
     }
 
     public void saveCustomerToken(Customer customer, String jwtToken) {

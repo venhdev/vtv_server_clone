@@ -44,9 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            // throw new UnauthorizedAccessException("Unauthorized access - Token not
-            // provided or invalid format.");
+            System.out.println("authHeader:aaaaa " + authHeader);
             return;
+//            throw new UnauthorizedAccessException("Unauthorized access - Token not provided or invalid format.");
         }
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);

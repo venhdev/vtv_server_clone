@@ -19,7 +19,7 @@ public interface IAuthenticationService {
 
     LoginResponse login(LoginRequest loginRequest, HttpServletResponse response);
 
-    LogoutResponse logout(String refreshToken);
+    LogoutResponse logout(String refreshToken, HttpServletResponse response);
 
     RefreshTokenResponse refreshToken(
             String refreshToken,
