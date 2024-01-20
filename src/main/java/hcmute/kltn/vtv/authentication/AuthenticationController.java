@@ -39,7 +39,7 @@ public class AuthenticationController {
 
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout(
-            @CookieValue(name = "refreshToken") String refreshToken) throws IOException {
+            @CookieValue(name = "refreshToken") String refreshToken) {
         return ResponseEntity.ok(customerService.logout(refreshToken));
     }
 

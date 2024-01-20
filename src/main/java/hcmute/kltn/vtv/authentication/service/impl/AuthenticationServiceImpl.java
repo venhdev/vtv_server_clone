@@ -134,7 +134,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setCustomerDTO(modelMapper.map(customer, CustomerDTO.class));
-        loginResponse.setStatus("ok");
+        loginResponse.setStatus("OK");
         loginResponse.setMessage("Đăng nhập thành công");
         loginResponse.setCode(200);
         loginResponse.setAccessToken(jwtToken);
@@ -173,7 +173,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         tokenRepository.save(token);
         SecurityContextHolder.clearContext();
 
-        return new LogoutResponse("success", "Đăng xuất thành công", 200);
+        return new LogoutResponse("Success", "Đăng xuất thành công", 200);
     }
 
     public void saveCustomerToken(Customer customer, String jwtToken) {
@@ -225,7 +225,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
                     RefreshTokenResponse refreshTokenResponse = new RefreshTokenResponse();
                     refreshTokenResponse.setAccessToken(accessToken);
-                    refreshTokenResponse.setStatus("ok");
+                    refreshTokenResponse.setStatus("Success");
                     refreshTokenResponse.setMessage("Refresh token thành công");
                     refreshTokenResponse.setCode(200);
                     return refreshTokenResponse;
