@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.model.data.user.request.ProfileCustomerRequest;
 import hcmute.kltn.vtv.model.data.user.response.ForgotPasswordResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.model.entity.user.Customer;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface ICustomerService {
     Customer getCustomerByUsername(String username);
@@ -19,4 +20,7 @@ public interface ICustomerService {
     ForgotPasswordResponse resetPassword(ForgotPasswordRequest request);
 
     Customer getCustomerById(Long customerId);
+
+    @Transactional
+    void removeAllRoleManagerOfCustomer(Customer customer);
 }

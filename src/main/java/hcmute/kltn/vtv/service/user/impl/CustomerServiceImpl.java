@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ChangePasswordRequest;
 import hcmute.kltn.vtv.model.data.user.request.ForgotPasswordRequest;
@@ -11,6 +12,7 @@ import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.user.IOtpService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -149,6 +152,25 @@ public class CustomerServiceImpl implements ICustomerService {
     public Customer getCustomerById(Long customerId) {
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại."));
+    }
+
+
+    @Override
+    @Transactional
+    public void removeAllRoleManagerOfCustomer(Customer customer) {
+
+        Set<Role> roles = customer.getRoles();
+        roles.remove(Role.MANAGERSHIPPING);
+        roles.remove(Role.MANAGERCUSTOMER);
+        roles.remove(Role.MANAGERVENDOR);
+
+        try {
+            customerRepository.save(customer);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Xóa quyền quản lý trong customer thất bại!");
+        }
+
+
     }
 
 

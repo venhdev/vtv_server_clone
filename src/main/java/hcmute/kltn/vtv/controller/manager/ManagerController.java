@@ -1,58 +1,56 @@
 package hcmute.kltn.vtv.controller.manager;
 
 
+import hcmute.kltn.vtv.model.data.manager.response.ListManagerPageResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerResponse;
+import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.service.manager.IManagerService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/manager-info/get")
+@RequestMapping("/api/manager")
 @RequiredArgsConstructor
 public class ManagerController {
 
     @Autowired
     private IManagerService managerService;
 
-    @GetMapping("/manager")
+    @GetMapping("/info")
     public ResponseEntity<ManagerResponse> getManagerInfo(HttpServletRequest servletRequest) {
         String username = (String) servletRequest.getAttribute("username");
 
         return ResponseEntity.ok(managerService.getManagerByUserName(username));
     }
 
-    @GetMapping("/manager-customer")
-    public ResponseEntity<ManagerResponse> getManagerInfoCustomer(HttpServletRequest servletRequest) {
-        String username = (String) servletRequest.getAttribute("username");
+    @GetMapping("/list/username-added/{usernameAdded}/status/{status}")
+    public ResponseEntity<ListManagerPageResponse> getManagersByUsernameAddedAndStatus(@PathVariable String usernameAdded,
+                                                                                       @PathVariable Status status,
+                                                                                       @RequestParam int page,
+                                                                                       @RequestParam int size) {
+        managerService.checkRequestPageParams(page, size);
 
-        return ResponseEntity.ok(managerService.getManagerByUserName(username));
+        return ResponseEntity.ok(managerService.getManagersByUsernameAddedAndStatus(usernameAdded, status, page, size));
     }
 
+    @GetMapping("/list/status/{status}")
+    public ResponseEntity<ListManagerPageResponse> getListManagerByStatus(@PathVariable Status status,
+                                                                           @RequestParam int page,
+                                                                           @RequestParam int size) {
+        managerService.checkRequestPageParams(page, size);
 
-    @GetMapping("/manager-shipping")
-    public ResponseEntity<ManagerResponse> getManagerInfoShipping(HttpServletRequest servletRequest) {
-        String username = (String) servletRequest.getAttribute("username");
-
-        return ResponseEntity.ok(managerService.getManagerByUserName(username));
+        return ResponseEntity.ok(managerService.listManagerPageResponseByStatus(status, page, size));
     }
 
-    @GetMapping("/manager-product")
-    public ResponseEntity<ManagerResponse> getManagerInfoProduct(HttpServletRequest servletRequest) {
+    @DeleteMapping("/delete/id/{managerId}")
+    public ResponseEntity<ManagerResponse> deleteManagerByrId(@PathVariable Long managerId,
+                                                         HttpServletRequest servletRequest) {
         String username = (String) servletRequest.getAttribute("username");
 
-        return ResponseEntity.ok(managerService.getManagerByUserName(username));
-    }
-
-    @GetMapping("/manager-vendor")
-    public ResponseEntity<ManagerResponse> getManagerInfoVendor(HttpServletRequest servletRequest) {
-        String username = (String) servletRequest.getAttribute("username");
-
-        return ResponseEntity.ok(managerService.getManagerByUserName(username));
+        return ResponseEntity.ok(managerService.deleteManager(username, managerId));
     }
 
 

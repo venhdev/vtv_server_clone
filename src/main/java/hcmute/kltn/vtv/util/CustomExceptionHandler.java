@@ -2,14 +2,17 @@ package hcmute.kltn.vtv.util;
 
 import hcmute.kltn.vtv.util.exception.*;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
+import jakarta.el.MethodNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.MethodNotAllowedException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -88,6 +91,46 @@ public class CustomExceptionHandler {
                 errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodNotAllowedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowedException(MethodNotAllowedException ex) {
+
+        String errorMessage = "Phương thức không được phép.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, 405, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+
+        String errorMessage = "Dữ liệu không hợp lệ.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, 400, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotFoundException(MethodNotFoundException ex) {
+
+        String errorMessage = "Phương thức không tồn tại.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, 404, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedOperationException(UnsupportedOperationException ex) {
+
+        String errorMessage = "Ngoại lệ hoạt động không được hỗ trợ.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_IMPLEMENTED, 501, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(errorResponse);
     }
 
 }

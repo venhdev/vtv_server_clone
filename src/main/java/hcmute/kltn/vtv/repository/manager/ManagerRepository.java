@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.entity.manager.Manager;
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,8 @@ import java.util.Set;
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     boolean existsByManagerUsername(String username);
+
+    boolean existsByUsernameAdded(String usernameAdded);
 
     boolean existsByManagerUsernameAndStatus(String username, Status status);
 
@@ -37,6 +40,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findByManagerUsernameAndStatus(String username, Status status);
 
     int countAllByManagerUsernameContainsAndStatus(String username, Status status);
+
+    Optional<Page<Manager>> findAllByUsernameAddedAndStatus(String usernameAdded, Status status, Pageable pageable);
 
     Optional<Page<Manager>> findAllByManagerUsernameContainingAndStatusOrderByManagerFullName(String username,
                                                                                               Status status, Pageable pageable);

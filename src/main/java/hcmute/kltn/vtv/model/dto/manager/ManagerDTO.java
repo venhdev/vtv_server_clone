@@ -1,13 +1,16 @@
 package hcmute.kltn.vtv.model.dto.manager;
 
 import hcmute.kltn.vtv.model.entity.manager.Manager;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,9 +38,13 @@ public class ManagerDTO {
 
     public static List<ManagerDTO> convertEntitiesToDTOs(List<Manager> managers) {
         List<ManagerDTO> managerDTOs = new ArrayList<>();
-        for (Manager manager : managers) {
-            managerDTOs.add(convertEntityToDTO(manager));
+        if (managers != null) {
+//            managers.sort(Comparator.comparing(Manager::getManagerId));
+            for (Manager manager : managers) {
+                managerDTOs.add(convertEntityToDTO(manager));
+            }
         }
+
         return managerDTOs;
     }
 }

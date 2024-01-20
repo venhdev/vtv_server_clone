@@ -289,6 +289,8 @@
     - Thêm quyền nhân viên.
     - Cập nhật quyền nhân viên.
     - Xem danh sách quyền nhân viên theo quyền.
+    - Xem danh sách quyền nhân viên theo trạng thái.
+    - Xem danh sách quyền nhân viên theo tài khoản và trạng thái.
     - Xóa quyền nhân viên.
 
 
