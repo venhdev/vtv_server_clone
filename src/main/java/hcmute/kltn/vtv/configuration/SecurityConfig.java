@@ -43,7 +43,9 @@ public class SecurityConfig {
             "/api/payment/**",
             "/api/vendor/shop/category/all-parent",
 
-            "/api/deliver/**",
+            "/api/chat/room/**",
+            "/api/chat/message/**",
+
 
 
             "/v2/api-docs",
@@ -116,6 +118,12 @@ public class SecurityConfig {
             "/api/provider/**",
     };
 
+
+    private static final String[] WEBSOCKET_ENDPOINT = {
+            "/ws-stomp/**"
+    };
+
+
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final ObjectMapper objectMapper;
@@ -159,6 +167,9 @@ public class SecurityConfig {
 
                         .requestMatchers(PROVIDER_ROLE)
                         .hasRole(Role.PROVIDER.name())
+
+                        .requestMatchers(WEBSOCKET_ENDPOINT)
+                        .permitAll()
 
 
                         .anyRequest()

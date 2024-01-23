@@ -1,10 +1,13 @@
-package hcmute.kltn.vtv.model.entity.user;
+package hcmute.kltn.vtv.model.entity.chat;
 
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -12,19 +15,26 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Messenger {
+public class Message {
 
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long messengerId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID messengerId;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
+
+    private String senderUsername;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
     private Date date;
+
+    private boolean usernameSenderDelete;
+
+    private boolean usernameReceiverDelete;
 
     /*
      * private String time;
@@ -37,12 +47,12 @@ public class Messenger {
      * }
      */
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+//    @ManyToOne
+//    @JoinColumn(name = "customer_id")
+//    private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "romchat_id")
-    private RomChat romChat;
+    @JoinColumn(name = "roomchat_id")
+    private RoomChat roomChat;
 
 }

@@ -173,5 +173,10 @@ public class CustomerServiceImpl implements ICustomerService {
 
     }
 
+    @Override
+    public boolean checkUsernameExist(String username) {
+        return customerRepository.existsByUsername(username);
+    }
+
 
 }

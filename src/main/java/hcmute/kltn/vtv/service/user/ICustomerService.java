@@ -23,4 +23,6 @@ public interface ICustomerService {
 
     @Transactional
     void removeAllRoleManagerOfCustomer(Customer customer);
+
+    boolean checkUsernameExist(String username);
 }

@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
-import hcmute.kltn.vtv.model.dto.user.MessengerDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
@@ -19,5 +18,5 @@ public class MessengersResponse extends ResponseAbstract {
 
     private Long romChatId;
 
-    private List<MessengerDTO> messengerDTOs;
+//    private List<MessengerDTO> messengerDTOs;
 }
