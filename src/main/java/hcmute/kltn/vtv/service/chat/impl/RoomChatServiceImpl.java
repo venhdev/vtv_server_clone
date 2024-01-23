@@ -31,16 +31,21 @@ public class RoomChatServiceImpl implements IRoomChatService {
     @Transactional
     public RoomChatResponse addNewRoomChat(String senderUsername, String receiverUsername) {
 
-        checkUsernameReceiver(receiverUsername);
+        String message = "Tạo phòng chat thành công!";
 
+        checkUsernameReceiver(receiverUsername);
         int roomChatExist = checkRoomChatExist(senderUsername, receiverUsername);
+
+        if (roomChatExist != 0) {
+            message = "Lấy thông tin phòng chat thành công!";
+        }
 
         RoomChat roomChat = createOrUpdateRoomChat(senderUsername, receiverUsername, roomChatExist);
 
         try {
             roomChatRepository.save(roomChat);
 
-            return roomChatResponse(roomChat, "Tạo phòng chat thành công!");
+            return roomChatResponse(roomChat, message, roomChatExist == 0 ? "Success" : "OK");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi hệ thống phòng chat! Vui lòng thử lại sau.");
         }
@@ -60,7 +65,7 @@ public class RoomChatServiceImpl implements IRoomChatService {
         try {
             roomChatRepository.save(roomChat);
 
-            return roomChatResponse(roomChat, "Xóa phòng chat thành công!");
+            return roomChatResponse(roomChat, "Xóa phòng chat thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi hệ thống khi xóa phòng chat! Vui lòng thử lại sau.");
         }
@@ -109,8 +114,8 @@ public class RoomChatServiceImpl implements IRoomChatService {
         roomChat.setLastMessage(lastMessage);
         roomChat.setSenderSeen(checkSender(senderUsername, roomChat));
         roomChat.setReceiverSeen(checkReceiver(senderUsername, roomChat));
-        roomChat.setReceiverDelete(checkReceiverDelete(senderUsername, roomChat));
-        roomChat.setSenderDelete(checkSenderDelete(senderUsername, roomChat));
+        roomChat.setReceiverDelete(false);
+        roomChat.setSenderDelete(false);
 
         try {
             roomChatRepository.save(roomChat);
@@ -120,9 +125,7 @@ public class RoomChatServiceImpl implements IRoomChatService {
         }
     }
 
-    private boolean checkSender(String senderUsername, RoomChat roomChat) {
-        return senderUsername.equals(roomChat.getSenderUsername());
-    }
+
 
 
     private void checkDeleteByUsername(String username, RoomChat roomChat) {
@@ -143,28 +146,16 @@ public class RoomChatServiceImpl implements IRoomChatService {
 
         if (roomChatExist == 1 || roomChatExist == 2) {
             roomChat = getRoomChat(senderUsername, receiverUsername, roomChatExist);
-            roomChat.setSenderDelete(checkSenderDelete(senderUsername, roomChat));
-            roomChat.setSenderSeen(checkSender(senderUsername, roomChat));
-            roomChat.setReceiverDelete(checkReceiverDelete(receiverUsername, roomChat));
-            roomChat.setReceiverSeen(checkReceiver(receiverUsername, roomChat));
-            // // hiển thị room chat
-            // if (senderUsername.equals(roomChat.getSenderUsername())) {
-            // roomChat.setSenderDelete(false);
-            // roomChat.setSenderSeen(true);
-            // } else {
-            // roomChat.setReceiverDelete(false);
-            // roomChat.setReceiverSeen(true);
-            // }
 
         } else {
             roomChat.setSenderUsername(senderUsername);
             roomChat.setReceiverUsername(receiverUsername);
             roomChat.setCreatedAt(LocalDateTime.now());
             roomChat.setLastDate(new Date());
-            roomChat.setSenderDelete(false);
+            roomChat.setSenderDelete(true);
             roomChat.setReceiverDelete(true);
             roomChat.setSenderSeen(true);
-            roomChat.setReceiverSeen(false);
+            roomChat.setReceiverSeen(true);
         }
 
         roomChat.setStatus(Status.ACTIVE);
@@ -173,17 +164,18 @@ public class RoomChatServiceImpl implements IRoomChatService {
         return roomChat;
     }
 
+    private boolean checkSender(String senderUsername, RoomChat roomChat) {
+        return senderUsername.equals(roomChat.getSenderUsername()) || roomChat.isSenderSeen();
+    }
+
     private boolean checkReceiver(String receiverUsername, RoomChat roomChat) {
-        return receiverUsername.equals(roomChat.getReceiverUsername());
+
+        return receiverUsername.equals(roomChat.getReceiverUsername()) || roomChat.isReceiverSeen();
     }
 
-    private boolean checkSenderDelete(String senderUsername, RoomChat roomChat) {
-        return senderUsername.equals(roomChat.getSenderUsername()) && roomChat.isSenderDelete();
-    }
 
-    private boolean checkReceiverDelete(String receiverUsername, RoomChat roomChat) {
-        return receiverUsername.equals(roomChat.getReceiverUsername()) && roomChat.isReceiverDelete();
-    }
+
+
 
     @Override
     public void checkRequestPageParams(int page, int size) {
@@ -206,16 +198,16 @@ public class RoomChatServiceImpl implements IRoomChatService {
         response.setPage(page);
         response.setSize(size);
         response.setCode(200);
-        response.setStatus("Success");
+        response.setStatus("OK");
         response.setMessage("Lấy danh sách phòng chat thành công!");
         return response;
     }
 
-    private RoomChatResponse roomChatResponse(RoomChat roomChat, String message) {
+    private RoomChatResponse roomChatResponse(RoomChat roomChat, String message, String status) {
         RoomChatResponse response = new RoomChatResponse();
         response.setRoomChatDTO(RoomChatDTO.convertEntityToDTO(roomChat));
         response.setMessage(message);
-        response.setStatus("Success"); // "Success" or "Fail
+        response.setStatus(status);
         response.setCode(200);
         return response;
     }

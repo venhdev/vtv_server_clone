@@ -2,10 +2,12 @@ package hcmute.kltn.vtv.util;
 
 import hcmute.kltn.vtv.util.exception.*;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.el.MethodNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.MethodNotAllowedException;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -132,5 +135,35 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(errorResponse);
     }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
+
+        String errorMessage = "Phiên đăng nhập đã hết hạn.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+
+        String errorMessage = "Phương thức không được hỗ trợ.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, 405, "Thông báo",
+                errorMessage);
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleDispatcherServletException(Exception ex) {
+        String errorMessage = "Không tìm thấy trang.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, 404, "Thông báo", errorMessage);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+
 
 }

@@ -2,9 +2,15 @@ package hcmute.kltn.vtv.controller.chat;
 
 
 import hcmute.kltn.vtv.model.data.chat.request.ChatMessageRequest;
+import hcmute.kltn.vtv.model.data.chat.response.ChatMessageResponse;
 import hcmute.kltn.vtv.service.chat.IChatService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,21 +27,27 @@ public class ChatController {
 
 
     @PostMapping("/send")
-    public void sendMessage(@RequestBody ChatMessageRequest chatMessageRequest, Principal principal,
-                            HttpServletRequest request) {
+    public ResponseEntity<ChatMessageResponse> sendMessage(@RequestBody ChatMessageRequest chatMessageRequest,
+                                                           HttpServletRequest request) {
 
-        String username = (String) request.getAttribute("username");
-        System.out.println("username" + username);
+      try {
+          String username = (String) request.getAttribute("username");
+          chatMessageRequest.setSenderUsername(username);
+          chatMessageRequest.validate(chatMessageRequest);
+          chatMessageRequest.setDate(new Date());
 
-        chatMessageRequest.setSenderUsername(principal.getName());
+          ChatMessageResponse response =  chatService.saveMessage(chatMessageRequest);
 
-        chatService.saveMessage(chatMessageRequest);
+          messagingTemplate.convertAndSendToUser(
+                  chatMessageRequest.getReceiverUsername(),
+                  "/topic/" + chatMessageRequest.getRomChatId() + "/public",
+                  chatMessageRequest
+          );
 
-        messagingTemplate.convertAndSendToUser(
-                chatMessageRequest.getReceiverUsername(),
-                "/topic/" + chatMessageRequest.getRomChatId() + "/public",
-                chatMessageRequest
-        );
+          return ResponseEntity.ok(response);
+      }catch (Exception e){
+          throw new InternalServerErrorException("Lỗi hệ thống tin nhắn! Vui lòng thử lại sau. " + e.getMessage());
+      }
     }
 
 

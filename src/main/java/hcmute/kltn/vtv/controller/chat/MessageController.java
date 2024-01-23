@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/chat/message")
 @RequiredArgsConstructor
@@ -18,13 +20,16 @@ public class MessageController {
     @Autowired
     private IMessageService messageService;
 
-    @GetMapping("/list/room-chat")
-    public ResponseEntity<ListMessagesPageResponse> getListMessageByRoomChatId(@RequestBody ListChatMessagesPageRequest request,
-                                                                               HttpServletRequest servletRequest) {
+
+    @GetMapping("/list/room-chat/{roomChatId}/page/{page}/size/{size}")
+    public ResponseEntity<ListMessagesPageResponse> getListMessageByRoomChatId( @PathVariable UUID roomChatId,
+                                                                                @PathVariable int page,
+                                                                                @PathVariable int size,
+                                                                                HttpServletRequest servletRequest) {
+
         String username = (String) servletRequest.getAttribute("username");
-        request.setUsername(username);
-        request.validate();
-        return ResponseEntity.ok(messageService.getListChatMessagesPage(request));
+        messageService.checkRequestPageParams(page, size);
+        return ResponseEntity.ok(messageService.getListChatMessagesPage(username, roomChatId, page, size));
     }
 
 

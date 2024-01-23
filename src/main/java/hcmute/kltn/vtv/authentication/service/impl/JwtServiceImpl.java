@@ -37,12 +37,6 @@ public class JwtServiceImpl implements IJwtService {
     @Override
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-
-        // String username = extractClaim(token, Claims::getSubject);
-        // if (username == null) {
-        // throw new NotFoundException("Không tìm thấy thông tin tài khoản từ token.");
-        // }
-        // return username;
     }
 
     @Override

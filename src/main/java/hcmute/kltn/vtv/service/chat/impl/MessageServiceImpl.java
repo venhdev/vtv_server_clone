@@ -1,8 +1,6 @@
 package hcmute.kltn.vtv.service.chat.impl;
 
 import hcmute.kltn.vtv.model.data.chat.request.ChatMessageRequest;
-import hcmute.kltn.vtv.model.data.chat.request.ListChatMessagesPageByUsernameRequest;
-import hcmute.kltn.vtv.model.data.chat.request.ListChatMessagesPageRequest;
 import hcmute.kltn.vtv.model.data.chat.response.ListMessagesPageResponse;
 import hcmute.kltn.vtv.model.dto.chat.MessageDTO;
 import hcmute.kltn.vtv.model.entity.chat.Message;
@@ -12,6 +10,7 @@ import hcmute.kltn.vtv.repository.chat.MessageRepository;
 import hcmute.kltn.vtv.service.chat.IMessageService;
 import hcmute.kltn.vtv.service.chat.IRoomChatService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -38,7 +38,7 @@ public class MessageServiceImpl implements IMessageService {
         Message message = new Message();
         message.setContent(chatMessageRequest.getContent());
         message.setSenderUsername(chatMessageRequest.getSenderUsername());
-        message.setDate(new Date());
+        message.setDate(chatMessageRequest.getDate());
         message.setUsernameSenderDelete(false);
         message.setUsernameReceiverDelete(false);
         message.setRoomChat(roomChatService.getRoomChatById(chatMessageRequest.getRomChatId()));
@@ -53,31 +53,43 @@ public class MessageServiceImpl implements IMessageService {
 
 
     @Override
-    public ListMessagesPageResponse getListChatMessagesPage(ListChatMessagesPageRequest request) {
+    public ListMessagesPageResponse getListChatMessagesPage(String username, UUID roomChatId, int page, int size) {
         Page<Message> messages = messageRepository
-                .findByRoomChatRomChatId(request.getRoomChatId(),
-                        PageRequest.of(request.getPage() - 1, request.getSize()))
+                .findByRoomChatRomChatId(roomChatId, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm danh sách tin nhắn!"));
 
-        String message = "Lấy danh sách tin nhắn thành công!";
+        String message = "Lấy danh sách tin nhắn theo phòng chat thành công!";
 
-        return listMessagesPageResponse(messages, message, request.getPage(), request.getSize());
+        return listMessagesPageResponse(messages, message, page, size);
     }
 
 
     @Override
-    public ListMessagesPageResponse getListChatMessagesPageBySenderUsernameAndReceiverUsername(ListChatMessagesPageByUsernameRequest request) {
+    public ListMessagesPageResponse getListChatMessagesPageByUsername(String senderUsername, String receiverUsername, int page, int size) {
 
-        RoomChat roomChat = roomChatService.getRoomChatBySenderUsernameAndReceiverUsername(request.getSenderUsername(), request.getReceiverUsername());
+        RoomChat roomChat = roomChatService.getRoomChatBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername);
 
         Page<Message> messages = messageRepository
-                .findByRoomChatRomChatId(roomChat.getRomChatId(),
-                        PageRequest.of(request.getPage() - 1, request.getSize()))
+                .findByRoomChatRomChatId(roomChat.getRomChatId(), PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm danh sách tin nhắn!"));
 
         String message = "Lấy danh sách tin nhắn thành công!";
 
-        return listMessagesPageResponse(messages, message, request.getPage(), request.getSize());
+        return listMessagesPageResponse(messages, message, page, size);
+    }
+
+    @Override
+    public void checkRequestPageParams(int page, int size) {
+        if (page < 0) {
+            throw new BadRequestException("Số trang phải lớn hơn 0");
+        }
+        if (size < 0) {
+            throw new BadRequestException("Số lượng phải lớn hơn 0");
+        }
+
+        if (size > 100) {
+            throw new BadRequestException("Số lượng phải nhỏ hơn 100");
+        }
     }
 
 
@@ -90,7 +102,7 @@ public class MessageServiceImpl implements IMessageService {
             response.setPage(page);
             response.setSize(size);
             response.setMessage(message);
-            response.setStatus("Success");
+            response.setStatus("OK");
             response.setCode(200);
 
             return response;

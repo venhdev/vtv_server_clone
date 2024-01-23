@@ -44,18 +44,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-            System.out.println("authHeader:aaaaa " + authHeader);
             return;
-//            throw new UnauthorizedAccessException("Unauthorized access - Token not provided or invalid format.");
         }
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
+
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             var isTokenValid = jwtService.isTokenValid(jwt, userDetails);
 
-            // System.out.println("isTokenValid: " + isTokenValid);
+             System.out.println("isTokenValid: " + isTokenValid);
 
             if (!isTokenValid) {
                 throw new UnauthorizedAccessException("Token đã hết hạn.");

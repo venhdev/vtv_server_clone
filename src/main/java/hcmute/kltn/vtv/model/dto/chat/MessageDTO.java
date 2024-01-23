@@ -32,8 +32,6 @@ public class MessageDTO {
 
     private boolean usernameReceiverDelete;
 
-    private Long customerId;
-
     private UUID roomChatId;
 
     public static MessageDTO convertEntityToDTO(Message message) {
@@ -54,7 +52,7 @@ public class MessageDTO {
         for (Message message : messages) {
             messageDTOs.add(convertEntityToDTO(message));
         }
-        messageDTOs.sort(Comparator.comparing(MessageDTO::getDate));
+        messageDTOs.sort(Comparator.comparing(MessageDTO::getDate).reversed());
         return messageDTOs;
     }
 

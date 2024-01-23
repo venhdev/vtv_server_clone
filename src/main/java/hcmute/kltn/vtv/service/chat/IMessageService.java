@@ -7,11 +7,16 @@ import hcmute.kltn.vtv.model.data.chat.response.ListMessagesPageResponse;
 import hcmute.kltn.vtv.model.entity.chat.Message;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 public interface IMessageService {
     @Transactional
     Message addNewMessage(ChatMessageRequest chatMessageRequest);
 
-    ListMessagesPageResponse getListChatMessagesPage(ListChatMessagesPageRequest request);
 
-    ListMessagesPageResponse getListChatMessagesPageBySenderUsernameAndReceiverUsername(ListChatMessagesPageByUsernameRequest request);
+    ListMessagesPageResponse getListChatMessagesPage(String username, UUID roomChatId, int page, int size);
+
+    ListMessagesPageResponse getListChatMessagesPageByUsername(String senderUsername, String receiverUsername, int page, int size);
+
+    void checkRequestPageParams(int page, int size);
 }

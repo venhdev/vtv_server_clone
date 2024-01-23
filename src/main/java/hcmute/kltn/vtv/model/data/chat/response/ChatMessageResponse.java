@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.data.chat.response;
 
 
 import hcmute.kltn.vtv.model.data.chat.request.ChatMessageRequest;
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessageResponse {
+public class ChatMessageResponse extends ResponseAbstract {
 
     private String content;
     private Date date;

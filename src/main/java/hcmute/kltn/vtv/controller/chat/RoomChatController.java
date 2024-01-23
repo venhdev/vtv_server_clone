@@ -32,8 +32,8 @@ public class RoomChatController {
 
     @GetMapping("/list/page/{page}/size/{size}")
     public ResponseEntity<ListRoomChatsPageResponse> getListRoomChat(
-            @PathVariable("page") int page,
-            @PathVariable("size") int size,
+            @PathVariable int page,
+            @PathVariable int size,
             HttpServletRequest requestServlet) {
 
         String username = (String) requestServlet.getAttribute("username");
@@ -47,7 +47,7 @@ public class RoomChatController {
     }
 
     @DeleteMapping("/delete-room/{roomChatId}")
-    public ResponseEntity<RoomChatResponse> deleteRoomChat(@PathVariable("roomChatId") UUID roomChatId,
+    public ResponseEntity<RoomChatResponse> deleteRoomChat(@PathVariable UUID roomChatId,
                                                            HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
