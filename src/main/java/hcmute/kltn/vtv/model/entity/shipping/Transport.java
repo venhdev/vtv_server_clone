@@ -18,10 +18,14 @@ import java.util.UUID;
 public class Transport {
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transportId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID transportId;
 
     private String wardCodeShop;
+
+    private String wardCodeCustomer;
+
+    private Long orderId;
 
     private LocalDateTime createAt;
 
@@ -29,10 +33,6 @@ public class Transport {
 
     @Enumerated(EnumType.STRING)
     private TransportStatus transportStatus;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id")
-    private Order order;
 
     @OneToMany(mappedBy = "transport",
             cascade = CascadeType.ALL,

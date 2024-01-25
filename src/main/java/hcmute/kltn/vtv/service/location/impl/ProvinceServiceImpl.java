@@ -5,10 +5,12 @@ import hcmute.kltn.vtv.model.dto.location.ProvinceDTO;
 import hcmute.kltn.vtv.model.entity.location.Province;
 import hcmute.kltn.vtv.repository.location.ProvinceRepository;
 import hcmute.kltn.vtv.service.location.IProvinceService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -32,6 +34,20 @@ public class ProvinceServiceImpl implements IProvinceService {
         response.setMessage("Lấy danh sách tỉnh thành phố thành công.");
         response.setStatus("OK");
         return response;
+    }
+
+
+    @Override
+    public List<Province> getPronvincesByProvinceCode(List<String> provincesCode) {
+        List<Province> provinces = new ArrayList<>();
+        for (String provinceCode : provincesCode) {
+            Province province = provinceRepository.findByProvinceCode(provinceCode)
+                    .orElseThrow(() -> new NotFoundException(
+                            "Không tìm thấy tỉnh thành phố nào có mã là: " + provinceCode));
+            provinces.add(province);
+        }
+        provinces.sort(Comparator.comparing(Province::getName));
+        return provinces;
     }
 
 }

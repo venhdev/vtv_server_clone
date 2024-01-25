@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.entity.shipping;
 
+import hcmute.kltn.vtv.model.entity.location.Province;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
@@ -7,11 +8,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -27,16 +28,6 @@ public class TransportServiceProvider {
 
     private String shortName;
 
-    private String province;
-
-    private String district;
-
-    private String ward;
-
-    private String wardCode;
-
-    private String fullAddress;
-
     private String usernameAdded;
 
     @Enumerated(EnumType.STRING)
@@ -50,6 +41,11 @@ public class TransportServiceProvider {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
+    @JoinColumn(name = "code")
+    private List<Province> provinces;
 
 
 }
