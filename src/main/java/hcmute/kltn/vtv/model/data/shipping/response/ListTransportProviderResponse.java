@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.shipping.response;
 
-import hcmute.kltn.vtv.model.dto.shipping.TransportServiceProviderDTO;
+import hcmute.kltn.vtv.model.dto.shipping.TransportProviderDTO;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListTransportServiceProvidersResponse extends ResponseAbstract {
+public class ListTransportProviderResponse extends ResponseAbstract {
 
         private int count;
 
-        private List<TransportServiceProviderDTO> transportServiceProviderDTOs;
+        private List<TransportProviderDTO> transportProviderDTOs;
 }

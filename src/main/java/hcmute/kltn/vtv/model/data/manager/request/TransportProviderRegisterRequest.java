@@ -1,5 +1,4 @@
-package hcmute.kltn.vtv.model.data.admin.request;
-
+package hcmute.kltn.vtv.model.data.manager.request;
 
 import hcmute.kltn.vtv.authentication.request.RegisterRequest;
 import hcmute.kltn.vtv.model.dto.location.ProvinceDTO;
@@ -16,7 +15,7 @@ import java.util.Set;
 @Data
 @ToString
 @RequiredArgsConstructor
-public class TransportServiceProviderRegisterRequest {
+public class TransportProviderRegisterRequest {
 
     private String fullName;
 
@@ -45,7 +44,7 @@ public class TransportServiceProviderRegisterRequest {
             throw new BadRequestException("Tỉnh thành không được để trống!");
         }
 
-        if(hasDuplicates(this.provincesCode)){
+        if (hasDuplicates(this.provincesCode)) {
             throw new BadRequestException("Mã tỉnh thành không được trùng lặp.");
         }
 
@@ -60,7 +59,6 @@ public class TransportServiceProviderRegisterRequest {
         this.usernameAdded = this.usernameAdded.trim();
     }
 
-
     public static boolean hasDuplicates(List<String> list) {
         Set<String> uniqueSet = new HashSet<>();
 
@@ -72,7 +70,5 @@ public class TransportServiceProviderRegisterRequest {
 
         return false;
     }
-
-
 
 }

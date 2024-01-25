@@ -295,3 +295,20 @@
 
 
 [//]: # (có thên thêmn nhà cung cấp vận chuyển)
+
+
+
+- Trò chuyện với customer:
+  - Tạo cuộc trò chuyện với customer.
+  - Xem danh sách cuộc trò chuyện.
+  - Xem chi tiết cuộc trò chuyện.
+  - Gửi tin nhắn.
+
+- Quản lý nhà cung cấp vận chuyển từ quyền manager:
+    - Thêm nhà cung cấp vận chuyển.
+
+
+- Xem thông tin nhà cung cấp vận chuyển từ quyền customer:
+    - Xem danh sách nhà cung cấp vận chuyển đầy đủ thông tin.
+    - Xem danh sách nhà cung cấp vận chuyển rút gọn thông tin.
+    - Xem chi tiết nhà cung cấp vận chuyển.

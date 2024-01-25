@@ -1,5 +1,7 @@
 package hcmute.kltn.vtv;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,15 +11,21 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 public class ServerVtvApplication {
 
+    private static final Logger logger = LoggerFactory.getLogger(ServerVtvApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(ServerVtvApplication.class, args);
 
         try {
             InetAddress ip = InetAddress.getLocalHost();
-            System.out.println("\n\n" +"IP Address: " + ip.getHostAddress());
-            System.out.println("Localhost:  http://localhost:8585/swagger-ui/index.html" + "\n\n");
+            logger.info("""
+                                    
+                    IP Address: {}
+                    Localhost:  http://localhost:8585/swagger-ui/index.html
+                          
+                    """, ip.getHostAddress());
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while getting the local host address.", e);
         }
     }
 

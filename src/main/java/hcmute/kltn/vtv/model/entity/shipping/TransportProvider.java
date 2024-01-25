@@ -10,18 +10,17 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class TransportServiceProvider {
+public class TransportProvider {
 
     @Id
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long transportServiceProviderId;
+    private Long transportProviderId;
 
     @Column(nullable = false, unique = true)
     private String fullName;
@@ -37,15 +36,20 @@ public class TransportServiceProvider {
 
     private LocalDateTime updateAt;
 
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
-    @JoinColumn(name = "code")
-    private List<Province> provinces;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "province_code")
+//    private List<Province> provinces;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "transport_provider_province",
+            joinColumns = @JoinColumn(name = "transport_provider_id"),
+            inverseJoinColumns = @JoinColumn(name = "province_code")
+    )
+    private List<Province> provinces;
 
 }
