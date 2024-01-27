@@ -64,6 +64,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         if (existingCustomer.isPresent()) {
             throw new DuplicateEntryException("Tài khoản đã tồn tại.");
         }
+
         existingCustomer = customerRepository.findByEmail(customerRequest.getEmail());
         if (existingCustomer.isPresent()) {
             throw new DuplicateEntryException("Email đã được đăng ký.");

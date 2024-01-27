@@ -27,6 +27,10 @@ public class TransportProvider {
 
     private String shortName;
 
+    private String email;
+
+    private String phone;
+
     private String usernameAdded;
 
     @Enumerated(EnumType.STRING)

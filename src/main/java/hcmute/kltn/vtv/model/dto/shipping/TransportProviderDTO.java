@@ -28,6 +28,10 @@ public class TransportProviderDTO {
 
     private String shortName;
 
+    private String email;
+
+    private String phone;
+
     private String usernameAdded;
 
     private Status status;
@@ -44,6 +48,8 @@ public class TransportProviderDTO {
         dto.setTransportProviderId(transportProvider.getTransportProviderId());
         dto.setFullName(transportProvider.getFullName());
         dto.setShortName(transportProvider.getShortName());
+        dto.setEmail(transportProvider.getEmail());
+        dto.setPhone(transportProvider.getPhone());
         dto.setUsernameAdded(transportProvider.getUsernameAdded());
         dto.setStatus(transportProvider.getStatus());
         dto.setCustomerId(transportProvider.getCustomer().getCustomerId());
@@ -58,6 +64,8 @@ public class TransportProviderDTO {
         dto.setTransportProviderId(transportProvider.getTransportProviderId());
         dto.setFullName(transportProvider.getFullName());
         dto.setShortName(transportProvider.getShortName());
+        dto.setEmail(transportProvider.getEmail());
+        dto.setPhone(transportProvider.getPhone());
         dto.setCountProvince(transportProvider.getProvinces().size());
         dto.setProvinceDTOs(null);
         return dto;

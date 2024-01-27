@@ -3,7 +3,7 @@ package hcmute.kltn.vtv.controller.user;
 
 import hcmute.kltn.vtv.model.data.shipping.response.ListTransportProviderResponse;
 import hcmute.kltn.vtv.model.data.shipping.response.TransportProviderResponse;
-import hcmute.kltn.vtv.service.shipping.ITransportProvider;
+import hcmute.kltn.vtv.service.shipping.ITransportProviderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/customer/transport-provider")
 public class CustomerTransportProviderController {
 
-    private final ITransportProvider transportProvider;
+    private final ITransportProviderService transportProvider;
 
     @GetMapping("/list/not-province")
     public ResponseEntity<ListTransportProviderResponse> getListTransportProviderNotProvince() {

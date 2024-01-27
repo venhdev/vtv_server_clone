@@ -114,8 +114,9 @@ public class SecurityConfig {
             "/api//deliver/**",
     };
 
+
     private static final String[] PROVIDER_ROLE = {
-            "/api/provider/**",
+            "/api/transport-provider/**",
     };
 
 

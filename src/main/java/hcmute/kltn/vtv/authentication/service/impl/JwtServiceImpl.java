@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.authentication.service.impl;
 
 import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.repository.user.TokenRepository;
+import hcmute.kltn.vtv.util.exception.JwtExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -86,9 +87,17 @@ public class JwtServiceImpl implements IJwtService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
+//    @Override
+//    public Boolean isTokenExpired(String token) {
+//        return extractExpiration(token).before(new Date());
+//    }
+
     @Override
     public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        if (extractExpiration(token).before(new Date())) {
+            throw new JwtExpiredException("Token đã hết hạn.");
+        }
+        return false;
     }
 
     @Override

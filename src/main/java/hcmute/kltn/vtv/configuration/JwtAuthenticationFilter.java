@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.configuration;
 
 import hcmute.kltn.vtv.authentication.service.IJwtService;
+import hcmute.kltn.vtv.util.exception.JwtExpiredException;
 import hcmute.kltn.vtv.util.exception.UnauthorizedAccessException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -54,10 +55,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             var isTokenValid = jwtService.isTokenValid(jwt, userDetails);
 
-             System.out.println("isTokenValid: " + isTokenValid);
-
             if (!isTokenValid) {
-                throw new UnauthorizedAccessException("Token đã hết hạn.");
+                throw new JwtExpiredException("Token hết hạn.");
             }
 
             request.setAttribute("username", username);

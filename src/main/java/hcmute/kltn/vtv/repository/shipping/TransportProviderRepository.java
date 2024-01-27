@@ -13,4 +13,11 @@ public interface TransportProviderRepository extends JpaRepository<TransportProv
     // Các phương thức truy vấn cụ thể có thể được thêm ở đây
 
     Optional<List<TransportProvider>> findAllByStatus(Status status);
+
+    Optional<TransportProvider> findByEmail(String email);
+
+    Optional<TransportProvider> findByPhone(String phone);
+
+    Optional<TransportProvider> findByCustomerUsername(String username);
+
 }

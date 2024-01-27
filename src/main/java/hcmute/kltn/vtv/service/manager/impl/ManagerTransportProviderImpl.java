@@ -13,9 +13,10 @@ import hcmute.kltn.vtv.repository.shipping.TransportProviderRepository;
 import hcmute.kltn.vtv.service.location.IProvinceService;
 import hcmute.kltn.vtv.service.manager.IManagerCustomerService;
 import hcmute.kltn.vtv.service.manager.IManagerTransportProvider;
-import hcmute.kltn.vtv.service.shipping.ITransportProvider;
+import hcmute.kltn.vtv.service.shipping.ITransportProviderService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,15 +33,15 @@ public class ManagerTransportProviderImpl implements IManagerTransportProvider {
     private final IAuthenticationService authenticationService;
     private final IManagerCustomerService managerCustomerService;
     private final IProvinceService provinceService;
-    private final ITransportProvider transportProviderService;
+    private final ITransportProviderService transportProviderService;
 
     @Override
     @Transactional
     public TransportProviderResponse addNewTransportProvider(TransportProviderRegisterRequest request) {
 
-        if (customerService.checkUsernameExist(request.getRegisterRequest().getUsername())) {
-            throw new BadRequestException("Tài khoản đã tồn tại.");
-        }
+        checkEmailExist(request.getEmail());
+        checkPhoneExist(request.getPhone());
+        checkUsernameExist(request.getRegisterRequest().getUsername());
 
         List<Province> provinces = provinceService.getPronvincesByProvinceCode(request.getProvincesCode());
         Customer customer = authenticationService.addNewCustomer(request.getRegisterRequest());
@@ -69,10 +70,39 @@ public class ManagerTransportProviderImpl implements IManagerTransportProvider {
         return transportProviderService.listTransportProvidersResponse(transportProviders);
     }
 
+
+    private void checkEmailExist(String email) {
+        TransportProvider transportProvider = transportProviderRepository.findByEmail(email)
+                .orElse(null);
+
+        if (transportProvider != null) {
+            throw new NotFoundException("Email nhà vận chuyển đã tồn tại.");
+        }
+    }
+
+
+    private void checkPhoneExist(String phone) {
+        TransportProvider transportProvider = transportProviderRepository.findByPhone(phone)
+                .orElse(null);
+
+        if (transportProvider != null) {
+            throw new NotFoundException("Số điện thoại nhà vận chuyển đã tồn tại.");
+        }
+    }
+
+    private void checkUsernameExist(String username) {
+        if (customerService.checkUsernameExist(username)) {
+            throw new BadRequestException("Tài khoản đã tồn tại.");
+        }
+    }
+
+
     private TransportProvider createTransportProvider(TransportProviderRegisterRequest request) {
         TransportProvider transportProvider = new TransportProvider();
         transportProvider.setFullName(request.getFullName());
         transportProvider.setShortName(request.getShortName());
+        transportProvider.setEmail(request.getEmail());
+        transportProvider.setPhone(request.getPhone());
         transportProvider.setUsernameAdded(request.getUsernameAdded());
         transportProvider.setStatus(Status.ACTIVE);
         transportProvider.setCreateAt(LocalDateTime.now());
@@ -80,9 +110,6 @@ public class ManagerTransportProviderImpl implements IManagerTransportProvider {
 
         return transportProvider;
     }
-
-
-
 
 
 }

@@ -36,9 +36,6 @@ public class CustomExceptionHandler {
     }
 
 
-
-
-
     @ExceptionHandler(DuplicateEntryException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateEntryException(DuplicateEntryException ex) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, 409, "Thông báo", ex.getMessage());
@@ -51,7 +48,6 @@ public class CustomExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo", ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
-
 
 
     @ExceptionHandler(BadRequestException.class)
@@ -181,6 +177,14 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+
+    @ExceptionHandler(JwtExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleJwtExpiredException(JwtExpiredException ex) {
+        String errorMessage = "Phiên đăng nhập đã hết hạn.";
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo", errorMessage);
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+    }
 
 
 }
