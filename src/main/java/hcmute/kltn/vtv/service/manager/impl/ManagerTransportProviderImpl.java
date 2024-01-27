@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.service.manager.impl;
 
 import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
 import hcmute.kltn.vtv.model.data.manager.request.TransportProviderRegisterRequest;
+import hcmute.kltn.vtv.model.data.manager.request.UpdateTransportProviderWithProvincesRequest;
 import hcmute.kltn.vtv.model.data.shipping.response.ListTransportProviderResponse;
 import hcmute.kltn.vtv.model.data.shipping.response.TransportProviderResponse;
 import hcmute.kltn.vtv.model.entity.location.Province;
@@ -58,6 +59,26 @@ public class ManagerTransportProviderImpl implements IManagerTransportProvider {
                     "Đăng ký nhà vận chuyển thành công.", "Success");
         } catch (Exception e) {
             throw new BadRequestException("Đăng ký nhà vận chuyển thất bại.");
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public TransportProviderResponse updateTransportProviderWithProvinces(UpdateTransportProviderWithProvincesRequest request) {
+
+        TransportProvider transportProvider = transportProviderService.getTransportProviderByTransportProviderId(request.getTransportProviderId());
+
+        List<Province> provinces = provinceService.getPronvincesByProvinceCode(request.getProvincesCode());
+        transportProvider.setProvinces(provinces);
+
+        try {
+            transportProviderRepository.save(transportProvider);
+
+            return transportProviderService.transportProviderResponse(transportProvider,
+                    "Cập nhật nhà vận chuyển thành công.", "Success");
+        } catch (Exception e) {
+            throw new NotFoundException("Cập nhật nhà vận chuyển thất bại.");
         }
     }
 

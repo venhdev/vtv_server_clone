@@ -29,7 +29,7 @@ public class TransportProviderImplService implements ITransportProviderService {
 
         TransportProvider transportProvider = updateTransportProvider(request);
 
-        
+
         checkOwnerUpdateExist(request.getUsername(), request.getTransportProviderId());
         checkEmailUpdateExist(request.getEmail(), request.getTransportProviderId());
         checkPhoneUpdateExist(request.getPhone(), request.getTransportProviderId());
@@ -89,6 +89,8 @@ public class TransportProviderImplService implements ITransportProviderService {
         return transportProviderResponse(transportProvider, "Lấy thông tin nhà vận chuyển thành công.", "OK");
     }
 
+
+    @Override
     public TransportProvider getTransportProviderByTransportProviderId(Long id) {
         TransportProvider transportProvider = transportProviderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy nhà vận chuyển."));

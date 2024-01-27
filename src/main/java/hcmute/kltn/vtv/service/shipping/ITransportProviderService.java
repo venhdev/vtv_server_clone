@@ -16,6 +16,8 @@ public interface ITransportProviderService {
 
     TransportProviderResponse getTransportProviderById(Long id);
 
+    TransportProvider getTransportProviderByTransportProviderId(Long id);
+
     ListTransportProviderResponse getAllTransportProvidersNotProvince();
 
     ListTransportProviderResponse getAllTransportProviders();
