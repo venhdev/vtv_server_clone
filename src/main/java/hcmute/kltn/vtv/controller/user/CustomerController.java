@@ -7,6 +7,7 @@ import hcmute.kltn.vtv.model.data.user.response.ForgotPasswordResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.user.IMailService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,9 @@ public class CustomerController {
 
     @GetMapping("/forgot-password")
     public ResponseEntity<ForgotPasswordResponse> sendMailForgotPassword(@RequestParam("username") String username) {
+        if (username == null || username.isEmpty()) {
+            throw new BadRequestException("Tài khoản không được để trống.");
+        }
         ForgotPasswordResponse response = mailService.sendMailForgotPassword(username);
         return ResponseEntity.ok(response);
     }
