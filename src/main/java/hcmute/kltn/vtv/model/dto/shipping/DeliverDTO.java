@@ -47,8 +47,8 @@ public class DeliverDTO {
     public static DeliverDTO convertEntityToDTO(Deliver deliver) {
         DeliverDTO deliverDTO = new DeliverDTO();
         deliverDTO.setDeliverId(deliver.getDeliverId());
-//        deliverDTO.setPhone(deliver.getPhone());
-//        deliverDTO.setEmail(deliver.getEmail());
+        deliverDTO.setPhone(deliver.getPhone());
+        deliverDTO.setEmail(deliver.getEmail());
         deliverDTO.setProvince(deliver.getProvince());
         deliverDTO.setDistrict(deliver.getDistrict());
         deliverDTO.setWard(deliver.getWard());
@@ -70,9 +70,7 @@ public class DeliverDTO {
             deliverDTOs.add(convertEntityToDTO(deliver));
         }
 
-        if (!deliverDTOs.isEmpty()){
-            deliverDTOs.sort((o1, o2) -> o1.getUsernameAdded().compareTo(o2.getUsernameAdded()));
-        }
+        deliverDTOs.sort((o1, o2) -> o2.getDeliverId().compareTo(o1.getDeliverId()));
         return deliverDTOs;
     }
 

@@ -278,12 +278,7 @@
     - Lấy danh sách phường xã theo quận huyện.
     - Lấy thông tin chi tiết location theo phường xã.
 
-- Quản lý nhà vận chuyển từ quyền manager_deliver:
-    - Thêm nhân viên vận chuyển.
-    - Cập nhật khu vực làm việc của nhân viên vận chuyển.
-    - Cập nhật trạng thái nhân viên vận chuyển.
-    - Xem danh sách nhân viên vận chuyển theo trạng thái.
-    - Xem danh sách nhân viên vận chuyển theo trạng thái và loại công việc.
+
 
 - Quản lý quyền nhân viên từ quyền manger:
     - Thêm quyền nhân viên.
@@ -306,9 +301,18 @@
 
 - Quản lý nhà cung cấp vận chuyển từ quyền manager:
     - Thêm nhà cung cấp vận chuyển.
+    - Cập nhật khu vực làm việc của nhà cung cấp vận chuyển.
 
 
 - Xem thông tin nhà cung cấp vận chuyển từ quyền customer:
     - Xem danh sách nhà cung cấp vận chuyển đầy đủ thông tin.
     - Xem danh sách nhà cung cấp vận chuyển rút gọn thông tin.
     - Xem chi tiết nhà cung cấp vận chuyển.
+
+
+- Quản lý nhà vận chuyển từ quyền provider:
+  - Thêm nhân viên vận chuyển.
+  - Cập nhật khu vực làm việc của nhân viên vận chuyển.
+  - Cập nhật trạng thái nhân viên vận chuyển.
+  - Xem danh sách nhân viên vận chuyển theo trạng thái.
+  - Xem danh sách nhân viên vận chuyển theo trạng thái và loại công việc.

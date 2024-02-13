@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.data.shipping.request;
 
 import hcmute.kltn.vtv.authentication.request.RegisterRequest;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
+import hcmute.kltn.vtv.model.extra.EmailValidator;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,15 +11,16 @@ import lombok.ToString;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 @Data
 @ToString
 @RequiredArgsConstructor
 public class DeliverRequest {
 
-//    private String phone;
-//
-//    private String email;
+    private String phone;
+
+    private String email;
 
     private String province;
 
@@ -38,29 +40,27 @@ public class DeliverRequest {
 
     private List<String> wardsCodeWork;
 
-//    private Long customerId;
-
     private RegisterRequest registerCustomerRequest;
 
 
     public void validate() {
-//        if (this.phone == null || this.phone.isEmpty()) {
-//            throw new BadRequestException("Số điện thoại không được để trống.");
-//        }
-//
-//        if (!Pattern.matches("[0-9]+", phone)) {
-//            throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
-//        }
-//
-//        if (phone.length() < 9 || phone.length() > 11) {
-//            throw new BadRequestException("Số điện thoại không hợp lệ.");
-//        }
-//
-//        if (this.email == null || this.email.isEmpty()) {
-//            throw new BadRequestException("Email không được để trống.");
-//        } else if (!EmailValidator.isValidEmail(email)) {
-//            throw new BadRequestException("Email không hợp lệ.");
-//        }
+        if (this.phone == null || this.phone.isEmpty()) {
+            throw new BadRequestException("Số điện thoại không được để trống.");
+        }
+
+        if (!Pattern.matches("[0-9]+", phone)) {
+            throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");
+        }
+
+        if (phone.length() < 9 || phone.length() > 11) {
+            throw new BadRequestException("Số điện thoại không hợp lệ.");
+        }
+
+        if (this.email == null || this.email.isEmpty()) {
+            throw new BadRequestException("Email không được để trống.");
+        } else if (!EmailValidator.isValidEmail(email)) {
+            throw new BadRequestException("Email không hợp lệ.");
+        }
         if (this.province == null || this.province.isEmpty()) {
             throw new BadRequestException("Tỉnh/Thành phố không được để trống.");
         }
@@ -122,8 +122,8 @@ public class DeliverRequest {
     }
 
     public void trim() {
-//        this.phone = this.phone.trim();
-//        this.email = this.email.trim();
+        this.phone = this.phone.trim();
+        this.email = this.email.trim();
         this.province = this.province.trim();
         this.district = this.district.trim();
         this.ward = this.ward.trim();
@@ -138,8 +138,8 @@ public class DeliverRequest {
     public static Deliver convertRequestToEntity(DeliverRequest deliverRequest) {
         Deliver deliver = new Deliver();
 //        deliver.setDeliverId(deliverRequest.getDeliverId());
-//        deliver.setPhone(deliverRequest.getPhone());
-//        deliver.setEmail(deliverRequest.getEmail());
+        deliver.setPhone(deliverRequest.getPhone());
+        deliver.setEmail(deliverRequest.getEmail());
         deliver.setProvince(deliverRequest.getProvince());
         deliver.setDistrict(deliverRequest.getDistrict());
         deliver.setWard(deliverRequest.getWard());

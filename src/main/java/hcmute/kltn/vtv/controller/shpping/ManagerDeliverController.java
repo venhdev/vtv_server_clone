@@ -6,7 +6,7 @@ import hcmute.kltn.vtv.model.data.shipping.request.UpdateStatusDeliverRequest;
 import hcmute.kltn.vtv.model.data.shipping.response.DeliverResponse;
 import hcmute.kltn.vtv.model.data.shipping.response.ListDeliverResponse;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.service.manager.IManagerDeliverService;
+import hcmute.kltn.vtv.service.shipping.IManagerDeliverService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/manager/deliver")
+@RequestMapping("/api/transport-provider/manager/deliver")
 @RequiredArgsConstructor
 public class ManagerDeliverController {
 

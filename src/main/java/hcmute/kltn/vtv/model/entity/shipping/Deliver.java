@@ -23,9 +23,9 @@ public class Deliver {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long deliverId;
 
-//    private String phone;
-//
-//    private String email;
+    private String phone;
+
+    private String email;
 
     private String province;
 

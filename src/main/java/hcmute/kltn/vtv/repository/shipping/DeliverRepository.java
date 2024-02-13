@@ -17,4 +17,16 @@ public interface DeliverRepository extends JpaRepository<Deliver, Long> {
     Optional<List<Deliver>> findAllByStatus(Status status);
 
     Optional<List<Deliver>> findAllByStatusAndTypeWork(Status status, String typeWork);
+
+    Optional<Deliver> findByDeliverId(Long deliverId);
+
+    Optional<Deliver> findByCustomerUsername(String username);
+
+    Optional<Deliver> findByEmail(String email);
+
+    boolean existsByEmail(String email);
+
+    Optional<Deliver> findByPhone(String phone);
+
+    boolean existsByPhone(String phone);
 }

@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.service.manager;
+package hcmute.kltn.vtv.service.shipping;
 
 import hcmute.kltn.vtv.model.data.shipping.request.DeliverRequest;
 import hcmute.kltn.vtv.model.data.shipping.request.UpdateDeliverWorkRequest;

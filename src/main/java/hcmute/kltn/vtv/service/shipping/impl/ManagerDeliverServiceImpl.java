@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.service.manager.impl;
+package hcmute.kltn.vtv.service.shipping.impl;
 
 import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
 import hcmute.kltn.vtv.model.data.shipping.request.DeliverRequest;
@@ -15,7 +15,7 @@ import hcmute.kltn.vtv.repository.shipping.DeliverRepository;
 import hcmute.kltn.vtv.service.location.IDistrictService;
 import hcmute.kltn.vtv.service.location.IWardService;
 import hcmute.kltn.vtv.service.manager.IManagerCustomerService;
-import hcmute.kltn.vtv.service.manager.IManagerDeliverService;
+import hcmute.kltn.vtv.service.shipping.IManagerDeliverService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
@@ -49,17 +49,12 @@ public class ManagerDeliverServiceImpl implements IManagerDeliverService {
     @Transactional
     public DeliverResponse addNewDeliver(DeliverRequest request) {
 
+        checkEmailExist(request.getEmail());
+        checkPhoneExist(request.getPhone());
+
         Customer customer = authenticationService.addNewCustomer(request.getRegisterCustomerRequest());
-
-        Deliver deliver = DeliverRequest.convertRequestToEntity(request);
-
-        deliver.setDistrictWork(districtService.getDistrictByCode(request.getDistrictCodeWork()));
+        Deliver deliver = createDeliver(request);
         deliver.setCustomer(customer);
-        deliver.setWardsWork(wardService.getWardsByWardsCodeWithDistrictCode(
-                request.getWardsCodeWork(), request.getDistrictCodeWork()));
-        deliver.setStatus(Status.ACTIVE);
-        deliver.setCreateAt(LocalDateTime.now());
-        deliver.setUpdateAt(LocalDateTime.now());
 
         try {
             managerCustomerService.updateRoleWithCustomer(customer.getCustomerId(), Role.DELIVER);
@@ -162,6 +157,42 @@ public class ManagerDeliverServiceImpl implements IManagerDeliverService {
     }
 
 
+    private Deliver createDeliver(DeliverRequest request) {
+        Deliver deliver = DeliverRequest.convertRequestToEntity(request);
+
+        deliver.setPhone(request.getPhone());
+        deliver.setEmail(request.getEmail());
+        deliver.setProvince(request.getProvince());
+        deliver.setDistrict(request.getDistrict());
+        deliver.setWard(request.getWard());
+        deliver.setWardCode(request.getWardCode());
+        deliver.setFullAddress(request.getFullAddress());
+        deliver.setTypeWork(request.getTypeWork());
+        deliver.setUsernameAdded(request.getUsernameAdded());
+        deliver.setDistrictWork(districtService.getDistrictByCode(request.getDistrictCodeWork()));
+        deliver.setWardsWork(wardService.getWardsByWardsCodeWithDistrictCode(
+                request.getWardsCodeWork(), request.getDistrictCodeWork()));
+        deliver.setStatus(Status.ACTIVE);
+        deliver.setCreateAt(LocalDateTime.now());
+        deliver.setUpdateAt(LocalDateTime.now());
+
+        return deliver;
+    }
+
+
+    private void checkEmailExist(String email) {
+        if (deliverRepository.existsByEmail(email)) {
+            throw new BadRequestException("Email đã tồn tại.");
+        }
+    }
+
+    private void checkPhoneExist(String phone) {
+        if (deliverRepository.existsByPhone(phone)) {
+            throw new BadRequestException("Số điện thoại đã tồn tại.");
+        }
+    }
+
+
 
     private void checkStatusDeliver(Status status) {
         if (!status.equals(Status.ACTIVE) && !status.equals(Status.INACTIVE) && !status.equals(Status.DELETED) && !status.equals(Status.LOCKED)) {
@@ -177,16 +208,6 @@ public class ManagerDeliverServiceImpl implements IManagerDeliverService {
 
 
 
-
-
-    private Customer checkCustomerById(Long customerId) {
-
-        if (deliverRepository.existsByCustomerCustomerId(customerId)) {
-            throw new NotFoundException("Nhân viên này đã tồn tại.");
-        }
-
-        return customerService.getCustomerById(customerId);
-    }
 
 
     private String getTypeWork(String typeWork) {
