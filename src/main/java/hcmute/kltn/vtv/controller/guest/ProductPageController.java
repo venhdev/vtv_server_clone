@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.controller.guest;
 
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.service.guest.IPageService;
 import hcmute.kltn.vtv.service.guest.IProductPageService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,13 @@ public class ProductPageController {
     @Autowired
     private IProductPageService productPageService;
 
+    @Autowired
+    private final IPageService pageService;
+
     @GetMapping("/list")
     public ResponseEntity<ListProductPageResponse> getListProductPage(@RequestParam int page,
             @RequestParam int size) {
-        productPageService.checkRequestPageParams(page, size);
+        pageService.checkRequestProductPageParams(page, size);
 
         return ResponseEntity.ok(productPageService.getListProductPage(page, size));
     }
@@ -31,7 +35,7 @@ public class ProductPageController {
         if (categoryId == null) {
             throw new NotFoundException("Mã danh mục không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
+        pageService.checkRequestProductPageParams(page, size);
 
         return ResponseEntity.ok(productPageService.getListProductPageByCategoryId(categoryId, page, size));
     }
@@ -43,7 +47,7 @@ public class ProductPageController {
         if (shopId == null) {
             throw new NotFoundException("Mã cửa hàng không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
+        pageService.checkRequestProductPageParams(page, size);
 
         return ResponseEntity.ok(productPageService.getListProductsPageByShopId(shopId, page, size));
     }
@@ -55,7 +59,7 @@ public class ProductPageController {
         if (shopId == null) {
             throw new NotFoundException("Mã cửa hàng không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
+        pageService.checkRequestProductPageParams(page, size);
 
         return ResponseEntity.ok(productPageService.getListBestSellingProductsPageByShopId(shopId, page, size));
     }
@@ -67,7 +71,7 @@ public class ProductPageController {
         if (shopId == null) {
             throw new NotFoundException("Mã cửa hàng không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
+        pageService.checkRequestProductPageParams(page, size);
 
         return ResponseEntity.ok(productPageService.getListNewProductsPageByShopId(shopId, page, size));
     }
@@ -77,8 +81,8 @@ public class ProductPageController {
             @RequestParam int size,
             @RequestParam Long minPrice,
             @RequestParam Long maxPrice) {
-        productPageService.checkRequestPageParams(page, size);
-        productPageService.checkRequestPriceRangeParams(minPrice, maxPrice);
+        pageService.checkRequestProductPageParams(page, size);
+        pageService.checkRequestPriceRangeParams(minPrice, maxPrice);
 
         return ResponseEntity.ok(productPageService.getListProductsPagePriceRange(minPrice, maxPrice, page, size));
     }
@@ -92,8 +96,8 @@ public class ProductPageController {
         if (shopId == null) {
             throw new NotFoundException("Mã cửa hàng không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
-        productPageService.checkRequestPriceRangeParams(minPrice, maxPrice);
+        pageService.checkRequestProductPageParams(page, size);
+        pageService.checkRequestPriceRangeParams(minPrice, maxPrice);
 
         return ResponseEntity
                 .ok(productPageService.getListProductsPageByShopAndPriceRange(shopId, minPrice, maxPrice, page, size));
@@ -109,21 +113,22 @@ public class ProductPageController {
         if (shopId == null) {
             throw new NotFoundException("Mã cửa hàng không được để trống!");
         }
-        productPageService.checkRequestPageParams(page, size);
-        productPageService.checkRequestPriceRangeParams(minPrice, maxPrice);
-        productPageService.checkRequestSortParams(sort);
+        pageService.checkRequestProductPageParams(page, size);
+        pageService.checkRequestPriceRangeParams(minPrice, maxPrice);
+        pageService.checkRequestSortParams(sort);
 
         return ResponseEntity.ok(productPageService.getListProductsPageByShopAndPriceRangeAndSort(shopId, minPrice,
                 maxPrice, page, size, sort));
     }
 
     @GetMapping("/search/sort")
-    public ResponseEntity<ListProductPageResponse> getListProductsPageByShopSearchSort(@RequestParam int page,
+    public ResponseEntity<ListProductPageResponse> getListProductsPageBySearchSort(
+            @RequestParam int page,
             @RequestParam int size,
             @RequestParam String search,
             @RequestParam String sort) {
-        productPageService.checkRequestPageParams(page, size);
-        productPageService.checkRequestSortParams(sort);
+        pageService.checkRequestProductPageParams(page, size);
+        pageService.checkRequestSortParams(sort);
         if (search == null) {
             throw new NotFoundException("Từ khóa tìm kiếm không được để trống!");
         }
@@ -138,8 +143,8 @@ public class ProductPageController {
             @RequestParam String sort,
             @RequestParam Long minPrice,
             @RequestParam Long maxPrice) {
-        productPageService.checkRequestPageParams(page, size);
-        productPageService.checkRequestSortParams(sort);
+        pageService.checkRequestProductPageParams(page, size);
+        pageService.checkRequestSortParams(sort);
         if (search == null) {
             throw new NotFoundException("Từ khóa tìm kiếm không được để trống!");
         }

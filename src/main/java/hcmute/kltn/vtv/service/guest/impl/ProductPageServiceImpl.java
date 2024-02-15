@@ -230,43 +230,43 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message;
         Page<Product> productPage;
-        switch (sort) {
-            case "newest":
+        message = switch (sort) {
+            case "newest" -> {
                 productPage = productRepository
                         .findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByCreateAtDesc(
                                 search, minPrice, maxPrice, Status.ACTIVE, PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
-                message = "Lọc sản phẩm tìm kiếm theo thứ tự mới nhất thành công!";
-                break;
-            case "best-selling":
+                yield "Lọc sản phẩm tìm kiếm theo thứ tự mới nhất thành công!";
+            }
+            case "best-selling" -> {
                 productPage = productRepository
                         .findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderBySoldDescNameAsc(
                                 search, minPrice, maxPrice, Status.ACTIVE, PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
-                message = "Lọc sản phẩm tìm kiếm theo thứ tự bán chạy nhất thành công!";
-
-                break;
-            case "price-asc":
+                yield "Lọc sản phẩm tìm kiếm theo thứ tự bán chạy nhất thành công!";
+            }
+            case "price-asc" -> {
                 productPage = productRepository
                         .findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceAsc(
                                 search, minPrice, maxPrice, Status.ACTIVE, PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
-                message = "Lọc sản phẩm tìm kiếm theo thứ tự giá tăng dần thành công!";
-                break;
-            case "price-desc":
+                yield "Lọc sản phẩm tìm kiếm theo thứ tự giá tăng dần thành công!";
+            }
+            case "price-desc" -> {
                 productPage = productRepository
                         .findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceDesc(
                                 search, minPrice, maxPrice, Status.ACTIVE, PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
-                message = "Lọc sản phẩm tìm kiếm theo thứ tự giá giảm dần thành công!";
-                break;
-            default:
+                yield "Lọc sản phẩm tìm kiếm theo thứ tự giá giảm dần thành công!";
+            }
+            default -> {
                 productPage = productRepository
                         .findAllByNameContainsAndProductVariantsPriceBetweenAndStatus(
                                 search, minPrice, maxPrice, Status.ACTIVE, PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
-                message = "Tìm kiếm sản phẩm thành công!";
-        }
+                yield "Tìm kiếm sản phẩm thành công!";
+            }
+        };
 
         return listProductPageResponse(productPage.getContent(), page, size, totalPage, message);
     }
@@ -286,43 +286,11 @@ public class ProductPageServiceImpl implements IProductPageService {
 
     }
 
-    @Override
-    public void checkRequestPageParams(int page, int size) {
-        if (page < 0) {
-            throw new NotFoundException("Trang không được nhỏ hơn 0!");
-        }
-        if (size < 0) {
-            throw new NotFoundException("Kích thước trang không được nhỏ hơn 0!");
-        }
-        if (size > 200) {
-            throw new NotFoundException("Kích thước trang không được lớn hơn 200!");
-        }
-    }
 
-    @Override
-    public void checkRequestPriceRangeParams(Long minPrice, Long maxPrice) {
-        if (minPrice < 0) {
-            throw new NotFoundException("Giá nhỏ nhất không được nhỏ hơn 0!");
-        }
-        if (maxPrice < 0) {
-            throw new NotFoundException("Giá lớn nhất không được nhỏ hơn 0!");
-        }
-        if (minPrice > maxPrice) {
-            throw new NotFoundException("Giá nhỏ nhất không được lớn hơn giá lớn nhất!");
-        }
-    }
 
-    @Override
-    public void checkRequestSortParams(String sort) {
-        if (sort == null) {
-            throw new NotFoundException("Tham số sắp xếp không được để trống!");
-        }
-        if (!sort.equals("best-selling") && !sort.equals("price-asc") && !sort.equals("price-desc")
-                && !sort.equals("newest")) {
-            throw new NotFoundException(
-                    "Tham số sắp xếp không hợp lệ! Chỉ được sắp xếp theo: best-selling, price-asc, price-desc, newest");
-        }
-    }
+
+
+
 
     private ListProductPageResponse getProductsByCategoryParentId(Long categoryId, int page, int size) {
         List<Category> categories = categoryRepository.findAllByParentCategoryIdAndStatus(categoryId, Status.ACTIVE)

@@ -27,9 +27,6 @@ public interface IProductPageService {
     ListProductPageResponse getListProductsPageBySearchAndPriceSort(String search, Long minPrice, Long maxPrice,
             int page, int size, String sort);
 
-    void checkRequestPageParams(int page, int size);
 
-    void checkRequestPriceRangeParams(Long minPrice, Long maxPrice);
 
-    void checkRequestSortParams(String sort);
 }
