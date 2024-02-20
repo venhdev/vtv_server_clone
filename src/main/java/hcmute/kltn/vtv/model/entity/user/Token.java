@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.model.entity.user;
 
-import hcmute.kltn.vtv.model.extra.TokenType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,8 +19,7 @@ public class Token {
     @Column(unique = true)
     public String token;
 
-    @Enumerated(EnumType.STRING)
-    public TokenType tokenType = TokenType.BEARER;
+    public String tokenType;
 
     public boolean revoked;
 
