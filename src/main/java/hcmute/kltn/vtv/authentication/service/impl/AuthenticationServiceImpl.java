@@ -13,7 +13,6 @@ import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.user.Token;
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.model.extra.TokenType;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.user.TokenRepository;
 import hcmute.kltn.vtv.util.exception.*;
@@ -194,7 +193,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         var token = Token.builder()
                 .customer(customer)
                 .token(jwtToken)
-                .tokenType(TokenType.BEARER)
+                .tokenType("BEARER")
                 .expired(false)
                 .revoked(false)
                 .build();
@@ -211,6 +210,24 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
+
+
+    public void revokeCustomerToken(Customer customer, String token) {
+        Token validToken = tokenRepository.findByCustomerCustomerIdAndToken(customer.getCustomerId(), token)
+                .orElseThrow(() -> new NotFoundException("Token không tồn tại."));
+        if (validToken.isExpired() || validToken.isRevoked()) {
+            return;
+        }
+        validToken.setExpired(true);
+        validToken.setRevoked(true);
+
+        try {
+            tokenRepository.save(validToken);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Xóa token thất bại");
+        }
+    }
+
 
     @Override
     public RefreshTokenResponse refreshToken(String refreshToken, HttpServletRequest request,
@@ -234,7 +251,8 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
                 if (jwtService.isTokenValid(refreshToken, customer)) {
                     String accessToken = jwtService.generateToken(customer);
-                    revokeAllCustomerTokens(customer);
+//                    revokeAllCustomerTokens(customer);
+                    revokeCustomerToken(customer, refreshToken);
                     saveCustomerToken(customer, accessToken);
 
                     RefreshTokenResponse refreshTokenResponse = new RefreshTokenResponse();
