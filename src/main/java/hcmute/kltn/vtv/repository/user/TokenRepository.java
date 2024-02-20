@@ -18,6 +18,12 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
       """)
   List<Token> findAllValidTokenByCustomer(Long customerId);
 
+
+  Optional<Token> findByCustomerCustomerIdAndToken(Long customerId, String token);
+
+
+
+
   // @Query("select t from Token t inner join Customer c " +
   // "on t.customer.customerId = c.customerId " +
   // "where c.customerId = :customerId and (t.expired = false or t.revoked =

@@ -27,7 +27,7 @@ public class Token {
 
     public boolean expired;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     @ToString.Exclude
     public Customer customer;
