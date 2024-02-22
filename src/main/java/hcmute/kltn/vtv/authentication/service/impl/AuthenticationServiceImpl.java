@@ -164,9 +164,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         }
 
         var token = storedToken.get();
-        if (token.isExpired() || token.isRevoked()) {
-            throw new UnauthorizedAccessException("Token đã hết hạn. Đăng xuất thất bại.");
-        }
+//        if (token.isExpired() || token.isRevoked()) {
+//            throw new UnauthorizedAccessException("Token đã hết hạn. Đăng xuất thất bại.");
+//        }
 
         token.setExpired(true);
         token.setRevoked(true);
