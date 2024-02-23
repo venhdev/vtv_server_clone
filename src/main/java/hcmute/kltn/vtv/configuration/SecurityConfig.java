@@ -32,7 +32,7 @@ public class SecurityConfig {
             "/api/customer/forgot-password",
             "/api/customer/reset-password",
             "/api/product/**",
-            "/api/product/page/**",
+            "/api/search/**",
             "/api/shop-detail/shop/**",
             "/api/voucher/**",
             "/api/review/**",
@@ -138,7 +138,18 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+//                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(java.util.List.of("*"));
+                    corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
+                    return corsConfiguration;
+                }))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(STATELESS)
+                        .sessionFixation().migrateSession() // Change session ID on authentication
+                )
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(NO_AUTH)
                         .permitAll()
