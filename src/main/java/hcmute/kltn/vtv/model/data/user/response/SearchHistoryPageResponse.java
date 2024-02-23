@@ -11,11 +11,12 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchHistoryResponse extends ResponseAbstract {
+public class SearchHistoryPageResponse extends ResponseAbstract {
 
-    private int total; // total search history
-    private String username;
-    private int count; // count of search history show in page
+    private int count;
+    private int page;
+    private int size;
+    private int totalPage;
     private List<SearchHistoryDTO> searchHistoryDTOs;
 
 
