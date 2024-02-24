@@ -316,3 +316,10 @@
   - Cập nhật trạng thái nhân viên vận chuyển.
   - Xem danh sách nhân viên vận chuyển theo trạng thái.
   - Xem danh sách nhân viên vận chuyển theo trạng thái và loại công việc.
+
+
+- Tìm kiếm sản phẩm(nếu có token thì sẻ lưu lịch sử tìm kiếm)
+  - Tìm kiếm sản phẩm theo tên và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
+  - Tìm kiếm sản phẩm theo tên, khoảng giá và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
+  - Tìm kiếm sản phẩm theo tên, trong cửa hàng và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
+  - Tìm kiếm sản phẩm theo tên, trong cửa hàng, khoảng giá và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
