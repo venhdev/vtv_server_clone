@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,8 +39,14 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
     @Transactional
     public SearchHistoryPageResponse addNewSearchHistory(String username, String search) {
         SearchHistory searchHistory = new SearchHistory();
-        searchHistory.setUsername(username);
-        searchHistory.setSearch(search);
+
+        if (searchHistoryRepository.existsByUsernameAndSearch(username, search)) {
+            searchHistory = searchHistoryRepository.findByUsernameAndSearch(username, search)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch sử tìm kiếm!"));
+        } else {
+            searchHistory.setSearch(search);
+            searchHistory.setUsername(username);
+        }
         searchHistory.setCreateAt(LocalDateTime.now());
 
         try {
@@ -71,6 +76,21 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi xóa lịch sử tìm kiếm!");
         }
+    }
+
+    @Override
+    public String toStringSearchHistoryByUsername(String username, int size, int page) {
+
+        Page<SearchHistory> searchHistories = searchHistoryPage(username, size, page);
+
+        StringBuilder searchHistoriesToString = new StringBuilder();
+        for (SearchHistory searchHistory : searchHistories.getContent()) {
+            searchHistoriesToString.append(searchHistory.getSearch()).append(" ");
+        }
+
+        return searchHistoriesToString.toString();
+
+
     }
 
 

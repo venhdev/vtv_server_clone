@@ -45,9 +45,13 @@ public class PageServiceImpl implements IPageService {
             throw new NotFoundException("Tham số sắp xếp không được để trống!");
         }
         if (!sort.equals("best-selling") && !sort.equals("price-asc") && !sort.equals("price-desc")
-                && !sort.equals("newest")) {
+                && !sort.equals("newest") && !sort.equals("random")) {
             throw new NotFoundException(
                     "Tham số sắp xếp không hợp lệ! Chỉ được sắp xếp theo: best-selling, price-asc, price-desc, newest");
         }
     }
+
+
+
+
 }

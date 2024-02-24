@@ -19,7 +19,7 @@ public class ServerVtvApplication {
         try {
             InetAddress ip = InetAddress.getLocalHost();
             logger.info("""
-                                    
+                    \n                
                     IP Address: {}
                     Localhost:  http://localhost:8585/swagger-ui/index.html
                           

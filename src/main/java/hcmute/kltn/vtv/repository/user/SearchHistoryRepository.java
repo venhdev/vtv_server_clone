@@ -13,11 +13,13 @@ import java.util.UUID;
 @Repository
 public interface SearchHistoryRepository extends JpaRepository<SearchHistory, UUID> {
 
+    boolean existsByUsernameAndSearch(String username, String search);
+
     Optional<Page<SearchHistory>> findByUsernameOrderByCreateAtDesc(String username, PageRequest pageRequest);
 
     void deleteByUsernameAndSearchHistoryId(String username, UUID searchHistoryId);
 
     Optional<SearchHistory> findByUsernameAndSearchHistoryId(String username, UUID searchHistoryId);
 
-
+    Optional<SearchHistory> findByUsernameAndSearch(String username, String search);
 }

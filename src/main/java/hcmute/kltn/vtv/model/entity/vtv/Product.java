@@ -8,6 +8,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+
+
+
+
 @Getter
 @Setter
 @ToString
@@ -20,6 +24,7 @@ public class Product {
     @Column(nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
+
 
     private String name;
 

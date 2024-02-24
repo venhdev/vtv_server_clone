@@ -16,4 +16,6 @@ public interface ISearchHistoryService {
 
     @Transactional
     SearchHistoryPageResponse deleteSearchHistory(String username, UUID searchHistoryId);
+
+    String toStringSearchHistoryByUsername(String username, int size, int page);
 }

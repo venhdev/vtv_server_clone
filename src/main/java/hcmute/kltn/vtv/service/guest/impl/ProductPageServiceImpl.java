@@ -182,7 +182,7 @@ public class ProductPageServiceImpl implements IProductPageService {
         switch (sort) {
             case "newest":
                 productPage = productRepository
-                        .findAllByNameContainsAndStatusOrderByCreateAtDesc(search, Status.ACTIVE,
+                        .searchFullTextByStatusOrderByCreateAtDesc(search, Status.ACTIVE,
                                 PageRequest.of(page - 1, size))
                         .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào!"));
                 // message = "Lọc sản phẩm tìm kiếm theo thứ tự mới nhất thành công!";
@@ -323,7 +323,7 @@ public class ProductPageServiceImpl implements IProductPageService {
         response.setPage(page);
         response.setTotalPage(totalPage);
         response.setMessage(message);
-        response.setStatus("ok");
+        response.setStatus("OK");
         response.setCode(200);
         return response;
     }
