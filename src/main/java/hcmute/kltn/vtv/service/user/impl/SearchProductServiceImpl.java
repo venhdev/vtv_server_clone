@@ -28,7 +28,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort);
         Page<Product> productPage = getProductPage(search, page, size, sort);
 
-        return listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Trong khoảng giá từ " + minPrice + " VNĐ đến " + maxPrice + " VNĐ!";
         Page<Product> productPage = getProductPageAndPriceRange(search, page, size, sort, minPrice, maxPrice);
 
-        return listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
     }
 
 
@@ -51,7 +51,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Của cửa hàng!";
         Page<Product> productPage = getProductPageOnShop(search, shopId, page, size, sort);
 
-        return listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
     }
 
 
@@ -66,7 +66,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Trong khoảng giá từ " + minPrice + " VNĐ đến " + maxPrice + " VNĐ!";
         Page<Product> productPage = getProductPagePriceRangeOnShop(search, shopId, page, size, sort, minPrice, maxPrice);
 
-        return listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
     }
 
 
@@ -211,19 +211,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
     }
 
 
-    public ListProductPageResponse listProductPageResponse(Page<Product> products,
-                                                           int size, String message) {
-        ListProductPageResponse response = new ListProductPageResponse();
-        response.setProductDTOs(ProductDTO.convertToListDTO(products.getContent()));
-        response.setCount((int) products.getTotalElements());
-        response.setSize(size);
-        response.setPage(products.getNumber() + 1);
-        response.setTotalPage(products.getTotalPages());
-        response.setMessage(message);
-        response.setStatus("OK");
-        response.setCode(200);
-        return response;
-    }
+
 
 
 }

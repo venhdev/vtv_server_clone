@@ -323,3 +323,83 @@
   - Tìm kiếm sản phẩm theo tên, khoảng giá và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
   - Tìm kiếm sản phẩm theo tên, trong cửa hàng và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
   - Tìm kiếm sản phẩm theo tên, trong cửa hàng, khoảng giá và lọc sản phẩm theo mới nhất, bán chạy, giá tăng dần, giá giảm dần, ngẫu nhiên.
+
+
+- Gợi ý sản phẩm cửa Customer:
+  - Theo lịch sử tìm kiếm.
+
+[//]: # (  - Gợi ý sản phẩm theo sản phẩm đã xem.)
+[//]: # (  - Gợi ý sản phẩm theo sản phẩm yêu thích.)
+[//]: # (  - Gợi ý sản phẩm theo sản phẩm đã mua.)
+
+
+- Gợi ý sản phẩm cửa Guest:
+  - Theo ngẫu nhiên.
+  - Theo tên sản phẩm trên toàn hệ thống và cửa hàng. (inShop = true -> cửa hàng, inShop = false -> toàn hệ thống)
+  - Theo mã danh mục con, cha. (truyền category id server tự phân loại)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

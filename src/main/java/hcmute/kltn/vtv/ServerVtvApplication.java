@@ -18,12 +18,14 @@ public class ServerVtvApplication {
 
         try {
             InetAddress ip = InetAddress.getLocalHost();
+
             logger.info("""
-                    \n                
-                    IP Address: {}
+                   
+                   
+                    IP Address: {}, {}
                     Localhost:  http://localhost:8585/swagger-ui/index.html
                           
-                    """, ip.getHostAddress());
+                    """, ip.getHostAddress(), ip.getCanonicalHostName());
         } catch (UnknownHostException e) {
             logger.error("An error occurred while getting the local host address.", e);
         }

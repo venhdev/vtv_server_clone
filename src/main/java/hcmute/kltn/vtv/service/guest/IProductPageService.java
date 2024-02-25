@@ -14,18 +14,7 @@ public interface IProductPageService {
 
     ListProductPageResponse getListNewProductsPageByShopId(Long shopId, int page, int size);
 
-    ListProductPageResponse getListProductsPagePriceRange(Long minPrice, Long maxPrice, int page, int size);
 
-    ListProductPageResponse getListProductsPageByShopAndPriceRange(Long shopId, Long minPrice, Long maxPrice, int page,
-            int size);
-
-    ListProductPageResponse getListProductsPageByShopAndPriceRangeAndSort(Long shopId, Long minPrice, Long maxPrice,
-            int page, int size, String sort);
-
-    ListProductPageResponse getListProductsPageByShopSearchSort(String search, int page, int size, String sort);
-
-    ListProductPageResponse getListProductsPageBySearchAndPriceSort(String search, Long minPrice, Long maxPrice,
-            int page, int size, String sort);
 
 
 

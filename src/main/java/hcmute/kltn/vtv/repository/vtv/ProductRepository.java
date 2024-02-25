@@ -89,9 +89,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Page<Product>> findAllByCategoryInAndStatusOrderByCreateAt(List<Category> categories, Status status,
                                                                         PageRequest pageRequest);
 
-    int countByCategoryInAndStatus(List<Category> categories, Status status);
 
-    int countByCategoryShopShopIdAndStatus(Long shopId, Status status);
 
     Optional<Page<Product>> findAllByCategoryShopShopIdAndStatusOrderByCreateAt(Long shopId, Status status,
                                                                                 Pageable pageable);
@@ -102,82 +100,84 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Page<Product>> findAllByCategoryShopShopIdAndStatusOrderByCreateAtDesc(Long shopId, Status status,
                                                                                     Pageable pageable);
 
-    Optional<Page<Product>> findAllByCategoryShopShopIdAndProductVariantsPriceBetweenAndStatusOrderByCreateAtDesc(
-            Long shopId, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    int countByCategoryShopShopIdAndProductVariantsPriceBetweenAndStatus(Long shopId, Long minPrice, Long maxPrice,
-                                                                         Status status);
-
-    Optional<Page<Product>> findAllByProductVariantsPriceBetweenAndStatusOrderByCreateAtDesc(
-            Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    int countByProductVariantsPriceBetweenAndStatus(Long minPrice, Long maxPrice, Status status);
-
-    Optional<Page<Product>> findAllByCategoryShopShopIdAndProductVariantsPriceBetweenAndStatusOrderBySoldDescNameAsc(
-            Long shopId, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByCategoryShopShopIdAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceAsc(
-            Long shopId, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByCategoryShopShopIdAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceDesc(
-            Long shopId, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    int countByNameContainsAndStatus(String name, Status status);
-
-    Optional<Page<Product>> findAllByNameContainsAndStatus(String name, Status status, Pageable pageable);
-
-
-    Optional<Page<Product>> findAllByNameContainsAndStatusOrderBySoldDescNameAsc(String name, Status status,
-                                                                                 Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndStatusOrderByProductVariantsPriceAsc(String name, Status status,
-                                                                                         Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndStatusOrderByProductVariantsPriceDesc(String name,
-                                                                                          Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByCreateAtDesc(
-            String name, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndProductVariantsPriceBetweenAndStatus(
-            String name, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderBySoldDescNameAsc(
-            String name, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceAsc(
-            String name, Long minPrice, Long maxPrice, Status status, Pageable pageable);
-
-    Optional<Page<Product>> findAllByNameContainsAndProductVariantsPriceBetweenAndStatusOrderByProductVariantsPriceDesc(
-            String name, Long minPrice, Long maxPrice, Status status, Pageable pageable);
 
     Optional<Page<Product>> findAllByStatusOrderByName(Status status, Pageable pageable);
 
-    int countByNameContainsAndProductVariantsPriceBetweenAndStatus(String name, Long minPrice, Long maxPrice,
-                                                                   Status status);
 
 
-    // findAllByNameContainsAndStatusOrderByCreateAtDesc
-    @Query(value =
-            "SELECT * " +
-                    " FROM product WHERE MATCH(name, description) AGAINST (:searchText IN BOOLEAN MODE)" +
-                    " AND status = :status " +
-                    " ORDER BY name DESC", nativeQuery = true)
-    Optional<Page<Product>> searchFullTextByStatusOrderByCreateAtDesc(
-            @Param("searchText") String searchText,
-            @Param("status") Status status, Pageable pageable);
 
+
+    /////////////////////////////////////////// Suggestion ///////////////////////////////////////////
 
     @Query(value =
-            "SELECT * " +
+            "SELECT DISTINCT p.* " +
                     "FROM product p " +
-                    "AND p.status = :status " +
+                    "WHERE p.status = :status " +
                     "ORDER BY RAND()",
-            countQuery = "SELECT COUNT(*) FROM product p WHERE  p.status = :status",
+            countQuery = "SELECT COUNT( DISTINCT p.product_id) FROM product p WHERE  p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> suggestByRandomly(
             @Param("status") String status,
             Pageable pageable);
+
+
+    @Query(value =
+            "SELECT DISTINCT p.* " +
+                    "FROM product p " +
+                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "AND p.status = :status " +
+                    "ORDER BY RAND()",
+            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
+            nativeQuery = true)
+    Optional<Page<Product>> suggestBySearchHistoryAndRandomly(
+            @Param("searchText") String searchText,
+            @Param("status") String status,
+            Pageable pageable);
+
+
+
+    @Query(value =
+            "SELECT DISTINCT p.* " +
+                    "FROM product p " +
+                    "WHERE p.category_id = :categoryId " +
+                    "AND p.status = :status " +
+                    "ORDER BY RAND()",
+            countQuery = "" +
+                    "SELECT COUNT( DISTINCT p.product_id) " +
+                    "FROM product p " +
+                    "WHERE p.category_id = :categoryId " +
+                    "AND p.status = :status ",
+            nativeQuery = true)
+    Optional<Page<Product>> suggestByCategoryAndRandomly(
+            @Param("categoryId") Long categoryId,
+            @Param("status") String status,
+            Pageable pageable);
+
+
+    @Query(value =
+            "SELECT DISTINCT p.* " +
+                    "FROM product p " +
+                    "JOIN  category c " +
+                    "ON p.category_id = c.category_id " +
+                    "WHERE c.parent_id = :categoryParentId " +
+                    "AND p.status = :status " +
+                    "ORDER BY RAND()",
+            countQuery = "" +
+                    "SELECT COUNT( DISTINCT p.product_id) " +
+                    "FROM product p " +
+                    "JOIN  category c " +
+                    "ON p.category_id = c.category_id " +
+                    "WHERE c.parent_id = :categoryParentId " +
+                    "AND p.status = :status ",
+            nativeQuery = true)
+    Optional<Page<Product>> suggestByCategoryParentAndRandomly(
+            @Param("categoryParentId") Long categoryParentId,
+            @Param("status") String status,
+            Pageable pageable);
+
+
+
+    /////////////////////////////////////////// Search On VTV ///////////////////////////////////////////
 
 
     @Query(value =
@@ -251,12 +251,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     @Query(value =
-            "SELECT * " +
+            "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY RAND()",
-            countQuery = "SELECT COUNT(*) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
+            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortRandomly(
             @Param("searchText") String searchText,
@@ -264,7 +264,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable);
 
 
-    /////////////////////////////////////////// Price Range ///////////////////////////////////////////
+    /////////////////////////////////////////// Price Range On VTV ///////////////////////////////////////////
 
 
     @Query(value =
@@ -716,7 +716,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     @Query(value =
-            "SELECT p.* " +
+            "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN category c " +
                     "ON p.category_id = c.category_id " +
@@ -727,7 +727,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "AND p.status = :status " +
                     "ORDER BY RAND()",
             countQuery =
-                    "SELECT COUNT(*) " +
+                    "SELECT COUNT(DISTINCT p.product_id) " +
                             "FROM product p " +
                             "JOIN category c " +
                             "ON p.category_id = c.category_id " +
@@ -744,56 +744,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable);
 
 
-//    @Query(value =
-//            "SELECT * " +
-//                    "FROM product p " +
-//                    "JOIN product_variant pv ON p.product_id = pv.product_id " +
-//                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
-//                    "AND p.status = :status " +
-//                    "AND pv.price >= :minPrice " +
-//                    "AND pv.price <= :maxPrice " +
-//                    "ORDER BY pv.price ASC",
-//            countQuery = "SELECT COUNT(*) " +
-//                    "FROM product p " +
-//                    "JOIN product_variant pv " +
-//                    "ON p.product_id = pv.product_id " +
-//                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
-//                    "AND p.status = :status " +
-//                    "AND pv.price >= :minPrice " +
-//                    "AND pv.price <= :maxPrice",
-//            nativeQuery = true)
-//    Optional<Page<Product>> Timtheokhoanggia_searchFullTextByNameAndStatusAndSortByPriceAsc(
-//            @Param("searchText") String searchText,
-//            @Param("status") String status,
-//            @Param("minPrice") Long minPrice,
-//            @Param("maxPrice") Long maxPrice,
-//            Pageable pageable);
 
-
-//@Query(value =
-//        "SELECT * " +
-//                "FROM product p " +
-//                "JOIN product_variant pv ON p.product_id = pv.product_id " +
-//                "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
-//                "AND p.status = :status " +
-//                "AND pv.price >= :minPrice " +
-//                "AND pv.price <= :maxPrice " +
-//                "ORDER BY pv.price DESC",
-//        countQuery = "SELECT COUNT(*) " +
-//                "FROM product p " +
-//                "JOIN product_variant pv " +
-//                "ON p.product_id = pv.product_id " +
-//                "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
-//                "AND p.status = :status " +
-//                "AND pv.price >= :minPrice " +
-//                "AND pv.price <= :maxPrice",
-//        nativeQuery = true)
-//Optional<Page<Product>> searchAndSortByPriceDesc(
-//        @Param("searchText") String searchText,
-//        @Param("status") String status,
-//        @Param("minPrice") Long minPrice,
-//        @Param("maxPrice") Long maxPrice,
-//        Pageable pageable);
 
 
 }

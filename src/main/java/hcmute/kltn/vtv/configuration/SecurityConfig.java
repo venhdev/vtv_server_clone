@@ -48,6 +48,8 @@ public class SecurityConfig {
             "/api/chat/room/**",
             "/api/chat/message/**",
 
+            "/api/product-suggestion/**",
+
 
 
             "/v2/api-docs",
