@@ -50,6 +50,8 @@ public class SecurityConfig {
 
             "/api/product-suggestion/**",
 
+            "/api/notification/**",
+
 
 
             "/v2/api-docs",

@@ -15,6 +15,8 @@ import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.user.TokenRepository;
+import hcmute.kltn.vtv.service.user.ICustomerService;
+import hcmute.kltn.vtv.service.user.IFcmService;
 import hcmute.kltn.vtv.util.exception.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,8 +44,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private final IJwtService jwtService;
@@ -53,38 +53,21 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final TokenRepository tokenRepository;
     @Value("${application.security.jwt.refresh-token.expiration}")
     private int refreshExpiration;
+    @Autowired
+    private final IFcmService fcmService;
+    @Autowired
+    private final ICustomerService customerService;
 
     @Override
     @Transactional
     public RegisterResponse register(RegisterRequest customerRequest) {
         customerRequest.validate();
-
-        Optional<Customer> existingCustomer = customerRepository.findByUsername(customerRequest.getUsername());
-        if (existingCustomer.isPresent()) {
-            throw new DuplicateEntryException("Tài khoản đã tồn tại.");
-        }
-
-        existingCustomer = customerRepository.findByEmail(customerRequest.getEmail());
-        if (existingCustomer.isPresent()) {
-            throw new DuplicateEntryException("Email đã được đăng ký.");
-        }
-
-        Customer customer = modelMapper.map(customerRequest, Customer.class);
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.CUSTOMER); // Every customer has a CUSTOMER role
-        customer.setRoles(roles);
-        customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
-        customer.setCreateAt(LocalDateTime.now());
-        customer.setUpdateAt(LocalDateTime.now());
-        customer.setStatus(Status.ACTIVE);
+        existingCustomer(customerRequest);
+        Customer customer = createCustomer(customerRequest);
 
         try {
-            var saveCustomer = customerRepository.save(customer);
-            RegisterResponse registerResponse = modelMapper.map(saveCustomer, RegisterResponse.class);
-            registerResponse.setStatus("success");
-            registerResponse.setMessage("Đăng ký tài khoản khách hàng thành công");
-
-            return registerResponse;
+            customerRepository.save(customer);
+            return registerResponse(customer);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
         }
@@ -93,128 +76,192 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Override
     public Customer addNewCustomer(RegisterRequest customerRequest) {
-        Optional<Customer> existingCustomer = customerRepository.findByUsername(customerRequest.getUsername());
-        if (existingCustomer.isPresent()) {
-            throw new DuplicateEntryException("Tài khoản đã tồn tại.");
-        }
-        existingCustomer = customerRepository.findByEmail(customerRequest.getEmail());
-        if (existingCustomer.isPresent()) {
-            throw new DuplicateEntryException("Email đã được đăng ký.");
-        }
-
-        Customer customer = modelMapper.map(customerRequest, Customer.class);
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.CUSTOMER); // Every customer has a CUSTOMER role
-        customer.setRoles(roles);
-        customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
-        customer.setCreateAt(LocalDateTime.now());
-        customer.setUpdateAt(LocalDateTime.now());
-        customer.setStatus(Status.ACTIVE);
+        customerRequest.validate();
+        existingCustomer(customerRequest);
+        Customer customer = createCustomer(customerRequest);
 
         try {
-            customerRepository.save(customer);
-            return customer;
+            return customerRepository.save(customer);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
+            throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại");
         }
     }
 
     @Override
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         loginRequest.validate();
+        Customer customer = getCustomerByLogin(loginRequest);
 
+        try {
+            var jwtToken = jwtService.generateToken(customer);
+            var refreshToken = jwtService.generateRefreshToken(customer);
+            addNewToken(customer, refreshToken);
+            fcmService.addNewFcmToken(loginRequest.getFcmToken(), customer.getUsername());
+            Cookie cookie = addCookie(refreshToken, refreshExpiration);
+            response.addCookie(cookie);
+
+            return loginResponse(customer, jwtToken, refreshToken);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng nhập thất bại");
+        }
+    }
+
+
+
+    @Override
+    public RefreshTokenResponse refreshToken(String refreshToken, HttpServletRequest request,
+                                             HttpServletResponse response)
+            throws IOException {
+        checkRefreshToken(refreshToken);
+        String username = jwtService.extractUsername(refreshToken);
+
+        if (username != null) {
+            Customer customer = customerService.getCustomerByUsername(username);
+
+            if (customer != null) {
+                if (jwtService.isTokenValid(refreshToken, customer)) {
+                    String accessToken = jwtService.generateToken(customer);
+                    return refreshTokenResponse(accessToken);
+                }
+            } else {
+                throw new NotFoundException("Tài khoản không tồn tại.");
+            }
+        } else {
+            throw new BadRequestException("Lỗi xác thực token.");
+        }
+        return null;
+    }
+
+
+
+
+    @Override
+    @Transactional
+    public LogoutResponse logout(String refreshToken,
+                                 String fcmToken,
+                                 HttpServletResponse response) {
+        try {
+            revokeCustomerToken(refreshToken);
+            fcmService.deleteFcmToken(fcmToken);
+            SecurityContextHolder.clearContext();
+            Cookie cookie = addCookie(null, 0);
+            response.addCookie(cookie);
+
+            return new LogoutResponse("Success", "Đăng xuất thành công", 200);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng xuất thất bại");
+        }
+    }
+
+
+    private Token getTokenByRefreshToken(String refreshToken) {
+        if (refreshToken == null) {
+            throw new BadRequestException("Token không được null. Đăng xuất thất bại.");
+        }
+
+        return tokenRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new NotFoundException("Token không tồn tại. Đăng xuất thất bại."));
+    }
+
+
+    private Customer getCustomerByLogin(LoginRequest loginRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        Customer customer = customerRepository.findByUsernameAndStatus(loginRequest.getUsername(), Status.ACTIVE)
+        return customerRepository.findByUsernameAndStatus(loginRequest.getUsername(), Status.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("Tài khoản không tồn tại."));
+    }
 
-        var jwtToken = jwtService.generateToken(customer);
-        var refreshToken = jwtService.generateRefreshToken(customer);
-        saveCustomerToken(customer, refreshToken);
 
+    void existingCustomer(RegisterRequest customerRequest) {
+        if (customerRepository.existsByUsername(customerRequest.getUsername())) {
+            throw new DuplicateEntryException("Tài khoản đã tồn tại.");
+        }
+        if (customerRepository.existsByEmail(customerRequest.getEmail())) {
+            throw new DuplicateEntryException("Email đã được đăng ký.");
+        }
+    }
+
+
+    private Customer createCustomer(RegisterRequest customerRequest) {
+
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.CUSTOMER); // Every customer has a CUSTOMER role
+
+        Customer customer = new Customer();
+        customer.setUsername(customerRequest.getUsername());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setGender(customerRequest.isGender());
+        customer.setFullName(customerRequest.getFullName());
+        customer.setBirthday(customerRequest.getBirthday());
+        customer.setRoles(roles);
+        customer.setPassword(passwordEncoder.encode(customerRequest.getPassword()));
+        customer.setCreateAt(LocalDateTime.now());
+        customer.setUpdateAt(LocalDateTime.now());
+        customer.setStatus(Status.ACTIVE);
+
+        return customer;
+    }
+
+
+    private RegisterResponse registerResponse(Customer customer) {
+        RegisterResponse registerResponse = new RegisterResponse();
+        registerResponse.setUsername(customer.getUsername());
+        registerResponse.setEmail(customer.getEmail());
+        registerResponse.setStatus("success");
+        registerResponse.setMessage("Đăng ký tài khoản khách hàng thành công");
+        return registerResponse;
+    }
+
+
+    private LoginResponse loginResponse(Customer customer, String jwtToken, String refreshToken) {
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setCustomerDTO(modelMapper.map(customer, CustomerDTO.class));
+        loginResponse.setCustomerDTO(CustomerDTO.convertEntityToDTO(customer));
         loginResponse.setStatus("OK");
         loginResponse.setMessage("Đăng nhập thành công");
         loginResponse.setCode(200);
         loginResponse.setAccessToken(jwtToken);
         loginResponse.setRefreshToken(refreshToken);
-
-        // Lưu refreshToken vào cookie
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/"); // Đặt đúng path mà bạn muốn
-        cookie.setMaxAge(refreshExpiration); // Set thời gian sống của cookie (ví dụ: 30 ngày)
-        response.addCookie(cookie); // Thêm cookie vào response
-
         return loginResponse;
     }
 
-    @Override
-    @Transactional
-    public LogoutResponse logout(String refreshToken, HttpServletResponse response) {
 
-        if (refreshToken == null) {
-            throw new BadRequestException("Token không được null. Đăng xuất thất bại.");
-        }
-
-        var storedToken = tokenRepository.findByToken(refreshToken);
-        if (storedToken.isEmpty()) {
-            throw new NotFoundException("Token không tồn tại. Đăng xuất thất bại.");
-        }
-
-        var token = storedToken.get();
-//        if (token.isExpired() || token.isRevoked()) {
-//            throw new UnauthorizedAccessException("Token đã hết hạn. Đăng xuất thất bại.");
-//        }
-
-        token.setExpired(true);
-        token.setRevoked(true);
-        try {
-            tokenRepository.save(token);
-            SecurityContextHolder.clearContext();
-
-            // Xóa refreshToken trong cookie
-            Cookie cookie = new Cookie("refreshToken", null);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/"); // Đặt đúng path mà bạn muốn
-            cookie.setMaxAge(0); // Set thời gian sống của cookie (ví dụ: 30 ngày)
-            response.addCookie(cookie); // Thêm cookie vào response
-
-            return new LogoutResponse("Success", "Đăng xuất thành công", 200);
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Đăng xuất thất bại");
-
-        }
-
+    private RefreshTokenResponse refreshTokenResponse(String accessToken) {
+        RefreshTokenResponse refreshTokenResponse = new RefreshTokenResponse();
+        refreshTokenResponse.setAccessToken(accessToken);
+        refreshTokenResponse.setStatus("Success");
+        refreshTokenResponse.setMessage("Lấy access token thành công.");
+        refreshTokenResponse.setCode(200);
+        return refreshTokenResponse;
     }
 
-    public void saveCustomerToken(Customer customer, String jwtToken) {
-        var token = Token.builder()
+    private Cookie addCookie(String value, int maxAge) {
+        Cookie cookie = new Cookie("refreshToken", value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/"); // Đặt đúng path mà bạn muốn
+        cookie.setMaxAge(maxAge); // Set thời gian sống của cookie (ví dụ: 30 ngày)
+        return cookie;
+    }
+
+
+    public void addNewToken(Customer customer, String jwtToken) {
+        Token token = Token.builder()
                 .customer(customer)
                 .token(jwtToken)
                 .tokenType("BEARER")
                 .expired(false)
                 .revoked(false)
                 .build();
-        tokenRepository.save(token);
-    }
 
-    public void revokeAllCustomerTokens(Customer customer) {
-        var validUserTokens = tokenRepository.findAllValidTokenByCustomer(customer.getCustomerId());
-        if (validUserTokens.isEmpty())
-            return;
-        validUserTokens.forEach(token -> {
-            token.setExpired(true);
-            token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
+        try {
+            tokenRepository.save(token);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lưu token thất bại");
+        }
     }
 
 
-    public void revokeCustomerToken(Customer customer, String token) {
-        Token validToken = tokenRepository.findByCustomerCustomerIdAndToken(customer.getCustomerId(), token)
-                .orElseThrow(() -> new NotFoundException("Token không tồn tại."));
+    public void revokeCustomerToken(String token) {
+        Token validToken = getTokenByRefreshToken(token);
         if (validToken.isExpired() || validToken.isRevoked()) {
             return;
         }
@@ -228,11 +275,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         }
     }
 
-
-    @Override
-    public RefreshTokenResponse refreshToken(String refreshToken, HttpServletRequest request,
-                                             HttpServletResponse response)
-            throws IOException {
+    private void checkRefreshToken(String refreshToken) {
         if (refreshToken == null) {
             throw new BadRequestException("Refresh token không tồn tại.");
         }
@@ -240,35 +283,6 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         if (jwtService.isTokenExpired(refreshToken)) {
             throw new BadRequestException("Refresh token đã hết hạn.");
         }
-
-        // Validate and extract username from refreshToken
-        String username = jwtService.extractUsername(refreshToken);
-        if (username != null) {
-            Optional<Customer> optionalCustomer = customerRepository.findByUsername(username);
-
-            if (optionalCustomer.isPresent()) {
-                Customer customer = optionalCustomer.get();
-
-                if (jwtService.isTokenValid(refreshToken, customer)) {
-                    String accessToken = jwtService.generateToken(customer);
-//                    revokeAllCustomerTokens(customer);
-                    revokeCustomerToken(customer, refreshToken);
-                    saveCustomerToken(customer, accessToken);
-
-                    RefreshTokenResponse refreshTokenResponse = new RefreshTokenResponse();
-                    refreshTokenResponse.setAccessToken(accessToken);
-                    refreshTokenResponse.setStatus("Success");
-                    refreshTokenResponse.setMessage("Refresh token thành công");
-                    refreshTokenResponse.setCode(200);
-                    return refreshTokenResponse;
-                }
-            } else {
-                throw new NotFoundException("Tài khoản không tồn tại.");
-            }
-        } else {
-            throw new BadRequestException("Lỗi xác thực token.");
-        }
-        return null;
     }
 
 }

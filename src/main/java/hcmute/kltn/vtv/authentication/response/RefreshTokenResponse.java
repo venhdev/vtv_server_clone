@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.authentication.response;
 
+import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
 @Getter
@@ -8,11 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RefreshTokenResponse {
+public class RefreshTokenResponse extends ResponseAbstract {
 
         private String accessToken;
-
-        private String status;
-        private String message;
-        private int code;
 }

@@ -14,6 +14,8 @@ public class LoginRequest {
 
     private String password;
 
+    private String fcmToken;
+
     public void validate() {
         if (username == null || username.isEmpty()) {
             throw new BadRequestException("Tài khoản không được để trống.");
@@ -23,11 +25,16 @@ public class LoginRequest {
             throw new BadRequestException("Mật khẩu không được để trống.");
         }
 
+        if (fcmToken == null || fcmToken.isEmpty()) {
+            throw new BadRequestException("FCM token không được để trống.");
+        }
+
         trim();
     }
 
     public void trim() {
         this.username = this.username.trim();
         this.password = this.password.trim();
+        this.fcmToken = this.fcmToken.trim();
     }
 }

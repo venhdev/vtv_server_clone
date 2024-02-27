@@ -7,10 +7,12 @@ import hcmute.kltn.vtv.authentication.response.LogoutResponse;
 import hcmute.kltn.vtv.authentication.response.RefreshTokenResponse;
 import hcmute.kltn.vtv.authentication.response.RegisterResponse;
 import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,25 +24,32 @@ import java.io.IOException;
 public class AuthenticationController {
 
     @Autowired
-    private IAuthenticationService customerService;
+    private IAuthenticationService authenticationService;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> registerCustomer(@RequestBody RegisterRequest customerRequest) {
 
-        return ResponseEntity.ok(customerService.register(customerRequest));
+        return ResponseEntity.ok(authenticationService.register(customerRequest));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authentication(@RequestBody LoginRequest loginRequest,
-            HttpServletResponse response) {
-        LoginResponse loginResponse = customerService.login(loginRequest, response);
+                                                        HttpServletResponse response) {
+        LoginResponse loginResponse = authenticationService.login(loginRequest, response);
         return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/logout")
     public ResponseEntity<LogoutResponse> logout(
-            @CookieValue(name = "refreshToken") String refreshToken, HttpServletResponse response) {
-        return ResponseEntity.ok(customerService.logout(refreshToken, response));
+            @CookieValue(name = "refreshToken") String refreshToken,
+            @Param("fcmToken") String fcmToken,
+            HttpServletResponse response) {
+
+        if (fcmToken == null || fcmToken.isEmpty()) {
+            throw new BadRequestException("FCM token không được để trống.");
+        }
+
+        return ResponseEntity.ok(authenticationService.logout(refreshToken, fcmToken, response));
     }
 
     @PostMapping("/refresh-token")
@@ -48,7 +57,7 @@ public class AuthenticationController {
             @CookieValue(name = "refreshToken") String refreshToken,
             HttpServletRequest request,
             HttpServletResponse response) throws IOException {
-        return ResponseEntity.ok(customerService.refreshToken(refreshToken, request, response));
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshToken, request, response));
     }
 
 }
