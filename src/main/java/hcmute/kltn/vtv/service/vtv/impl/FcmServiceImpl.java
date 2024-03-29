@@ -10,6 +10,7 @@ import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +41,8 @@ public class FcmServiceImpl implements IFcmService {
         }
     }
 
-
     @Override
+    @Async
     public void sendNotification(Notification notice) {
         List<String> registrationTokens = getFcmTokens(notice.getRecipient());
         MulticastMessage message = createMulticastMessage(notice, registrationTokens);
@@ -53,6 +54,7 @@ public class FcmServiceImpl implements IFcmService {
             throw new InternalServerErrorException("Lỗi khi gửi nhiều thông báo");
         }
     }
+
 
 
     @Override

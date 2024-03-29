@@ -15,16 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CustomerVoucherController {
 
-    @Autowired
-    private ICustomerVoucherService customerVoucherService;
+    private final ICustomerVoucherService customerVoucherService;
 
-    @PostMapping("/save")
-    public ResponseEntity<CustomerVoucherResponse> saveVoucher(@RequestParam("voucherId") Long voucherId,
+    @PostMapping("/save/{voucherId}")
+    public ResponseEntity<CustomerVoucherResponse> saveVoucher(@PathVariable Long voucherId,
             HttpServletRequest request) {
-        if (voucherId == null) {
-            throw new NotFoundException("Mã giảm giá không được để trống.");
-        }
         String username = (String) request.getAttribute("username");
+
         return ResponseEntity.ok(customerVoucherService.saveVoucher(voucherId, username));
     }
 

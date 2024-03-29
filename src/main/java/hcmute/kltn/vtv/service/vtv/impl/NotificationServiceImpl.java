@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,22 +25,36 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements INotificationService {
 
-    @Autowired
     private final NotificationRepository notificationRepository;
-    @Autowired
     private final IFcmService fcmService;
 
 
+
     @Override
+    @Async
     @Transactional
     public void addNewNotification(NotificationRequest request) {
-        Notification notification = createNotification(request);
+        Notification notification = createNotificationByRequest(request);
 
         try {
             notificationRepository.save(notification);
             fcmService.sendNotification(notification);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi thêm thông báo mới");
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    @Async
+    @Transactional
+    public void addNewNotification(String title, String body, String recipient, String sender, String type) {
+        NotificationRequest notificationRequest = NotificationRequest.notificationRequest(title, body, recipient, sender, type);
+
+        try {
+            addNewNotification(notificationRequest);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -48,7 +63,7 @@ public class NotificationServiceImpl implements INotificationService {
     @Override
     public NotificationResponse getNotificationsByUsername(String username, int page, int size) {
         Page<Notification> notifications = getNotifications(username, page, size);
-        return notificationResponse(notifications, "Lấy danh sách thông báo thành công.");
+        return NotificationResponse.notificationResponse(notifications, "Lấy danh sách thông báo thành công.");
     }
 
 
@@ -61,7 +76,7 @@ public class NotificationServiceImpl implements INotificationService {
         try {
             notificationRepository.save(notification);
 
-            return notificationResponse(getNotifications(username, 1, 20), "Xóa thông báo thành công.");
+            return NotificationResponse.notificationResponse(getNotifications(username, 1, 20), "Xóa thông báo thành công.");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi xóa thông báo");
         }
@@ -77,7 +92,7 @@ public class NotificationServiceImpl implements INotificationService {
             notification.setSeen(true);
             notificationRepository.save(notification);
 
-            return notificationResponse(getNotifications(username, 1, 20), "Đọc thông báo thành công.");
+            return NotificationResponse.notificationResponse(getNotifications(username, 1, 20), "Đọc thông báo thành công.");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi đọc thông báo");
         }
@@ -99,17 +114,9 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
 
-    public NotificationRequest createNotificationRequest(String title, String body, String recipient, String sender, String type) {
-        NotificationRequest notificationRequest = new NotificationRequest();
-        notificationRequest.setTitle(title);
-        notificationRequest.setBody(body);
-        notificationRequest.setRecipient(recipient);
-        notificationRequest.setSender(sender);
-        notificationRequest.setType(type);
-        return notificationRequest;
-    }
 
-    private Notification createNotification(NotificationRequest request) {
+
+    private Notification createNotificationByRequest(NotificationRequest request) {
         Notification notification = new Notification();
         notification.setTitle(request.getTitle());
         notification.setBody(request.getBody());
@@ -123,19 +130,7 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
 
-    private NotificationResponse notificationResponse(Page<Notification> notifications, String message) {
-        NotificationResponse response = new NotificationResponse();
-        response.setNotificationDTOs(NotificationDTO.convertEntitiesToDTOs(notifications.getContent()));
-        response.setTotalPage(notifications.getTotalPages());
-        response.setCount(notifications.getNumberOfElements());
-        response.setPage(notifications.getNumber() + 1);
-        response.setSize(notifications.getSize());
-        response.setStatus("OK");
-        response.setCode(200);
-        response.setMessage(message);
 
-        return response;
-    }
 
 
 }

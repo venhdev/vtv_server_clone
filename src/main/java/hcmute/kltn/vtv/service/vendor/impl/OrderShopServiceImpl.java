@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;
 import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
+import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointHistoryService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
@@ -53,7 +54,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
     private final IMailService mailService;
     private final IShippingService shippingService;
     private final ILoyaltyPointService loyaltyPointService;
-    private final ILoyaltyPointHistoryService loyaltyPointHistoryService;
+    private final INotificationService notificationService;
 
     @Override
     public PageOrderResponse getPageOrder(String username, int page, int size) {
@@ -87,6 +88,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
         return ListOrderResponse.listOrderResponse(orders, "Lấy danh sách đơn hàng thành công!", "OK");
     }
 
+
     @Override
     public ListOrderResponse getOrdersByStatus(String username, OrderStatus status) {
         Shop shop = shopService.getShopByUsername(username);
@@ -99,6 +101,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
         return ListOrderResponse.listOrderResponse(orders, message, "OK");
     }
 
+
     @Override
     public ListOrderResponse getOrdersOnSameDay(String username, Date orderDate) {
         Shop shop = shopService.getShopByUsername(username);
@@ -109,6 +112,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
         return ListOrderResponse.listOrderResponse(orders, "Lấy danh sách đơn hàng trong cùng ngày thành công.", "OK");
     }
+
 
     @Override
     public ListOrderResponse getOrdersOnSameDayByStatus(String username, Date orderDate, OrderStatus status) {
@@ -123,6 +127,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
         return ListOrderResponse.listOrderResponse(orders, message, "OK");
     }
 
+
     @Override
     public ListOrderResponse getOrdersBetweenDate(String username, Date startOrderDate, Date endOrderDate) {
         Shop shop = shopService.getShopByUsername(username);
@@ -133,6 +138,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
         return ListOrderResponse.listOrderResponse(orders, "Lấy danh sách đơn hàng trong khoảng thời gian thành công.", "OK");
     }
+
 
     @Override
     public ListOrderResponse getOrdersBetweenDateByStatus(String username, Date startOrderDate, Date endOrderDate,
@@ -160,6 +166,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
         return OrderResponse.orderResponse(order, shippingDTO, "Lấy đơn hàng thành công!", "OK");
     }
 
+
     @Override
     public OrderResponse updateStatusOrder(String username, UUID orderId, OrderStatus status) {
         Shop shop = shopService.getShopByUsername(username);
@@ -168,19 +175,21 @@ public class OrderShopServiceImpl implements IOrderShopService {
         Order order = orderRepository.findByOrderIdAndShopShopId(orderId, shop.getShopId())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng trong cửa hàng!"));
         checkStatus(order);
-        String message = "Cập nhật trạng " + messageUpdateStatusOrder(status) + " cho đơn hàng thành công!";
-        ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
-                shop.getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
+
         if (status.equals(OrderStatus.CANCEL)) {
-            return cancelOrderByShop(order, shippingDTO, message);
+            return cancelOrderByShop(order);
         }
         order.setStatus(status);
         order.setUpdateAt(LocalDateTime.now());
         try {
-
             orderRepository.save(order);
 
-            return OrderResponse.orderResponse(order, shippingDTO, message, "Success");
+            String messageEmail = "Trạng thái đơn hàng của bạn đã được cập nhật thành " + messageUpdateStatusOrder(status);
+            String messageResponse =  "Cập nhật trạng " + messageUpdateStatusOrder(status) + " cho đơn hàng thành công!";
+            String titleNotification = "Cập nhật trạng thái đơn hàng";
+            String bodyNotification = "Đơn hàng của bạn đã được cập nhật trạng thái " + messageUpdateStatusOrder(status);
+
+            return  handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification);
         } catch (Exception e) {
             throw new InternalServerErrorException("Cập nhật trạng thái đơn hàng thất bại! " + e.getMessage());
         }
@@ -188,7 +197,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
 
     @Transactional
-    public OrderResponse cancelOrderByShop(Order order, ShippingDTO shippingDTO, String message) {
+    public OrderResponse cancelOrderByShop(Order order) {
 
         order.setStatus(OrderStatus.CANCEL);
         order.setUpdateAt(LocalDateTime.now());
@@ -206,11 +215,39 @@ public class OrderShopServiceImpl implements IOrderShopService {
             }
             List<OrderItem> orderItems = orderItemService.cancelOrderItem(order);
             order.setOrderItems(orderItems);
-            mailService.sendOrderConfirmationEmail(order, shippingDTO, "Đơn hàng của bạn đã bị hủy bởi cửa hàng!");
 
-            return OrderResponse.orderResponse(order, message, "Success");
+            String messageEmail = "Đơn hàng của bạn đã bị hủy bởi cửa hàng!";
+            String messageResponse =  "Đơn hàng của bạn đã bị hủy bởi cửa hàng!";
+            String titleNotification = "Hủy đơn hàng";
+            String bodyNotification = "Đơn hàng của bạn đã bị hủy bởi cửa hàng! Mã đơn hàng: #" + order.getOrderId();
+
+            return  handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification);
         } catch (Exception e) {
             throw new InternalServerErrorException("Hủy đơn hàng từ cửa hàng thất bại!");
+        }
+    }
+
+
+
+    public OrderResponse handleAfterSaveOrderShop(Order order, String messageEmail, String messageResponse, String titleNotification, String bodyNotification) {
+        try {
+            ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
+                    order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
+
+            mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
+            notificationService.addNewNotification(
+                    titleNotification,
+                    bodyNotification,
+                    order.getCustomer().getUsername(),
+                    order.getShop().getCustomer().getUsername(),
+                    "order"
+            );
+
+
+            return OrderResponse.orderResponse(order, shippingDTO, messageResponse, "Success");
+
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Xử lý đơn hàng thất bại!");
         }
     }
 

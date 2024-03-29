@@ -281,6 +281,29 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+    public OrderResponse handleAfterSaveOrder(Order order, String messageEmail, String messageResponse, String titleNotification, String bodyNotification) {
+        try {
+            ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
+                    order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
+
+            mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
+            notificationService.addNewNotification(
+                    titleNotification,
+                    bodyNotification,
+                    order.getShop().getCustomer().getUsername(),
+                    "system",
+                    "order"
+            );
+
+
+            return OrderResponse.orderResponse(order, shippingDTO, messageResponse, "Success");
+
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Xử lý đơn hàng thất bại!");
+        }
+    }
+
     @Transactional
     public OrderResponse cancelOrder(Order order) {
         order.setStatus(OrderStatus.CANCEL);
@@ -331,27 +354,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-    private OrderResponse handleAfterSaveOrder(Order order, String messageEmail, String messageResponse, String titleNotification, String bodyNotification) {
-        try {
-            ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
-                    order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
 
-            mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
-            notificationService.addNewNotification(
-                    titleNotification,
-                    bodyNotification,
-                    order.getShop().getCustomer().getUsername(),
-                    "system",
-                    "order"
-            );
-
-
-            return OrderResponse.orderResponse(order, shippingDTO, messageResponse, "Success");
-
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Xử lý đơn hàng thất bại!");
-        }
-    }
 
 
     private Order createOrderByOrderRequestWithCartIds(OrderRequestWithCart request, String username, Address address) {
