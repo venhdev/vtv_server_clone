@@ -18,22 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class VoucherController {
 
-    @Autowired
-    private IVoucherService voucherService;
+    private final IVoucherService voucherService;
 
     @GetMapping("/detail/{voucherId}")
     public ResponseEntity<VoucherResponse> getVoucherByVoucherId(@PathVariable Long voucherId) {
-        if (voucherId == null) {
-            throw new NotFoundException("Mã giảm giá không được để trống!");
-        }
+
         return ResponseEntity.ok(voucherService.getVoucherByVoucherId(voucherId));
     }
 
     @GetMapping("/list-on-shop/{shopId}")
     public ResponseEntity<ListVoucherResponse> listVoucherByShopId(@PathVariable Long shopId) {
-        if (shopId == null) {
-            throw new NotFoundException("Mã cửa hàng không được để trống!");
-        }
+
         return ResponseEntity.ok(voucherService.listVoucherByShopId(shopId));
     }
 
@@ -44,9 +39,7 @@ public class VoucherController {
 
     @GetMapping("/list-by-type/{type}")
     public ResponseEntity<ListVoucherResponse> listVoucherByType(@PathVariable VoucherType type) {
-        if (type == null) {
-            throw new NotFoundException("Loại mã giảm giá không được để trống!");
-        }
+
         return ResponseEntity.ok(voucherService.listVoucherByType(type));
     }
 

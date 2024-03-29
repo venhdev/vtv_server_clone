@@ -34,7 +34,7 @@ public class VoucherDTO {
 
     private int quantityUsed;
 
-    private String type;
+    private VoucherType type;
 
     public static VoucherDTO convertEntityToDTO(Voucher voucher) {
         VoucherDTO voucherDTO = new VoucherDTO();
@@ -49,18 +49,7 @@ public class VoucherDTO {
         voucherDTO.setEndDate(voucher.getEndDate());
         voucherDTO.setQuantityUsed(voucher.getQuantityUsed());
 
-        if (voucher.getType() == null ||
-                voucher.getType().equals(VoucherType.PERCENTAGE_SHOP) ||
-                voucher.getType().equals(VoucherType.PERCENTAGE_SYSTEM)) {
-            voucherDTO.setType("Giảm theo phần trăm");
-        }
-        if (voucher.getType().equals(VoucherType.MONEY_SHOP) ||
-                voucher.getType().equals(VoucherType.MONEY_SYSTEM)) {
-            voucherDTO.setType("Giảm theo tiền");
-        }
-        if (voucher.getType().equals(VoucherType.SHIPPING)) {
-            voucherDTO.setType("Giảm phí vận chuyển");
-        }
+
 
 
         return voucherDTO;
