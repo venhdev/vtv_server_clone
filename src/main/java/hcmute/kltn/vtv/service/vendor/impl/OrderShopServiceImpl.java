@@ -240,7 +240,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
                     bodyNotification,
                     order.getCustomer().getUsername(),
                     order.getShop().getCustomer().getUsername(),
-                    "order"
+                    "ORDER"
             );
 
 

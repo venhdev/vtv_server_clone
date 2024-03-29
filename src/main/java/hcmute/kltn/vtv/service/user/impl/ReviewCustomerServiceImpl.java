@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.service.user.impl;
 
 import hcmute.kltn.vtv.service.vtv.IImageService;
+import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.request.ReviewRequest;
@@ -11,6 +12,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.ReviewRepository;
 import hcmute.kltn.vtv.service.user.*;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,16 +25,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewCustomerServiceImpl implements IReviewCustomerService {
 
-    @Autowired
     private final ReviewRepository reviewRepository;
-    @Autowired
     private final ICustomerService customerService;
-    @Autowired
     private final IImageService imageService;
-    @Autowired
     private final IOrderItemService orderItemService;
-    @Autowired
     private final ILoyaltyPointService loyaltyPointService;
+    private final INotificationService notificationService;
 
 
     @Override
@@ -48,6 +46,16 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
 
             reviewRepository.save(review);
             loyaltyPointService.updatePointInLoyaltyPointByUsername(username, 200L, "REVIEW");
+
+            // Thêm thông báo cho chủ cửa hàng
+            notificationService.addNewNotification(
+                    "Có đánh giá mới",
+                    "Bạn có một đánh giá mới từ tài khoản " + username + " cho sản phẩm " + review.getProduct().getName() + " của đơn hàng: #" + review.getOrderItem().getOrder().getOrderId(),
+                    review.getProduct().getShop().getCustomer().getUsername(),
+                    "system",
+                    "REVIEW"
+            );
+
             return ReviewResponse.reviewResponse(review, "Thêm mới đánh giá thành công!", "Success");
         } catch (Exception e) {
             imageService.deleteImageInFirebase(review.getImage());
@@ -59,8 +67,8 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     @Override
     public ReviewResponse getReviewByOrderItemId(UUID orderItemId) {
         Review review = reviewRepository.findByOrderItemOrderItemId(orderItemId)
-                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại!"));
-        return ReviewResponse.reviewResponse(review, "Lấy thông tin đánh giá thành công!", "Success");
+                .orElseThrow(() -> new NotFoundException("Đánh giá không tồn tại!"));
+        return ReviewResponse.reviewResponse(review, "Lấy thông tin đánh giá thành công!", "OK");
     }
 
 
