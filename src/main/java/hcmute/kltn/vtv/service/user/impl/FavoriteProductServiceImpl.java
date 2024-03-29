@@ -1,14 +1,12 @@
 package hcmute.kltn.vtv.service.user.impl;
 
 import hcmute.kltn.vtv.model.extra.OrderStatus;
-import hcmute.kltn.vtv.service.guest.IReviewService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.FavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFavoriteProductResponse;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.user.FavoriteProduct;
-import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.repository.user.FavoriteProductRepository;
 import hcmute.kltn.vtv.service.guest.IProductService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
@@ -16,7 +14,6 @@ import hcmute.kltn.vtv.service.user.IFavoriteProductService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FavoriteProductServiceImpl implements IFavoriteProductService {
 
-    @Autowired
-    private ICustomerService customerService;
-    @Autowired
-    private IProductService productService;
-    @Autowired
-    private FavoriteProductRepository favoriteProductRepository;
+    private final ICustomerService customerService;
+    private final IProductService productService;
+    private final FavoriteProductRepository favoriteProductRepository;
 
     @Override
     @Transactional
@@ -47,7 +41,20 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
         } catch (Exception e) {
             throw new InternalServerErrorException("Thêm sản phẩm vào danh sách yêu thích thất bại!");
         }
+    }
 
+    @Override
+    public FavoriteProductResponse checkExistFavoriteProduct(Long productId, String username) {
+        if (favoriteProductRepository.existsByCustomerUsernameAndProductProductId(username, productId)) {
+            FavoriteProduct favoriteProduct = favoriteProductRepository.findByCustomerUsernameAndProductProductId(username, productId)
+                    .orElseThrow(() -> new NotFoundException("Sản phẩm yêu thích không tồn tại."));
+
+            return FavoriteProductResponse.favoriteProductResponse(favoriteProduct,
+                    "Sản phẩm đã có trong danh sách yêu thích của bạn.", "OK");
+        }
+
+        return FavoriteProductResponse.favoriteProductResponse(null,
+                "Sản phẩm chưa có trong danh sách yêu thích của bạn.", "Not Found");
     }
 
 
@@ -57,7 +64,7 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
 
         int countOrder = productService.countOrdersByProductId(favoriteProduct.getProduct().getProductId(), OrderStatus.COMPLETED);
 
-        return  ProductResponse.productResponse(favoriteProduct.getProduct(), countOrder,
+        return ProductResponse.productResponse(favoriteProduct.getProduct(), countOrder,
                 "Lấy thông tin sản phẩm yêu thích thành công.", "OK");
     }
 
@@ -126,7 +133,6 @@ public class FavoriteProductServiceImpl implements IFavoriteProductService {
         return favoriteProductRepository.findById(favoriteProductId)
                 .orElseThrow(() -> new NotFoundException("Sản phẩm yêu thích không tồn tại."));
     }
-
 
 
 }

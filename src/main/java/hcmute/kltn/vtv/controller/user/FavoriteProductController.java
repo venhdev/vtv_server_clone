@@ -29,11 +29,20 @@ public class FavoriteProductController {
 
     @GetMapping("/detail/{favoriteProductId}")
     public ResponseEntity<ProductResponse> getProductByFavoriteProductId(
-                         @PathVariable("favoriteProductId") Long favoriteProductId,
-                         HttpServletRequest request) {
+            @PathVariable("favoriteProductId") Long favoriteProductId,
+            HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
         return ResponseEntity.ok(favoriteProductService.getProductByFavoriteProductId(favoriteProductId, username));
+    }
+
+    @GetMapping("/check-exist/{productId}")
+    public ResponseEntity<FavoriteProductResponse> checkExistFavoriteProduct(
+            @PathVariable("productId") Long productId,
+            HttpServletRequest request) {
+        String username = (String) request.getAttribute("username");
+
+        return ResponseEntity.ok(favoriteProductService.checkExistFavoriteProduct(productId, username));
     }
 
 

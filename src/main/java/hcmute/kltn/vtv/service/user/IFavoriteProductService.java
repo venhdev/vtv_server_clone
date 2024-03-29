@@ -9,6 +9,8 @@ public interface IFavoriteProductService {
     @Transactional
     FavoriteProductResponse addNewFavoriteProduct(Long productId, String username);
 
+    FavoriteProductResponse checkExistFavoriteProduct(Long productId, String username);
+
     ProductResponse getProductByFavoriteProductId(Long favoriteProductId, String username);
 
     ListFavoriteProductResponse getListFavoriteProduct(String username);
