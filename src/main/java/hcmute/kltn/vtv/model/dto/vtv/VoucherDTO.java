@@ -48,6 +48,7 @@ public class VoucherDTO {
         voucherDTO.setStartDate(voucher.getStartDate());
         voucherDTO.setEndDate(voucher.getEndDate());
         voucherDTO.setQuantityUsed(voucher.getQuantityUsed());
+        voucherDTO.setType(voucher.getType());
 
 
 
@@ -61,11 +62,13 @@ public class VoucherDTO {
             voucherDTOs.add(convertEntityToDTO(voucher));
         }
 
-        voucherDTOs.sort(Comparator
-                .comparing(VoucherDTO::getType)
-                .thenComparing(VoucherDTO::getStartDate)
-                .thenComparing(VoucherDTO::getEndDate)
-                .reversed());
+        if (voucherDTOs.size() > 1){
+            voucherDTOs.sort(Comparator
+                    .comparing(VoucherDTO::getType)
+                    .thenComparing(VoucherDTO::getStartDate)
+                    .thenComparing(VoucherDTO::getEndDate)
+                    .reversed());
+        }
 
         return voucherDTOs;
     }
