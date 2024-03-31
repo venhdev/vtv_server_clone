@@ -21,23 +21,21 @@ public class RevenueServiceImpl implements IRevenueService {
     private final OrderRepository orderRepository;
     private final IShopService shopService;
 
-    @Override
-    public ListStatisticsResponse statisticsRevenueByDate(Date startDate, Date endDate, String username) {
+    public ListStatisticsResponse statisticsRevenueByDateAndStatus(Date startDate, Date endDate, OrderStatus status, String username) {
         Shop shop = shopService.getShopByUsername(username);
         startDate = DateServiceImpl.formatStartOfDate(startDate);
         endDate = DateServiceImpl.formatEndOfDate(endDate);
-
         List<Order> orders = orderRepository
-                .findAllByShopShopIdAndStatusAndOrderDateBetween(shop.getShopId(), OrderStatus.COMPLETED, startDate, endDate)
+                .findAllByShopShopIdAndStatusAndOrderDateBetween(shop.getShopId(), status, startDate, endDate)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào."));
-        String message = "Thống kê doanh thu từ ngày " + DateServiceImpl.formatStringDate(startDate) + " đến ngày " + DateServiceImpl.formatStringDate(endDate) + " thành công.";
+        String message = "Thống kê " + messageByStatus(status) + " từ ngày " + DateServiceImpl.formatStringDate(startDate)
+                + " đến ngày " + DateServiceImpl.formatStringDate(endDate) + " thành công.";
 
         return ListStatisticsResponse.listStatisticsResponse(orders, startDate, endDate, message);
     }
 
 
-
-    public static  Map<Date, List<Order>> getOrdersByDate(List<Order> orders, Date startDate, Date endDate) {
+    public static Map<Date, List<Order>> getOrdersByDate(List<Order> orders, Date startDate, Date endDate) {
         Map<Date, List<Order>> ordersByDate = new HashMap<>();
         List<Date> datesBetween = DateServiceImpl.getDatesBetween(startDate, endDate);
 
@@ -46,19 +44,31 @@ public class RevenueServiceImpl implements IRevenueService {
             Date start = DateServiceImpl.formatStartOfDate(date);
             Date end = DateServiceImpl.formatEndOfDate(date);
 
-            if (!orders.isEmpty()) {
-                for (Order checkOrder : orders) {
-                    Date dateUpdate = DateServiceImpl.convertToLocalDateTimeToDate(checkOrder.getUpdateAt());
-                    if (dateUpdate.after(start) && dateUpdate.before(end)) {
-                        ordersSameDate.add(checkOrder);
-                    }
+            for (Order checkOrder : orders) {
+                Date dateUpdate = DateServiceImpl.convertToLocalDateTimeToDate(checkOrder.getUpdateAt());
+                if (dateUpdate.after(start) && dateUpdate.before(end)) {
+                    ordersSameDate.add(checkOrder);
                 }
-                ordersSameDate.sort(Comparator.comparing(Order::getOrderDate));
             }
             ordersByDate.put(start, ordersSameDate);
         }
 
+        for (List<Order> ordersOnDate : ordersByDate.values()) {
+            ordersOnDate.sort(Comparator.comparing(Order::getOrderDate));
+        }
+
         return ordersByDate;
+    }
+
+
+    private String messageByStatus(OrderStatus status) {
+        return switch (status) {
+            case COMPLETED -> "doanh thu";
+            case DELIVERED -> "đơn hàng đã giao";
+            case SHIPPING -> "đơn hàng đang giao";
+            case CANCEL -> "đơn hàng đã hủy";
+            default -> "đơn hàng";
+        };
     }
 
 

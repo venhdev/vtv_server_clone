@@ -1,8 +1,10 @@
 package hcmute.kltn.vtv.controller.vendor;
 
 import hcmute.kltn.vtv.model.data.vendor.response.ListStatisticsResponse;
+import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.vendor.IRevenueService;
 import hcmute.kltn.vtv.service.vtv.IDateService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,13 +22,19 @@ public class RevenueShopController {
     private final IDateService dateService;
 
 
-    @GetMapping("/statistics")
-    public ResponseEntity<ListStatisticsResponse> statisticsRevenueByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    @GetMapping("/statistics/status/{status}")
+    public ResponseEntity<ListStatisticsResponse> statisticsRevenueByDate( @PathVariable OrderStatus status,
+                                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
                                                                           HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         dateService.checkDatesRequest(startDate, endDate, 31);
-        return ResponseEntity.ok(revenueService.statisticsRevenueByDate(startDate, endDate, username));
+        if (!status.equals(OrderStatus.COMPLETED) && !status.equals(OrderStatus.DELIVERED) &&
+                !status.equals(OrderStatus.SHIPPING) && !status.equals(OrderStatus.CANCEL)) {
+            throw new BadRequestException("Trạng thái thống kê không hợp lệ. Chỉ hỗ trợ COMPLETED, DELIVERED, SHIPPING, CANCEL.");
+        }
+
+        return ResponseEntity.ok(revenueService.statisticsRevenueByDateAndStatus(startDate, endDate, status, username));
     }
 
 }
