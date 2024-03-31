@@ -57,6 +57,18 @@ public class ProductDTO {
         return productDTOs;
     }
 
+
+    public static List<ProductDTO> sortProductDTOs(List<ProductDTO> productDTOs, String sortType) {
+        if (sortType.equals("price")) {
+            productDTOs.sort((o1, o2) -> o1.getMinPrice().compareTo(o2.getMinPrice()));
+        } else if (sortType.equals("rating")) {
+            productDTOs.sort((o1, o2) -> o2.getRating().compareTo(o1.getRating()));
+        } else if (sortType.equals("sold")) {
+            productDTOs.sort((o1, o2) -> o2.getSold().compareTo(o1.getSold()));
+        }
+        return productDTOs;
+    }
+
     public static ProductDTO convertEntityToDTO(Product product) {
 
         ProductDTO productDTO = new ProductDTO();

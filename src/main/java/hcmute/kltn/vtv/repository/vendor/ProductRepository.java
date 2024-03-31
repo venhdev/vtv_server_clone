@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -708,7 +709,57 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
 
+    /////////////////////////////////////////// Top 10 On Shop By Date ///////////////////////////////////////////
 
+    @Query(value =
+            "SELECT DISTINCT p.* " +
+                    "FROM product p " +
+                    "JOIN product_variant pv ON p.product_id = pv.product_id " +
+                    "JOIN cart c ON pv.product_variant_id = c.product_variant_id " +
+                    "JOIN order_item oi ON c.cart_id = oi.cart_id " +
+                    "JOIN `order` o ON oi.order_id = o.order_id " +
+                    "WHERE p.shop_id = :shopId " +
+                    "AND o.status = :orderStatus " +
+                    "AND o.update_at BETWEEN :startDate AND :endDate " +
+                    "LIMIT :limit OFFSET 0",  // Assuming the offset is always 0 for the first page
+            countQuery =
+                    "SELECT COUNT(DISTINCT p.product_id) " +
+                            "FROM product p " +
+                            "JOIN product_variant pv ON p.product_id = pv.product_id " +
+                            "JOIN cart c ON pv.product_variant_id = c.product_variant_id " +
+                            "JOIN order_item oi ON c.cart_id = oi.cart_id " +
+                            "JOIN `order` o ON oi.order_id = o.order_id " +
+                            "WHERE p.shop_id = :shopId " +
+                            "AND o.status = :orderStatus " +
+                            "AND o.update_at BETWEEN :startDate AND :endDate",
+            nativeQuery = true)
+    Optional<List<Product>> getBestProductsByLimitAndShopIdAndOrderStatusAndOrderDateBetween(
+            int limit, Long shopId, String orderStatus, Date startDate, Date endDate);
+
+
+
+    @Query(value =
+            "SELECT DISTINCT p.* " +
+                    "FROM product p " +
+                    "JOIN product_variant pv ON p.product_id = pv.product_id " +
+                    "JOIN cart c ON pv.product_variant_id = c.product_variant_id " +
+                    "JOIN order_item oi ON c.cart_id = oi.cart_id " +
+                    "JOIN `order` o ON oi.order_id = o.order_id " +
+                    "WHERE p.shop_id = :shopId " +
+                    "AND o.update_at BETWEEN :startDate AND :endDate " +
+                    "LIMIT :limit OFFSET 0",  // Assuming the offset is always 0 for the first page
+            countQuery =
+                    "SELECT COUNT(DISTINCT p.product_id) " +
+                            "FROM product p " +
+                            "JOIN product_variant pv ON p.product_id = pv.product_id " +
+                            "JOIN cart c ON pv.product_variant_id = c.product_variant_id " +
+                            "JOIN order_item oi ON c.cart_id = oi.cart_id " +
+                            "JOIN `order` o ON oi.order_id = o.order_id " +
+                            "WHERE p.shop_id = :shopId " +
+                            "AND o.update_at BETWEEN :startDate AND :endDate",
+            nativeQuery = true)
+    Optional<List<Product>> getBestProductsByLimitAndShopIdAndOrderDateBetween(
+            int limit, Long shopId, Date startDate, Date endDate);
 
 
 

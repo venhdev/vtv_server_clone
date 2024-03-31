@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.controller.vendor;
 
-import hcmute.kltn.vtv.model.data.vendor.response.ListStatisticsResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListStatisticsOrderResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.vendor.IRevenueService;
 import hcmute.kltn.vtv.service.vtv.IDateService;
@@ -23,10 +24,10 @@ public class RevenueShopController {
 
 
     @GetMapping("/statistics/status/{status}")
-    public ResponseEntity<ListStatisticsResponse> statisticsRevenueByDate( @PathVariable OrderStatus status,
-                                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-                                                                          HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ListStatisticsOrderResponse> statisticsOrderByDate(@PathVariable OrderStatus status,
+                                                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                                                             HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         dateService.checkDatesRequest(startDate, endDate, 31);
         if (!status.equals(OrderStatus.COMPLETED) && !status.equals(OrderStatus.DELIVERED) &&
@@ -34,7 +35,19 @@ public class RevenueShopController {
             throw new BadRequestException("Trạng thái thống kê không hợp lệ. Chỉ hỗ trợ COMPLETED, DELIVERED, SHIPPING, CANCEL.");
         }
 
-        return ResponseEntity.ok(revenueService.statisticsRevenueByDateAndStatus(startDate, endDate, status, username));
+        return ResponseEntity.ok(revenueService.statisticsOrderByDateAndStatus(startDate, endDate, status, username));
+    }
+
+
+    @GetMapping("/statistics/product/top/{limit}")
+    public ResponseEntity<ListProductResponse> statisticsTopProductByDate(@PathVariable int limit,
+                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                                                          HttpServletRequest httpServletRequest) {
+        String username = (String) httpServletRequest.getAttribute("username");
+        dateService.checkDatesRequest(startDate, endDate, 31);
+
+        return ResponseEntity.ok(revenueService.getTopProductByLimitAndDate(limit, startDate, endDate, username));
     }
 
 }

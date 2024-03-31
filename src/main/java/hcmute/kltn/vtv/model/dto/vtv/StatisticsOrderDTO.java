@@ -2,7 +2,6 @@ package hcmute.kltn.vtv.model.dto.vtv;
 
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.service.vendor.impl.RevenueServiceImpl;
-import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -14,37 +13,37 @@ import java.util.*;
 @ToString
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class StatisticsDTO {
+public class StatisticsOrderDTO {
 
     private Long totalMoney;
     private int totalOrder;
     private int totalProduct;
     private Date date;
 
-    public static StatisticsDTO convertOrdersAndDateToDTO(List<Order> orders, Date date) {
-        StatisticsDTO statisticsDTO = new StatisticsDTO();
-        statisticsDTO.setDate(date);
-        statisticsDTO.setTotalMoney(totalMoney(orders));
-        statisticsDTO.setTotalOrder(orders.size());
-        statisticsDTO.setTotalProduct(orders.stream().mapToInt(Order::getCount).sum());
+    public static StatisticsOrderDTO convertOrdersAndDateToDTO(List<Order> orders, Date date) {
+        StatisticsOrderDTO statisticsOrderDTO = new StatisticsOrderDTO();
+        statisticsOrderDTO.setDate(date);
+        statisticsOrderDTO.setTotalMoney(totalMoney(orders));
+        statisticsOrderDTO.setTotalOrder(orders.size());
+        statisticsOrderDTO.setTotalProduct(orders.stream().mapToInt(Order::getCount).sum());
 
-        return statisticsDTO;
+        return statisticsOrderDTO;
     }
 
 
 
 
-    public static List<StatisticsDTO> covertStatisticsDTOs(List<Order> orders, Date startDate, Date endDate) {
-        List<StatisticsDTO> statisticsDTOs = new ArrayList<>();
+    public static List<StatisticsOrderDTO> covertStatisticsOrderDTOs(List<Order> orders, Date startDate, Date endDate) {
+        List<StatisticsOrderDTO> statisticsOrderDTOS = new ArrayList<>();
         Map<Date, List<Order>> ordersByDate = RevenueServiceImpl.getOrdersByDate(orders, startDate, endDate);
         for (Map.Entry<Date, List<Order>> entry : ordersByDate.entrySet()) {
             Date date = entry.getKey();
             List<Order> ordersOnDate = entry.getValue();
-            statisticsDTOs.add(StatisticsDTO.convertOrdersAndDateToDTO(ordersOnDate, date));
+            statisticsOrderDTOS.add(StatisticsOrderDTO.convertOrdersAndDateToDTO(ordersOnDate, date));
         }
-        statisticsDTOs.sort(Comparator.comparing(StatisticsDTO::getDate));
+        statisticsOrderDTOS.sort(Comparator.comparing(StatisticsOrderDTO::getDate));
 
-        return statisticsDTOs;
+        return statisticsOrderDTOS;
     }
 
 

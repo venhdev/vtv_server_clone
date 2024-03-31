@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.data.vendor.response;
 
-import hcmute.kltn.vtv.model.dto.vtv.StatisticsDTO;
+import hcmute.kltn.vtv.model.dto.vtv.StatisticsOrderDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
@@ -14,20 +14,20 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListStatisticsResponse extends ResponseAbstract {
+public class ListStatisticsOrderResponse extends ResponseAbstract {
 
     private int count;
     private int totalOrder;
     private Long totalMoney;
     private Date dateStart;
     private Date dateEnd;
-    private List<StatisticsDTO> statisticsDTOs;
+    private List<StatisticsOrderDTO> statisticsOrderDTOS;
 
 
-    public static ListStatisticsResponse listStatisticsResponse(List<Order> orders, Date startDate, Date endDate, String message) {
-        ListStatisticsResponse response = new ListStatisticsResponse();
-        response.setStatisticsDTOs(StatisticsDTO.covertStatisticsDTOs(orders, startDate, endDate));
-        response.setCount(response.getStatisticsDTOs().size());
+    public static ListStatisticsOrderResponse listStatisticsResponse(List<Order> orders, Date startDate, Date endDate, String message) {
+        ListStatisticsOrderResponse response = new ListStatisticsOrderResponse();
+        response.setStatisticsOrderDTOS(StatisticsOrderDTO.covertStatisticsOrderDTOs(orders, startDate, endDate));
+        response.setCount(response.getStatisticsOrderDTOS().size());
         response.setTotalOrder(orders.size());
         response.setTotalMoney(totalMoney(orders));
         response.setDateStart(DateServiceImpl.formatStartOfDate(startDate));

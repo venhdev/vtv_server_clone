@@ -21,9 +21,17 @@ public class ListProductResponse extends ResponseAbstract {
     public static ListProductResponse listProductResponse(List<Product> products, String message, String status) {
         ListProductResponse response = new ListProductResponse();
         response.setProductDTOs(ProductDTO.convertEntitiesToDTOs(products));
+        response.setCount(products.size());
         response.setCode(200);
         response.setMessage(message);
         response.setStatus(status);
+        return response;
+    }
+
+
+    public static ListProductResponse listProductResponseSort(List<Product> products, String message, String status, String sort) {
+        ListProductResponse response = listProductResponse(products, message, status);
+        response.setProductDTOs(ProductDTO.sortProductDTOs(response.getProductDTOs(), sort));
         return response;
     }
 }

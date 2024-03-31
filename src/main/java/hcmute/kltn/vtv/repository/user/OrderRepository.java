@@ -24,7 +24,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     Optional<List<Order>> findAllByCustomerUsernameAndStatus(String username, OrderStatus status);
 
-    Optional<Order> findByOrderIdAndStatus(UUID orderId, OrderStatus status);
 
     Optional<Order> findByOrderIdAndShopShopId(UUID orderId, Long shopId);
 
@@ -39,7 +38,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     Optional<List<Order>> findAllByShopShopIdAndOrderDateBetweenAndStatus(Long shopId, Date startOrderDate,
             Date endOrderDate, OrderStatus status);
 
-    int countAllByShopShopIdAndStatusAndOrderDateBetween(Long shopId, OrderStatus status, Date startDate, Date endDate);
 
     Optional<List<Order>> findAllByShopShopIdAndStatusAndOrderDateBetween(Long shopId, OrderStatus status, Date startDate,
             Date endDate);
@@ -49,9 +47,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     Optional<Page<Order>> findAllByShopShopIdAndStatusOrderByCreateAtDesc(Long shopId, OrderStatus status,
             PageRequest pageRequest);
 
-    int countAllByShopShopIdAndStatus(Long shopId, OrderStatus status);
 
-    int countAllByShopShopId(Long shopId);
 
 
 
