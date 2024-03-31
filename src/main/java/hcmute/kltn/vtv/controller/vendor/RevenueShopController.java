@@ -1,9 +1,8 @@
 package hcmute.kltn.vtv.controller.vendor;
 
-import hcmute.kltn.vtv.model.data.vendor.response.StatisticsResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListStatisticsResponse;
 import hcmute.kltn.vtv.service.vendor.IRevenueService;
 import hcmute.kltn.vtv.service.vtv.IDateService;
-import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,9 +21,9 @@ public class RevenueShopController {
 
 
     @GetMapping("/statistics")
-    public ResponseEntity<StatisticsResponse> statisticsRevenueByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-                                                                      HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ListStatisticsResponse> statisticsRevenueByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                                                          HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         dateService.checkDatesRequest(startDate, endDate, 31);
         return ResponseEntity.ok(revenueService.statisticsRevenueByDate(startDate, endDate, username));

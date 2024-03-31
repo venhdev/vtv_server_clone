@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,23 @@ public class DateServiceImpl implements IDateService{
         if (diffDays > maxDays) {
             throw new BadRequestException("Khoảng thời gian không được lớn hơn " + maxDays + " ngày.");
         }
+    }
+
+
+    public static List<Date> getDatesBetween(Date startDate, Date endDate) {
+        startDate = formatStartOfDate(startDate);
+        endDate = formatEndOfDate(endDate);
+        List<Date> datesInRange = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+
+        while (!calendar.getTime().after(endDate)) {
+            Date result = calendar.getTime();
+            datesInRange.add(result);
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return datesInRange;
     }
 
 
