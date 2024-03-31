@@ -7,5 +7,5 @@ import java.util.Date;
 public interface IRevenueService {
 
 
-    StatisticsResponse statisticsByDate(Date startDate, Date endDate, String username);
+    StatisticsResponse statisticsRevenueByDate(Date startDate, Date endDate, String username);
 }

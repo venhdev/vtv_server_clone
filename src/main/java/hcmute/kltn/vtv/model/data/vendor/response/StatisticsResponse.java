@@ -1,10 +1,11 @@
 package hcmute.kltn.vtv.model.data.vendor.response;
 
 import hcmute.kltn.vtv.model.dto.vtv.StatisticsDTO;
+import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
+import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
 import lombok.*;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -18,26 +19,21 @@ public class StatisticsResponse extends ResponseAbstract {
     private int count;
     private int totalOrder;
     private Long totalMoney;
-    private String username;
     private Date dateStart;
     private Date dateEnd;
 
     private List<StatisticsDTO> statisticsDTOs;
 
 
-
-    public static StatisticsResponse statisticsResponse(List<StatisticsDTO> statisticsDTOs, String username,
-                                                  int totalOrder, Date startDate, Date endDate, long totalMoney) {
-
+    public static StatisticsResponse statisticsResponse(List<Order> orders, Date startDate, Date endDate, String message) {
         StatisticsResponse statisticsResponse = new StatisticsResponse();
-        statisticsResponse.setUsername(username);
-        statisticsResponse.setCount(statisticsDTOs.size());
-        statisticsResponse.setTotalOrder(totalOrder);
-        statisticsResponse.setTotalMoney(totalMoney);
-        statisticsResponse.setDateStart(ofDay(startDate));
-        statisticsResponse.setDateEnd(ofDay(endDate));
-        statisticsResponse.setStatisticsDTOs(statisticsDTOs);
-        statisticsResponse.setMessage("Thống kê doanh thu thành công.");
+        statisticsResponse.setStatisticsDTOs(StatisticsDTO.covertStatisticsDTOs(orders, startDate, endDate));
+        statisticsResponse.setCount(statisticsResponse.getStatisticsDTOs().size());
+        statisticsResponse.setTotalOrder(orders.size());
+        statisticsResponse.setTotalMoney(totalMoney(orders));
+        statisticsResponse.setDateStart(DateServiceImpl.formatStartOfDate(startDate));
+        statisticsResponse.setDateEnd(DateServiceImpl.formatStartOfDate(endDate));
+        statisticsResponse.setMessage(message);
         statisticsResponse.setCode(200);
         statisticsResponse.setStatus("OK");
 
@@ -45,16 +41,15 @@ public class StatisticsResponse extends ResponseAbstract {
     }
 
 
-
-
-    private static Date ofDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
+    public static Long totalMoney(List<Order> orders) {
+        long totalMoney = 0;
+        for (Order order : orders) {
+            totalMoney += (long) (order.getTotalPrice() + order.getDiscountShop() - order.getTotalPrice() * 0.04);
+        }
+        return totalMoney;
     }
+
+
+
 
 }

@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.service.guest;
+package hcmute.kltn.vtv.service.vtv;
 
 public interface IPageService {
     void checkRequestProductPageParams(int page, int size);

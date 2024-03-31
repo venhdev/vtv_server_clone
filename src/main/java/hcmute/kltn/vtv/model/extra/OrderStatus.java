@@ -12,7 +12,6 @@ public enum OrderStatus {
     PROCESSING("Processing"),
     PICKUP_PENDING("Pickup Pending"),
     SHIPPING("Shipping"),
-    SHIPPED("Shipped"),
     DELIVERED("Delivered"),
     COMPLETED("Completed"),
     RETURNED("Returned"),

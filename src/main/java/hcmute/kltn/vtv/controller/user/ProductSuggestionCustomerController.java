@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.controller.user;
 
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
-import hcmute.kltn.vtv.service.guest.IPageService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.service.user.IProductSuggestionCustomerService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

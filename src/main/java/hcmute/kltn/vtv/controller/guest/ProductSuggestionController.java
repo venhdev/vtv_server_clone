@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.controller.guest;
 
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
-import hcmute.kltn.vtv.service.guest.IPageService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.service.guest.IProductSuggestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
-package hcmute.kltn.vtv.service.guest.impl;
+package hcmute.kltn.vtv.service.vtv.impl;
 
 
-import hcmute.kltn.vtv.service.guest.IPageService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

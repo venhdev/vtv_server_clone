@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.controller.guest;
 
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
-import hcmute.kltn.vtv.service.guest.IPageService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.service.user.ISearchHistoryService;
 import hcmute.kltn.vtv.service.user.ISearchProductService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;

@@ -4,7 +4,7 @@ import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
 import hcmute.kltn.vtv.service.guest.IFavoriteProductGuestService;
-import hcmute.kltn.vtv.service.guest.IPageService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.service.guest.IProductService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

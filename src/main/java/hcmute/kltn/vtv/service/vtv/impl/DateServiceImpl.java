@@ -1,0 +1,84 @@
+package hcmute.kltn.vtv.service.vtv.impl;
+
+
+import hcmute.kltn.vtv.service.vtv.IDateService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
+
+@Service
+@RequiredArgsConstructor
+public class DateServiceImpl implements IDateService{
+
+
+
+    @Override
+    public void checkDatesRequest(Date startDate, Date endDate, int maxDays) {
+        startDate = formatStartOfDate(startDate);
+        endDate = formatStartOfDate(endDate);
+        long diff = endDate.getTime() - startDate.getTime();
+        long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
+        if (diffDays < 0) {
+            throw new BadRequestException("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
+        }
+
+
+        if (diffDays > maxDays) {
+            throw new BadRequestException("Khoảng thời gian không được lớn hơn " + maxDays + " ngày.");
+        }
+    }
+
+
+    public static Date formatStartOfDate(Date date) {
+        Calendar calendar = formatCalendar(date, 0, 0, 0, 0);
+        return calendar.getTime();
+    }
+
+
+    public static Date formatMiddleOfDate(Date date) {
+        Calendar calendar = formatCalendar(date, 12, 0, 0, 0);
+        return calendar.getTime();
+    }
+
+
+    public static Date formatEndOfDate(Date date) {
+        Calendar calendar = formatCalendar(date, 23, 59, 59, 999);
+        return calendar.getTime();
+    }
+
+
+
+
+
+   // dd/MM/yyyy
+    public static String formatStringDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
+    }
+
+
+    // Convert LocalDateTime to Date
+    public static Date convertToLocalDateTimeToDate(LocalDateTime dateTime) {
+        return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+
+
+
+
+    private static Calendar formatCalendar(Date date, int hour, int minute, int second, int millisecond) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+        return calendar;
+    }
+}
