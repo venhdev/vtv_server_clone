@@ -1,11 +1,12 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsProductResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.repository.vendor.ProductRepository;
 import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
-import hcmute.kltn.vtv.model.data.vendor.response.ListStatisticsOrderResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsOrderResponse;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
@@ -25,6 +26,7 @@ public class RevenueServiceImpl implements IRevenueService {
     private final ProductRepository productRepository;
     private final IShopService shopService;
 
+    @Override
     public ListStatisticsOrderResponse statisticsOrderByDateAndStatus(Date startDate, Date endDate, OrderStatus status, String username) {
         Shop shop = shopService.getShopByUsername(username);
         startDate = DateServiceImpl.formatStartOfDate(startDate);
@@ -40,20 +42,22 @@ public class RevenueServiceImpl implements IRevenueService {
 
 
     @Override
-    public ListProductResponse getTopProductByLimitAndDate(int limit, Date startDate, Date endDate, String username) {
+    public ListStatisticsProductResponse getTopProductByLimitAndDate(int limit, Date startDate, Date endDate, String username) {
         Shop shop = shopService.getShopByUsername(username);
         startDate = DateServiceImpl.formatStartOfDate(startDate);
         endDate = DateServiceImpl.formatEndOfDate(endDate);
         List<Product> productsBestSeller = productRepository.getBestProductsByLimitAndShopIdAndOrderStatusAndOrderDateBetween(
                         limit, shop.getShopId(), OrderStatus.COMPLETED.toString(), startDate, endDate)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách sản phẩm bán chạy nào."));
-
+        List<Order> orders = orderRepository
+                .findAllByShopShopIdAndStatusAndOrderDateBetween(shop.getShopId(), OrderStatus.COMPLETED, startDate, endDate)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào."));
 
 
         String message = "Danh sách sản phẩm bán chạy của cửa hàng từ ngày " + DateServiceImpl.formatStringDate(startDate)
                 + " đến ngày " + DateServiceImpl.formatStringDate(endDate) + " thành công.";
 
-        return ListProductResponse.listProductResponseSort(productsBestSeller, message, "OK", "sold");
+        return ListStatisticsProductResponse.listStatisticsProductResponse(productsBestSeller, orders, startDate, endDate, message);
     }
 
 

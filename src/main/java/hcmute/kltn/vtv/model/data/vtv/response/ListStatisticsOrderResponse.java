@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.data.vendor.response;
+package hcmute.kltn.vtv.model.data.vtv.response;
 
 import hcmute.kltn.vtv.model.dto.vtv.StatisticsOrderDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
