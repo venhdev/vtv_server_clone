@@ -17,8 +17,10 @@ public class FcmToken {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID fcmTokenId;
 
-    private String fcmToken;
+    private String tokenFcm;
 
     private String username;
+
+    private UUID refreshTokenId;
 
 }

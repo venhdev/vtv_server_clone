@@ -8,7 +8,6 @@ import hcmute.kltn.vtv.authentication.response.RefreshTokenResponse;
 import hcmute.kltn.vtv.authentication.response.RegisterResponse;
 import hcmute.kltn.vtv.authentication.service.IAuthenticationService;
 import hcmute.kltn.vtv.authentication.service.IJwtService;
-import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.user.Token;
 import hcmute.kltn.vtv.model.extra.Role;
@@ -107,7 +106,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             var jwtToken = jwtService.generateToken(customer);
             var refreshToken = jwtService.generateRefreshToken(customer);
             addNewToken(customer, refreshToken);
-            fcmService.addNewFcmToken(loginRequest.getFcmToken(), customer.getUsername());
+            Token token = tokenRepository.findByCustomerUsernameAndToken(customer.getUsername(), refreshToken)
+                    .orElseThrow(() -> new NotFoundException("Token không tồn tại."));
+            fcmService.addNewFcmToken(loginRequest.getFcmToken(), customer.getUsername(), token.getTokenId());
             Cookie cookie = addCookie(refreshToken, refreshExpiration);
             response.addCookie(cookie);
 
@@ -145,11 +146,10 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     @Override
     @Transactional
     public LogoutResponse logout(String refreshToken,
-                                 String fcmToken,
                                  HttpServletResponse response) {
         try {
+            fcmService.deleteFcmTokenByRefreshToken(refreshToken);
             revokeCustomerToken(refreshToken);
-            fcmService.deleteFcmToken(fcmToken);
             SecurityContextHolder.clearContext();
             Cookie cookie = addCookie(null, 0);
             response.addCookie(cookie);

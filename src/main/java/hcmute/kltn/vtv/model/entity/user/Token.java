@@ -3,7 +3,10 @@ package hcmute.kltn.vtv.model.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Data
+import java.util.UUID;
+
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,8 +16,8 @@ public class Token {
 
     @Id
     @Column(nullable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long tokenId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    public UUID tokenId;
 
     @Column(unique = true)
     public String token;

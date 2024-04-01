@@ -10,15 +10,20 @@ import java.util.UUID;
 
 @Repository
 public interface FcmTokenRepository extends JpaRepository<FcmToken, UUID> {
-    Optional<FcmToken> findByFcmToken(String fcmToken);
+    Optional<FcmToken> findByTokenFcm(String fcmToken);
 
-    boolean existsByFcmToken(String fcmToken);
+    boolean existsByTokenFcm(String fcmToken);
+    boolean existsByUsernameAndTokenFcm(String username, String fcmToken);
 
     Optional<List<FcmToken>> findAllByUsername(String username);
 
     boolean existsByUsername(String username);
 
-    void deleteByFcmToken(String fcmToken);
+    void deleteByTokenFcm(String fcmToken);
+
+    void deleteAllByRefreshTokenIdIn(List<UUID> refreshTokenIds);
+
+    void deleteAllByRefreshTokenId(UUID refreshTokenId);
 
 
 }

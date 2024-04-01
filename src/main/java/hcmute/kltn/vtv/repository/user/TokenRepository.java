@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface TokenRepository extends JpaRepository<Token, Long> {
+public interface TokenRepository extends JpaRepository<Token, UUID> {
 
   @Query(value = """
       select t from Token t inner join Customer c\s
@@ -25,7 +26,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 
   Optional<Token> findByCustomerCustomerIdAndToken(Long customerId, String token);
 
-
+  Optional<Token> findByCustomerUsernameAndToken(String username, String token);
 
 
   // @Query("select t from Token t inner join Customer c " +

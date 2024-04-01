@@ -3,19 +3,22 @@ package hcmute.kltn.vtv.service.vtv.impl;
 import com.google.firebase.messaging.*;
 import hcmute.kltn.vtv.model.entity.user.Notification;
 import hcmute.kltn.vtv.model.entity.user.FcmToken;
+import hcmute.kltn.vtv.model.entity.user.Token;
 import hcmute.kltn.vtv.repository.user.FcmTokenRepository;
+import hcmute.kltn.vtv.repository.user.TokenRepository;
 import hcmute.kltn.vtv.service.vtv.IFcmService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -24,20 +27,36 @@ public class FcmServiceImpl implements IFcmService {
 
     private final FirebaseMessaging firebaseMessaging;
     private final FcmTokenRepository fcmTokenRepository;
+    private final TokenRepository tokenRepository;
 
 
     @Override
-    public void addNewFcmToken(String fcmToken, String username) {
-        if (fcmTokenRepository.existsByFcmToken(fcmToken)) {
+    @Transactional
+    public void addNewFcmToken(String fcmToken, String username, UUID refreshTokenId) {
+        if (fcmTokenRepository.existsByUsernameAndTokenFcm(username, fcmToken)) {
             return;
         }
         FcmToken fcmTokenEntity = new FcmToken();
-        fcmTokenEntity.setFcmToken(fcmToken);
+        fcmTokenEntity.setTokenFcm(fcmToken);
         fcmTokenEntity.setUsername(username);
+        fcmTokenEntity.setRefreshTokenId(refreshTokenId);
         try {
             fcmTokenRepository.save(fcmTokenEntity);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi thêm fcm token");
+            throw new InternalServerErrorException("Lỗi khi thêm firebase cloud messaging token");
+        }
+    }
+
+
+    @Async
+    @Override
+    @Transactional
+    public void deleteFcmTokenByRefreshTokens(List<Token> tokens) {
+        try {
+            List<UUID> refreshTokens = tokens.stream().map(Token::getTokenId).toList();
+            fcmTokenRepository.deleteAllByRefreshTokenIdIn(refreshTokens);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi xóa fcm token");
         }
     }
 
@@ -46,8 +65,6 @@ public class FcmServiceImpl implements IFcmService {
     public void sendNotification(Notification notice) {
         List<String> registrationTokens = getFcmTokens(notice.getRecipient());
         MulticastMessage message = createMulticastMessage(notice, registrationTokens);
-//        BatchResponse batchResponse = null;
-
         try {
             firebaseMessaging.sendMulticast(message);
         } catch (FirebaseMessagingException e) {
@@ -58,9 +75,11 @@ public class FcmServiceImpl implements IFcmService {
 
 
     @Override
-    public void deleteFcmToken(String fcmToken) {
+    public void deleteFcmTokenByRefreshToken(String refreshToken) {
         try {
-            fcmTokenRepository.deleteByFcmToken(fcmToken);
+            Token token = tokenRepository.findByToken(refreshToken)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy token theo refreshToken"));
+            fcmTokenRepository.deleteAllByRefreshTokenId(token.getTokenId());
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi xóa fcm token");
         }
@@ -70,7 +89,7 @@ public class FcmServiceImpl implements IFcmService {
     private List<String> getFcmTokens(String username) {
         List<FcmToken> fcmTokens = fcmTokenRepository.findAllByUsername(username)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy fcm token"));
-        return fcmTokens.stream().map(FcmToken::getFcmToken).toList();
+        return fcmTokens.stream().map(FcmToken::getTokenFcm).toList();
     }
 
 

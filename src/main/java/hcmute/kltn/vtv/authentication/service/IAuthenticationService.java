@@ -21,7 +21,6 @@ public interface IAuthenticationService {
     LoginResponse login(LoginRequest loginRequest, HttpServletResponse response);
 
     LogoutResponse logout(String refreshToken,
-                          String fcmToken,
                           HttpServletResponse response);
 
     RefreshTokenResponse refreshToken(

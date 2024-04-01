@@ -51,11 +51,7 @@ public class AuthenticationController {
             @RequestBody String fcmToken,
             HttpServletResponse response) {
 
-        if (fcmToken == null || fcmToken.isEmpty()) {
-            throw new BadRequestException("FCM token không được để trống.");
-        }
-
-        return ResponseEntity.ok(authenticationService.logout(refreshToken, fcmToken, response));
+        return ResponseEntity.ok(authenticationService.logout(refreshToken,  response));
     }
 
     @PostMapping("/refresh-token")
