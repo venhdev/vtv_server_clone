@@ -13,16 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FcmServiceImpl implements IFcmService {
 
-    @Autowired
     private final FirebaseMessaging firebaseMessaging;
-    @Autowired
     private final FcmTokenRepository fcmTokenRepository;
 
 
@@ -84,10 +84,19 @@ public class FcmServiceImpl implements IFcmService {
 
     private MulticastMessage createMulticastMessage(Notification notice, List<String> registrationTokens) {
         com.google.firebase.messaging.Notification notification = createNotification(notice);
+        Map<String, String> data = new HashMap<>();
+        // Add data to the map
+        data.put("notificationId", notice.getNotificationId().toString());
+        data.put("title", notice.getTitle());
+        data.put("body", notice.getBody());
+        data.put("recipient", notice.getRecipient());
+        data.put("sender", notice.getSender());
+        data.put("type", notice.getType());
+
         return MulticastMessage.builder()
                 .addAllTokens(registrationTokens)
                 .setNotification(notification)
-                .putAllData(null)
+                .putAllData(data)
                 .build();
     }
 
