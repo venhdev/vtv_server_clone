@@ -1,36 +1,31 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
 import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;
-import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
+import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
+import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
+import hcmute.kltn.vtv.service.shipping.ITransportService;
+import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
-import hcmute.kltn.vtv.service.wallet.ILoyaltyPointHistoryService;
+import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
-import hcmute.kltn.vtv.model.dto.user.OrderDTO;
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.user.OrderItem;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.entity.user.VoucherOrder;
-import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.user.CartRepository;
-import hcmute.kltn.vtv.repository.user.OrderItemRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
-import hcmute.kltn.vtv.service.admin.IVoucherAdminService;
 import hcmute.kltn.vtv.service.user.*;
-import hcmute.kltn.vtv.service.vendor.IOrderItemShopService;
 import hcmute.kltn.vtv.service.vendor.IOrderShopService;
 import hcmute.kltn.vtv.service.vendor.IShopService;
-import hcmute.kltn.vtv.service.vendor.IVoucherShopService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -55,6 +50,9 @@ public class OrderShopServiceImpl implements IOrderShopService {
     private final IShippingService shippingService;
     private final ILoyaltyPointService loyaltyPointService;
     private final INotificationService notificationService;
+    private final ITransportService transportService;
+    private final ITransportHandleService transportHandleService;
+
 
     @Override
     public PageOrderResponse getPageOrder(String username, int page, int size) {
@@ -105,8 +103,8 @@ public class OrderShopServiceImpl implements IOrderShopService {
     @Override
     public ListOrderResponse getOrdersOnSameDay(String username, Date orderDate) {
         Shop shop = shopService.getShopByUsername(username);
-        Date startOfDay = startOfDay(orderDate);
-        Date endOfDay = endOfDay(orderDate);
+        Date startOfDay = DateServiceImpl.formatStartOfDate(orderDate);
+        Date endOfDay = DateServiceImpl.formatEndOfDate(orderDate);
         List<Order> orders = orderRepository.findAllByShopShopIdAndOrderDateBetween(shop.getShopId(), startOfDay, endOfDay)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào!"));
 
@@ -117,8 +115,8 @@ public class OrderShopServiceImpl implements IOrderShopService {
     @Override
     public ListOrderResponse getOrdersOnSameDayByStatus(String username, Date orderDate, OrderStatus status) {
         Shop shop = shopService.getShopByUsername(username);
-        Date startOfDay = startOfDay(orderDate);
-        Date endOfDay = endOfDay(orderDate);
+        Date startOfDay = DateServiceImpl.formatStartOfDate(orderDate);
+        Date endOfDay = DateServiceImpl.formatEndOfDate(orderDate);
         List<Order> orders = orderRepository
                 .findAllByShopShopIdAndOrderDateBetweenAndStatus(shop.getShopId(), startOfDay, endOfDay, status)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào!"));
@@ -129,10 +127,10 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
 
     @Override
-    public ListOrderResponse getOrdersBetweenDate(String username, Date startOrderDate, Date endOrderDate) {
+    public ListOrderResponse getOrdersBetweenDate(String username, Date startOfDay, Date endOfDay) {
         Shop shop = shopService.getShopByUsername(username);
-        Date startOfDay = startOfDay(startOrderDate);
-        Date endOfDay = endOfDay(endOrderDate);
+        startOfDay = DateServiceImpl.formatStartOfDate(startOfDay);
+        endOfDay = DateServiceImpl.formatEndOfDate(endOfDay);
         List<Order> orders = orderRepository.findAllByShopShopIdAndOrderDateBetween(shop.getShopId(), startOfDay, endOfDay)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào!"));
 
@@ -141,11 +139,11 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
 
     @Override
-    public ListOrderResponse getOrdersBetweenDateByStatus(String username, Date startOrderDate, Date endOrderDate,
+    public ListOrderResponse getOrdersBetweenDateByStatus(String username, Date startOfDay, Date endOfDay,
                                                           OrderStatus status) {
         Shop shop = shopService.getShopByUsername(username);
-        Date startOfDay = startOfDay(startOrderDate);
-        Date endOfDay = endOfDay(endOrderDate);
+        startOfDay = DateServiceImpl.formatStartOfDate(startOfDay);
+        endOfDay = DateServiceImpl.formatEndOfDate(endOfDay);
         List<Order> orders = orderRepository
                 .findAllByShopShopIdAndOrderDateBetweenAndStatus(shop.getShopId(), startOfDay, endOfDay, status)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng nào!"));
@@ -162,12 +160,13 @@ public class OrderShopServiceImpl implements IOrderShopService {
                 .orElseThrow(() -> new NotFoundException("Ma đơn hàng không có trong danh sách đơn hàng của cửa hàng!"));
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
                 shop.getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
-
-        return OrderResponse.orderResponse(order, shippingDTO, "Lấy đơn hàng thành công!", "OK");
+        Transport transport = transportService.getTransportByOrderId(orderId);
+        return OrderResponse.orderResponse(order, transport, shippingDTO, "Lấy đơn hàng thành công!", "OK");
     }
 
 
     @Override
+    @Transactional
     public OrderResponse updateStatusOrder(String username, UUID orderId, OrderStatus status) {
         Shop shop = shopService.getShopByUsername(username);
         checkExistOrderById(orderId);
@@ -185,11 +184,12 @@ public class OrderShopServiceImpl implements IOrderShopService {
             orderRepository.save(order);
 
             String messageEmail = "Trạng thái đơn hàng của bạn đã được cập nhật thành " + messageUpdateStatusOrder(status);
-            String messageResponse =  "Cập nhật trạng " + messageUpdateStatusOrder(status) + " cho đơn hàng thành công!";
+            String messageResponse = "Cập nhật trạng " + messageUpdateStatusOrder(status) + " cho đơn hàng thành công!";
             String titleNotification = "Cập nhật trạng thái đơn hàng";
             String bodyNotification = "Đơn hàng của bạn đã được cập nhật trạng thái " + messageUpdateStatusOrder(status);
+            TransportStatus transportStatus = convertOrderStatusToTransportStatus(status);
 
-            return  handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification, transportStatus);
         } catch (Exception e) {
             throw new InternalServerErrorException("Cập nhật trạng thái đơn hàng thất bại! " + e.getMessage());
         }
@@ -217,23 +217,27 @@ public class OrderShopServiceImpl implements IOrderShopService {
             order.setOrderItems(orderItems);
 
             String messageEmail = "Đơn hàng của bạn đã bị hủy bởi cửa hàng!";
-            String messageResponse =  "Đơn hàng của bạn đã bị hủy bởi cửa hàng!";
+            String messageResponse = "Đơn hàng của bạn đã bị hủy bởi cửa hàng!";
             String titleNotification = "Hủy đơn hàng";
             String bodyNotification = "Đơn hàng của bạn đã bị hủy bởi cửa hàng! Mã đơn hàng: #" + order.getOrderId();
+            TransportStatus status = convertOrderStatusToTransportStatus(order.getStatus());
 
-            return  handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification, status);
         } catch (Exception e) {
             throw new InternalServerErrorException("Hủy đơn hàng từ cửa hàng thất bại!");
         }
     }
 
 
-
-    public OrderResponse handleAfterSaveOrderShop(Order order, String messageEmail, String messageResponse, String titleNotification, String bodyNotification) {
+    public OrderResponse handleAfterSaveOrderShop(Order order, String messageEmail, String messageResponse,
+                                                  String titleNotification, String bodyNotification, TransportStatus status) {
         try {
+            transportHandleService.addNewTransportHandleByOrderId(
+                    order.getOrderId(), order.getShop().getWard().getWardCode(),
+                    order.getShop().getCustomer().getUsername(), true, status);
             ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
                     order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
-
+            Transport transport = transportService.getTransportByOrderId(order.getOrderId());
             mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
             notificationService.addNewNotification(
                     titleNotification,
@@ -243,9 +247,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
                     "ORDER"
             );
 
-
-            return OrderResponse.orderResponse(order, shippingDTO, messageResponse, "Success");
-
+            return OrderResponse.orderResponse(order, transport, shippingDTO, messageResponse, "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Xử lý đơn hàng thất bại!");
         }
@@ -272,8 +274,17 @@ public class OrderShopServiceImpl implements IOrderShopService {
             case PENDING -> "chờ xác nhận";
             case PROCESSING -> "xác nhận";
             case PICKUP_PENDING -> "chờ đơn vị vận chuyển lấy hàng";
-            case WAITING -> "chờ xử lý";
-            default -> "";
+            default -> "chờ xử lý";
+        };
+    }
+
+    private TransportStatus convertOrderStatusToTransportStatus(OrderStatus status) {
+        return switch (status) {
+            case CANCEL -> TransportStatus.CANCEL;
+            case PENDING -> TransportStatus.PENDING;
+            case PROCESSING -> TransportStatus.PROCESSING;
+            case PICKUP_PENDING -> TransportStatus.PICKUP_PENDING;
+            default -> TransportStatus.WAITING;
         };
     }
 
@@ -296,28 +307,6 @@ public class OrderShopServiceImpl implements IOrderShopService {
             throw new BadRequestException("Đơn hàng đã được hoàn tiền!");
         }
 
-    }
-
-
-    private Date startOfDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
-
-    private Date endOfDay(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-        return calendar.getTime();
     }
 
 

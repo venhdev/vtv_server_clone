@@ -24,8 +24,9 @@ public class TransportDTO {
 
     private UUID orderId;
 
-
     private TransportStatus transportStatus;
+
+    private int totalTransportHandle;
 
     private List<TransportHandleDTO> transportHandleDTOs;
 
@@ -36,12 +37,12 @@ public class TransportDTO {
         transportDTO.setWardCodeCustomer(transport.getWardCodeCustomer());
         transportDTO.setOrderId(transport.getOrderId());
         transportDTO.setTransportStatus(transport.getTransportStatus());
+        transportDTO.setTotalTransportHandle(transport.getTransportHandles().size());
         transportDTO.setTransportHandleDTOs(TransportHandleDTO.convertEntitiesToDTOs(transport.getTransportHandles()));
         return transportDTO;
     }
 
     public static List<TransportDTO> convertEntitiesToDTOs(List<Transport> transports) {
-
         transports.sort(Comparator.comparing(Transport::getCreateAt).reversed());
         List<TransportDTO> transportDTOs = new ArrayList<>();
         for (Transport transport : transports) {

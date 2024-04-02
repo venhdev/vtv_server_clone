@@ -21,11 +21,12 @@ public class Transport {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID transportId;
 
+    @Column(unique = true)
+    private UUID orderId;
+
     private String wardCodeShop;
 
     private String wardCodeCustomer;
-
-    private UUID orderId;
 
     private LocalDateTime createAt;
 
@@ -34,8 +35,6 @@ public class Transport {
     @Enumerated(EnumType.STRING)
     private TransportStatus transportStatus;
 
-    @OneToMany(mappedBy = "transport",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TransportHandle> transportHandles;
 }

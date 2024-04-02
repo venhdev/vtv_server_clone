@@ -51,7 +51,7 @@ public class FcmServiceImpl implements IFcmService {
 
     @Transactional
     public void updateFcmToken(String fcmToken, String username, UUID refreshTokenId) {
-        FcmToken fcmTokenEntity = fcmTokenRepository.findByTokenFcmAndUsername(fcmToken, username)
+        FcmToken fcmTokenEntity = fcmTokenRepository.findByTokenFcm(fcmToken)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy fcm token theo fcmToken và username"));
         if (fcmTokenEntity.getRefreshTokenId().equals(refreshTokenId)) {
             return;

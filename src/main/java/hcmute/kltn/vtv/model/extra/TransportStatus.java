@@ -5,16 +5,16 @@ import lombok.Getter;
 @Getter
 public enum TransportStatus {
 
+    PENDING,
+    PROCESSING,
     WAITING,
+    PICKUP_PENDING,
     PICKED_UP,
     IN_TRANSIT,
     WAREHOUSE,
     TRANSPORTING,
     DELIVERED,
-    RECEIVED,
+    COMPLETED,
     RETURNED,
     CANCEL;
-
-
-
 }

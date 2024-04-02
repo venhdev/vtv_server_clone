@@ -1,16 +1,15 @@
-package hcmute.kltn.vtv.service.user.impl;
+package hcmute.kltn.vtv.service.vtv.impl;
 
 import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;
 import hcmute.kltn.vtv.model.entity.user.*;
 import hcmute.kltn.vtv.model.entity.vendor.ProductVariant;
-import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
 import hcmute.kltn.vtv.model.extra.VoucherType;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.SendEmailResponse;
 import hcmute.kltn.vtv.model.dto.user.MailDTO;
 import hcmute.kltn.vtv.service.user.ICustomerService;
-import hcmute.kltn.vtv.service.user.IMailService;
-import hcmute.kltn.vtv.service.user.IOtpService;
+import hcmute.kltn.vtv.service.vtv.IMailService;
+import hcmute.kltn.vtv.service.vtv.IOtpService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -130,7 +129,7 @@ public class MailServiceImpl implements IMailService {
         htmlContent.append("<p><strong>Tổng số tiền:</strong> ").append(formatCurrency(order.getTotalPrice())).append(" VNĐ</p>");
         htmlContent.append("<p><strong>Phương thức thanh toán:</strong> ").append(order.getPaymentMethod()).append("</p>");
         htmlContent.append("<p><strong>Trạng thái đơn hàng:</strong> ").append(order.getStatus()).append("</p>");
-        htmlContent.append("<p><strong>Lời nhắn:</strong> ").append(order.getNote()).append("</p>");
+        htmlContent.append("<p><strong>Lời nhắn:</strong> ").append(order.getNote() != null ? order.getNote() : "").append("</p>");
     }
 
     private void createHtmlContentShopDetail(StringBuilder htmlContent, Order order) {

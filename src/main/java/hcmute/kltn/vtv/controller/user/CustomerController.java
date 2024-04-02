@@ -8,11 +8,10 @@ import hcmute.kltn.vtv.model.data.user.request.ProfileCustomerRequest;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.model.data.user.response.SendEmailResponse;
 import hcmute.kltn.vtv.service.user.ICustomerService;
-import hcmute.kltn.vtv.service.user.IMailService;
+import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

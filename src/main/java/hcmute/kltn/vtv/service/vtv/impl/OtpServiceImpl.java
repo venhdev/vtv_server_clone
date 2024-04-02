@@ -1,6 +1,6 @@
-package hcmute.kltn.vtv.service.user.impl;
+package hcmute.kltn.vtv.service.vtv.impl;
 
-import hcmute.kltn.vtv.service.user.IOtpService;
+import hcmute.kltn.vtv.service.vtv.IOtpService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,9 @@
 package hcmute.kltn.vtv.model.data.user.response;
 
 import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;
+import hcmute.kltn.vtv.model.dto.shipping.TransportDTO;
 import hcmute.kltn.vtv.model.dto.user.OrderDTO;
+import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
@@ -14,6 +16,8 @@ import lombok.*;
 public class OrderResponse extends ResponseAbstract {
 
     private OrderDTO orderDTO;
+
+    private TransportDTO transportDTO;
 
     private ShippingDTO shippingDTO;
 
@@ -29,11 +33,16 @@ public class OrderResponse extends ResponseAbstract {
     }
 
     public static OrderResponse orderResponse(Order order, ShippingDTO shippingDTO, String message, String status) {
-        OrderResponse response = new OrderResponse();
-        response.setOrderDTO(OrderDTO.convertEntityToDTO(order));
+        OrderResponse response = orderResponse(order, message, status);
         response.setShippingDTO(shippingDTO);
-        response.setMessage(message);
-        response.setStatus(status);
+        response.setCode(200);
+
+        return response;
+    }
+
+    public static OrderResponse orderResponse(Order order, Transport transport, ShippingDTO shippingDTO, String message, String status) {
+        OrderResponse response = orderResponse(order, shippingDTO, message, status);
+        response.setTransportDTO(TransportDTO.convertEntityToDTO(transport));
         response.setCode(200);
 
         return response;

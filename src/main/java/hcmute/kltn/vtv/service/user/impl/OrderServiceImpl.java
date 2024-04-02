@@ -1,22 +1,23 @@
 package hcmute.kltn.vtv.service.user.impl;
 
-import hcmute.kltn.vtv.model.data.user.request.NotificationRequest;
+import hcmute.kltn.vtv.model.data.shipping.request.TransportHandleRequest;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithProductVariant;
 import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;
+import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.*;
-import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
 import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPointHistory;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.service.guest.IProductVariantService;
-import hcmute.kltn.vtv.service.guest.IShopGuestService;
 import hcmute.kltn.vtv.service.location.IDistanceLocationService;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
-import hcmute.kltn.vtv.service.vtv.IFcmService;
+import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
+import hcmute.kltn.vtv.service.shipping.ITransportService;
+import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.vtv.shippingstrategy.*;
-import hcmute.kltn.vtv.service.wallet.ILoyaltyPointHistoryService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
@@ -26,7 +27,6 @@ import hcmute.kltn.vtv.service.user.*;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +48,10 @@ public class OrderServiceImpl implements IOrderService {
     private final IVoucherCustomerService voucherCustomerService;
     private final IShippingService shippingService;
     private final ILoyaltyPointService loyaltyPointService;
-    private final ILoyaltyPointHistoryService loyaltyPointHistoryService;
     private final IMailService mailService;
     private final INotificationService notificationService;
+    private final ITransportService transportService;
+    private final ITransportHandleService transportHandleService;
 
 
     @Override
@@ -145,13 +146,14 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
+            transportService.addNewTransport(order.getOrderId(), order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode(), username);
 
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm trong giỏ hàng.";
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm trong giỏ hàng! " + e.getMessage());
         }
@@ -173,14 +175,14 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
-
+            transportService.addNewTransport(order.getOrderId(), order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode(), username);
 
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm.";
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm! " + e.getMessage());
         }
@@ -217,9 +219,9 @@ public class OrderServiceImpl implements IOrderService {
 
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
+        Transport transport = transportService.getTransportByOrderId(orderId);
 
-
-        return OrderResponse.orderResponse(order, shippingDTO, "Lấy chi tiết đơn hàng thành công.", "OK");
+        return OrderResponse.orderResponse(order, transport, shippingDTO, "Lấy chi tiết đơn hàng thành công.", "OK");
 
     }
 
@@ -235,12 +237,17 @@ public class OrderServiceImpl implements IOrderService {
             order.setStatus(OrderStatus.COMPLETED);
             order.setUpdateAt(LocalDateTime.now());
             try {
+                transportHandleService.addNewTransportHandleByOrderId(
+                        orderId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.COMPLETED);
                 orderRepository.save(order);
-                ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
-                        order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
-                String messageMail = "Xác nhận đã nhận hàng thành công.";
-                mailService.sendOrderConfirmationEmail(order, shippingDTO, messageMail);
-                return OrderResponse.orderResponse(order, "Xác nhận đã nhận hàng thành công.", "Success");
+
+                String messageEmail = "Xác nhận đã nhận hàng thành công.";
+                String messageResponse = "Xác nhận đã nhận hàng thành công.";
+                String titleNotification = "Bạn có đơn hàng đã giao thành công.";
+                String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId() + " đã giao thành công.";
+
+                return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.COMPLETED);
+
             } catch (Exception e) {
                 throw new InternalServerErrorException("Hoàn thành đơn hàng thất bại!");
             }
@@ -281,12 +288,15 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
-    public OrderResponse handleAfterSaveOrder(Order order, String messageEmail, String messageResponse, String titleNotification, String bodyNotification) {
+    public OrderResponse handleAfterSaveOrder(Order order, String messageEmail, String messageResponse,
+                                              String titleNotification, String bodyNotification, TransportStatus status) {
         try {
+            transportHandleService.addNewTransportHandleByOrderId(
+                    order.getOrderId(), order.getAddress().getWard().getWardCode(), order.getCustomer().getUsername(), true, status);
+
             ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
                     order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
-
+            Transport transport = transportService.getTransportByOrderId(order.getOrderId());
             mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
             notificationService.addNewNotification(
                     titleNotification,
@@ -296,11 +306,9 @@ public class OrderServiceImpl implements IOrderService {
                     "ORDER"
             );
 
-
-            return OrderResponse.orderResponse(order, shippingDTO, messageResponse, "Success");
-
+            return OrderResponse.orderResponse(order, transport, shippingDTO, messageResponse, "Success");
         } catch (Exception e) {
-            throw new InternalServerErrorException("Xử lý đơn hàng thất bại!");
+            throw new InternalServerErrorException("Xử lý đơn hàng thất bại! " + e.getMessage());
         }
     }
 
@@ -328,7 +336,7 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có đơn hàng bị hủy";
             String bodyNotification = "Đơn hàng đã bị hủy với mã đơn hàng #" + order.getOrderId();
 
-            return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.CANCEL);
         } catch (Exception e) {
             throw new InternalServerErrorException("Hủy đơn hàng thất bại!");
         }
@@ -347,14 +355,11 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có yêu cầu hủy đơn hàng.";
             String bodyNotification = "Bạn có đơn hàng yêu cầu hủy đơn hàng với mã đơn hàng #" + order.getOrderId();
 
-            return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.WAITING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Yêu cầu hủy đơn hàng thất bại!");
         }
     }
-
-
-
 
 
     private Order createOrderByOrderRequestWithCartIds(OrderRequestWithCart request, String username, Address address) {

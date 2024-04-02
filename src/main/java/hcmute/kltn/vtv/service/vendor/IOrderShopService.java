@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.model.extra.Status;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public interface IOrderShopService {
 
     OrderResponse getOrderById(String username, UUID orderId);
 
+    @Transactional
     OrderResponse updateStatusOrder(String username, UUID orderId, OrderStatus status);
 
 

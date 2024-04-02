@@ -15,7 +15,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.user.TokenRepository;
 import hcmute.kltn.vtv.service.user.ICustomerService;
-import hcmute.kltn.vtv.service.user.IMailService;
+import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.IFcmService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.util.exception.*;

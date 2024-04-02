@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.service.user;
+package hcmute.kltn.vtv.service.vtv;
 
 public interface IOtpService {
     String generateRandomOtp();
