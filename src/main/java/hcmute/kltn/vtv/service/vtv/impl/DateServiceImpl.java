@@ -19,6 +19,15 @@ public class DateServiceImpl implements IDateService{
 
 
 
+    public static boolean isSameDate(Date date, LocalDateTime createdAt) {
+        LocalDateTime localDateTime = convertDateToLocalDateTime(date);
+
+        return createdAt.getYear() == localDateTime.getYear() &&
+                createdAt.getMonthValue() == localDateTime.getMonthValue() &&
+                createdAt.getDayOfMonth() == localDateTime.getDayOfMonth();
+    }
+
+
     @Override
     public void checkDatesRequest(Date startDate, Date endDate, int maxDays) {
         startDate = formatStartOfDate(startDate);
@@ -58,6 +67,10 @@ public class DateServiceImpl implements IDateService{
         return calendar.getTime();
     }
 
+    public static LocalDateTime convertDateToLocalDateTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
 
     public static Date formatMiddleOfDate(Date date) {
         Calendar calendar = formatCalendar(date, 12, 0, 0, 0);
@@ -83,7 +96,7 @@ public class DateServiceImpl implements IDateService{
 
 
     // Convert LocalDateTime to Date
-    public static Date convertToLocalDateTimeToDate(LocalDateTime dateTime) {
+    public static Date convertLocalDateTimeToDate(LocalDateTime dateTime) {
         return Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 

@@ -1,8 +1,7 @@
 package hcmute.kltn.vtv.controller.vendor;
 
-import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
-import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsOrderResponse;
-import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsProductResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.StatisticsOrdersResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.StatisticsProductsResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.vendor.IRevenueService;
 import hcmute.kltn.vtv.service.vtv.IDateService;
@@ -25,10 +24,10 @@ public class RevenueShopController {
 
 
     @GetMapping("/statistics/status/{status}")
-    public ResponseEntity<ListStatisticsOrderResponse> statisticsOrderByDate(@PathVariable OrderStatus status,
-                                                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                                             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-                                                                             HttpServletRequest httpServletRequest) {
+    public ResponseEntity<StatisticsOrdersResponse> statisticsOrderByDate(@PathVariable OrderStatus status,
+                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                          @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                                                          HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         dateService.checkDatesRequest(startDate, endDate, 31);
         if (!status.equals(OrderStatus.COMPLETED) && !status.equals(OrderStatus.DELIVERED) &&
@@ -41,10 +40,10 @@ public class RevenueShopController {
 
 
     @GetMapping("/statistics/product/top/{limit}")
-    public ResponseEntity<ListStatisticsProductResponse> statisticsTopProductByDate(@PathVariable int limit,
-                                                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-                                                                                    HttpServletRequest httpServletRequest) {
+    public ResponseEntity<StatisticsProductsResponse> statisticsTopProductByDate(@PathVariable int limit,
+                                                                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                                                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+                                                                                 HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         dateService.checkDatesRequest(startDate, endDate, 31);
 

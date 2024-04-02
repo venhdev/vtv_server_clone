@@ -1,12 +1,11 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
-import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
-import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsProductResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.StatisticsProductsResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.repository.vendor.ProductRepository;
 import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
-import hcmute.kltn.vtv.model.data.vtv.response.ListStatisticsOrderResponse;
+import hcmute.kltn.vtv.model.data.vtv.response.StatisticsOrdersResponse;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
@@ -27,7 +26,7 @@ public class RevenueServiceImpl implements IRevenueService {
     private final IShopService shopService;
 
     @Override
-    public ListStatisticsOrderResponse statisticsOrderByDateAndStatus(Date startDate, Date endDate, OrderStatus status, String username) {
+    public StatisticsOrdersResponse statisticsOrderByDateAndStatus(Date startDate, Date endDate, OrderStatus status, String username) {
         Shop shop = shopService.getShopByUsername(username);
         startDate = DateServiceImpl.formatStartOfDate(startDate);
         endDate = DateServiceImpl.formatEndOfDate(endDate);
@@ -37,12 +36,12 @@ public class RevenueServiceImpl implements IRevenueService {
         String message = "Thống kê " + messageByStatus(status) + " từ ngày " + DateServiceImpl.formatStringDate(startDate)
                 + " đến ngày " + DateServiceImpl.formatStringDate(endDate) + " thành công.";
 
-        return ListStatisticsOrderResponse.listStatisticsResponse(orders, startDate, endDate, message);
+        return StatisticsOrdersResponse.statisticsOrdersResponse(orders, startDate, endDate, message);
     }
 
 
     @Override
-    public ListStatisticsProductResponse getTopProductByLimitAndDate(int limit, Date startDate, Date endDate, String username) {
+    public StatisticsProductsResponse getTopProductByLimitAndDate(int limit, Date startDate, Date endDate, String username) {
         Shop shop = shopService.getShopByUsername(username);
         startDate = DateServiceImpl.formatStartOfDate(startDate);
         endDate = DateServiceImpl.formatEndOfDate(endDate);
@@ -57,7 +56,7 @@ public class RevenueServiceImpl implements IRevenueService {
         String message = "Danh sách sản phẩm bán chạy của cửa hàng từ ngày " + DateServiceImpl.formatStringDate(startDate)
                 + " đến ngày " + DateServiceImpl.formatStringDate(endDate) + " thành công.";
 
-        return ListStatisticsProductResponse.listStatisticsProductResponse(productsBestSeller, orders, startDate, endDate, message);
+        return StatisticsProductsResponse.statisticsProductsResponse(productsBestSeller, orders, startDate, endDate, message);
     }
 
 
@@ -71,7 +70,7 @@ public class RevenueServiceImpl implements IRevenueService {
             Date end = DateServiceImpl.formatEndOfDate(date);
 
             for (Order checkOrder : orders) {
-                Date dateUpdate = DateServiceImpl.convertToLocalDateTimeToDate(checkOrder.getUpdateAt());
+                Date dateUpdate = DateServiceImpl.convertLocalDateTimeToDate(checkOrder.getUpdateAt());
                 if (dateUpdate.after(start) && dateUpdate.before(end)) {
                     ordersSameDate.add(checkOrder);
                 }

@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface FcmTokenRepository extends JpaRepository<FcmToken, UUID> {
     Optional<FcmToken> findByTokenFcm(String fcmToken);
 
+    Optional<FcmToken> findByTokenFcmAndUsername(String fcmToken, String username);
     boolean existsByTokenFcm(String fcmToken);
     boolean existsByUsernameAndTokenFcm(String username, String fcmToken);
 

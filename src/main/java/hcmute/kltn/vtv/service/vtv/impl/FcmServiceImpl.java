@@ -33,7 +33,8 @@ public class FcmServiceImpl implements IFcmService {
     @Override
     @Transactional
     public void addNewFcmToken(String fcmToken, String username, UUID refreshTokenId) {
-        if (fcmTokenRepository.existsByUsernameAndTokenFcm(username, fcmToken)) {
+        if (fcmTokenRepository.existsByTokenFcm(fcmToken)) {
+            updateFcmToken(fcmToken, username, refreshTokenId);
             return;
         }
         FcmToken fcmTokenEntity = new FcmToken();
@@ -44,6 +45,23 @@ public class FcmServiceImpl implements IFcmService {
             fcmTokenRepository.save(fcmTokenEntity);
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi thêm firebase cloud messaging token");
+        }
+    }
+
+
+    @Transactional
+    public void updateFcmToken(String fcmToken, String username, UUID refreshTokenId) {
+        FcmToken fcmTokenEntity = fcmTokenRepository.findByTokenFcmAndUsername(fcmToken, username)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy fcm token theo fcmToken và username"));
+        if (fcmTokenEntity.getRefreshTokenId().equals(refreshTokenId)) {
+            return;
+        }
+        fcmTokenEntity.setTokenFcm(username);
+        fcmTokenEntity.setRefreshTokenId(refreshTokenId);
+        try {
+            fcmTokenRepository.save(fcmTokenEntity);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật refresh token cho fcm token");
         }
     }
 

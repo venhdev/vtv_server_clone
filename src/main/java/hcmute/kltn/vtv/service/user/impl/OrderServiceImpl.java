@@ -149,7 +149,7 @@ public class OrderServiceImpl implements IOrderService {
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm trong giỏ hàng.";
             String titleNotification = "Có đơn hàng mới";
-            String bodyNotification = "Bạn có đơn hàng mới từ tài khoản" + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
+            String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
             return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public class OrderServiceImpl implements IOrderService {
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm.";
             String titleNotification = "Có đơn hàng mới";
-            String bodyNotification = "Bạn có đơn hàng mới từ tài khoản" + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
+            String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
             return  handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification);
         } catch (Exception e) {

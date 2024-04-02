@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListStatisticsOrderResponse extends ResponseAbstract {
+public class StatisticsOrdersResponse extends ResponseAbstract {
 
     private int count;
     private int totalOrder;
@@ -24,8 +24,8 @@ public class ListStatisticsOrderResponse extends ResponseAbstract {
     private List<StatisticsOrderDTO> statisticsOrderDTOS;
 
 
-    public static ListStatisticsOrderResponse listStatisticsResponse(List<Order> orders, Date startDate, Date endDate, String message) {
-        ListStatisticsOrderResponse response = new ListStatisticsOrderResponse();
+    public static StatisticsOrdersResponse statisticsOrdersResponse(List<Order> orders, Date startDate, Date endDate, String message) {
+        StatisticsOrdersResponse response = new StatisticsOrdersResponse();
         response.setStatisticsOrderDTOS(StatisticsOrderDTO.covertStatisticsOrderDTOs(orders, startDate, endDate));
         response.setCount(response.getStatisticsOrderDTOS().size());
         response.setTotalOrder(orders.size());

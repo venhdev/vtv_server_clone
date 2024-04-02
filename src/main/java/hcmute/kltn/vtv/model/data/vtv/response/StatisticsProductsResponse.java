@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.model.data.vtv.response;
 
-import hcmute.kltn.vtv.model.dto.vtv.StatisticsOrderDTO;
 import hcmute.kltn.vtv.model.dto.vtv.StatisticsProductDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
@@ -16,7 +15,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListStatisticsProductResponse extends ResponseAbstract {
+public class StatisticsProductsResponse extends ResponseAbstract {
 
     private int count;
     private int totalOrder;
@@ -27,8 +26,8 @@ public class ListStatisticsProductResponse extends ResponseAbstract {
     private List<StatisticsProductDTO> statisticsProductDTOS;
 
 
-    public static ListStatisticsProductResponse listStatisticsProductResponse(List<Product> products, List<Order> orders, Date startDate, Date endDate, String message) {
-        ListStatisticsProductResponse response = new ListStatisticsProductResponse();
+    public static StatisticsProductsResponse statisticsProductsResponse(List<Product> products, List<Order> orders, Date startDate, Date endDate, String message) {
+        StatisticsProductsResponse response = new StatisticsProductsResponse();
         response.setStatisticsProductDTOS(StatisticsProductDTO.convertProductsAndOrdersToDTOs(products, orders));
         response.setCount(products.size());
         response.setTotalOrder(orders.size());
