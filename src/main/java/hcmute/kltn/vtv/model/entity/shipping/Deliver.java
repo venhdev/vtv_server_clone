@@ -40,11 +40,11 @@ public class Deliver {
 
     private LocalDateTime updateAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "transport_provider_id")
     private TransportProvider transportProvider;
 

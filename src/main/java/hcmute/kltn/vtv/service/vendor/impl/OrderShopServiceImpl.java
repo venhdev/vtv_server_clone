@@ -173,11 +173,13 @@ public class OrderShopServiceImpl implements IOrderShopService {
         checkExistOrderByShop(orderId, shop.getShopId());
         Order order = orderRepository.findByOrderIdAndShopShopId(orderId, shop.getShopId())
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng trong cửa hàng!"));
-        checkStatus(order);
+        checkStatus(order, status);
 
         if (status.equals(OrderStatus.CANCEL)) {
             return cancelOrderByShop(order);
         }
+
+
         order.setStatus(status);
         order.setUpdateAt(LocalDateTime.now());
         try {
@@ -254,6 +256,8 @@ public class OrderShopServiceImpl implements IOrderShopService {
     }
 
 
+
+
     private void checkExistOrderById(UUID orderId) {
         if (!orderRepository.existsByOrderId(orderId)) {
             throw new NotFoundException("Mã đơn hàng không tồn tại!");
@@ -289,7 +293,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
     }
 
 
-    private void checkStatus(Order order) {
+    private void checkStatus(Order order, OrderStatus status) {
 
         if (order.getStatus().equals(OrderStatus.CANCEL)) {
             throw new BadRequestException("Đơn hàng đã bị hủy!");
@@ -305,6 +309,12 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
         if (order.getStatus().equals(OrderStatus.REFUNDED)) {
             throw new BadRequestException("Đơn hàng đã được hoàn tiền!");
+        }
+
+        if (!status.equals(OrderStatus.PENDING) && !status.equals(OrderStatus.PROCESSING) &&
+                !status.equals(OrderStatus.PICKUP_PENDING) && !status.equals(OrderStatus.WAITING)) {
+            throw new BadRequestException("Trạng thái không hợp lệ! Cửa hàng chỉ có thể cập nhật trạng thái: " +
+                    "PENDING, PROCESSING, PICKUP_PENDING, WAITING");
         }
 
     }

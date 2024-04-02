@@ -12,7 +12,7 @@ public enum TransportStatus {
     PICKED_UP,
     IN_TRANSIT,
     WAREHOUSE,
-    TRANSPORTING,
+    SHIPPING,
     DELIVERED,
     COMPLETED,
     RETURNED,

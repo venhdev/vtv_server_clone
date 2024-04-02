@@ -19,6 +19,13 @@ public interface DeliverRepository extends JpaRepository<Deliver, Long> {
 
     boolean existsByDeliverId(Long deliverId);
 
+    boolean existsByPhone(String phone);
+
+
+    boolean existsByCustomerUsername(String username);
+
+    Optional<Deliver> findByCustomerUsernameAndStatus(String username, Status status);
+
     Optional<List<Deliver>> findAllByStatus(Status status);
 
     Optional<List<Deliver>> findAllByStatusAndTypeWork(Status status, TypeWork typeWork);
@@ -31,5 +38,6 @@ public interface DeliverRepository extends JpaRepository<Deliver, Long> {
 
     Optional<Deliver> findByPhone(String phone);
 
-    boolean existsByPhone(String phone);
+
+
 }

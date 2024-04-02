@@ -146,7 +146,7 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
-            transportService.addNewTransport(order.getOrderId(), order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode(), username);
+            transportService.addNewTransport(order.getOrderId());
 
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm trong giỏ hàng.";
@@ -175,7 +175,7 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
-            transportService.addNewTransport(order.getOrderId(), order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode(), username);
+            transportService.addNewTransport(order.getOrderId());
 
             String messageEmail = "Đặt hàng thành công.";
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm.";

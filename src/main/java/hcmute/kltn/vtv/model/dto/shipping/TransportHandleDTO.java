@@ -88,12 +88,12 @@ public class TransportHandleDTO {
         } else if (transportStatus == TransportStatus.PICKED_UP && !handled) {
             return "đang chở lấy hàng";
         } else if (transportStatus == TransportStatus.PICKUP_PENDING && !handled) {
-            return "đang chở lấy hàng";
+            return "đang lấy hàng";
         } else if (transportStatus == TransportStatus.PICKED_UP) {
             return "đã lấy hàng";
-        } else if (transportStatus == TransportStatus.TRANSPORTING && !handled) {
+        } else if (transportStatus == TransportStatus.SHIPPING && !handled) {
             return "đang vận chuyển";
-        } else if (transportStatus == TransportStatus.TRANSPORTING) {
+        } else if (transportStatus == TransportStatus.SHIPPING) {
             return "đã vận chuyển";
         } else if (transportStatus == TransportStatus.DELIVERED && !handled) {
             return "đang giao hàng";

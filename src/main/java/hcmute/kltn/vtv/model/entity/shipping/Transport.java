@@ -28,6 +28,8 @@ public class Transport {
 
     private String wardCodeCustomer;
 
+    private String shippingMethod;
+
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;

@@ -96,7 +96,7 @@ public class WardServiceImpl implements IWardService {
 
 
     @Override
-    public void checkWardCodeExist(String wardCode) {
+    public void checkExistWardCode(String wardCode) {
         if (wardRepository.existsByWardCode(wardCode)) {
             return;
         }

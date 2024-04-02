@@ -20,5 +20,5 @@ public interface IWardService {
 
     LocationResponse getLocationByWardCode(String wardCode);
 
-    void checkWardCodeExist(String wardCode);
+    void checkExistWardCode(String wardCode);
 }

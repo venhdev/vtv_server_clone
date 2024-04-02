@@ -8,14 +8,25 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 public interface ITransportService {
-    @Transactional
-    Transport addNewTransport(UUID orderId, String wardCodeShop, String wardCodeCustomer, String username);
+
 
     @Transactional
-    Transport updateStatusTransport(UUID orderId, String wardCode, String username,
+    Transport addNewTransport(UUID orderId);
+
+    @Transactional
+    Transport updateStatusTransport(Transport transport, String wardCode, String username,
                                     boolean handled, TransportStatus transportStatus);
+
+    Transport updateStatusTransportByOrderId(UUID orderId, String wardCode, String username,
+                                             boolean handled, TransportStatus transportStatus);
+
+    Transport updateStatusTransportByTransportId(UUID transportId, String wardCode, String username,
+                                                 boolean handled, TransportStatus transportStatus);
 
     Transport getTransportById(UUID transportId);
 
     Transport getTransportByOrderId(UUID orderId);
+
+    @Transactional
+    TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled, TransportStatus transportStatus, String wardCode);
 }

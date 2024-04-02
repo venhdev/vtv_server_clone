@@ -129,6 +129,7 @@ public class SecurityConfig {
 
     private static final String[] DELIVER_ROLE = {
             "/api/deliver/**",
+            "/api/shipping/transport**"
     };
 
 

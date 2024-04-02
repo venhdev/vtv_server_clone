@@ -18,6 +18,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     boolean existsByOrderIdAndShopShopId(UUID orderId, Long shopId);
 
+    Optional<Order> findByOrderId(UUID orderId);
+
     Optional<List<Order>> findAllByStatus(OrderStatus status);
 
     Optional<List<Order>> findAllByCustomerUsername(String username);

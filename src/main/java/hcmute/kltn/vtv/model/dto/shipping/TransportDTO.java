@@ -24,6 +24,8 @@ public class TransportDTO {
 
     private UUID orderId;
 
+    private String shippingMethod;
+
     private TransportStatus transportStatus;
 
     private int totalTransportHandle;
@@ -36,6 +38,7 @@ public class TransportDTO {
         transportDTO.setWardCodeShop(transport.getWardCodeShop());
         transportDTO.setWardCodeCustomer(transport.getWardCodeCustomer());
         transportDTO.setOrderId(transport.getOrderId());
+        transportDTO.setShippingMethod(transport.getShippingMethod());
         transportDTO.setTransportStatus(transport.getTransportStatus());
         transportDTO.setTotalTransportHandle(transport.getTransportHandles().size());
         transportDTO.setTransportHandleDTOs(TransportHandleDTO.convertEntitiesToDTOs(transport.getTransportHandles()));
