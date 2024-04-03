@@ -16,6 +16,9 @@ public class DistrictDTO {
     private String name;
     private String fullName;
     private String administrativeUnitShortName;
+    private String provinceCode;
+    private String provinceName;
+
 
     // private String nameEn;
     // private String fullName;
@@ -30,6 +33,8 @@ public class DistrictDTO {
         dto.setName(entity.getName());
         dto.setAdministrativeUnitShortName(entity.getAdministrativeUnit().getShortName());
         dto.setFullName(entity.getFullName());
+        dto.setProvinceCode(entity.getProvince().getProvinceCode());
+        dto.setProvinceName(entity.getProvince().getName());
         // dto.setNameEn(entity.getNameEn());
         // dto.setFullNameEn(entity.getFullNameEn());
         // dto.setCodeName(entity.getCodeName());

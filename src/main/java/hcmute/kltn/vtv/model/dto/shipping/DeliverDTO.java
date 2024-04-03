@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.model.dto.shipping;
 
+import hcmute.kltn.vtv.model.dto.location.DistrictDTO;
 import hcmute.kltn.vtv.model.dto.location.WardDTO;
 import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
@@ -36,15 +37,20 @@ public class DeliverDTO {
 
     private Status status;
 
-    private String districtWork;
-
     private String wardCode;
 
-    private List<String> wardsWork;
 
     private Long customerId;
 
     private Long transportProviderId;
+
+    private String transportProviderShortName;
+
+    private DistrictDTO districtWork;
+
+    private int countWardWork;
+
+    private List<WardDTO> wardsWork;
 
     public static DeliverDTO convertEntityToDTO(Deliver deliver) {
         DeliverDTO deliverDTO = new DeliverDTO();
@@ -58,10 +64,13 @@ public class DeliverDTO {
         deliverDTO.setTypeWork(deliver.getTypeWork());
         deliverDTO.setUsernameAdded(deliver.getUsernameAdded());
         deliverDTO.setStatus(deliver.getStatus());
-        deliverDTO.setDistrictWork(deliver.getDistrictWork().getName());
-        deliverDTO.setWardsWork(WardDTO.convertEntitiesToNames(deliver.getWardsWork()));
+        deliverDTO.setDistrictWork(DistrictDTO.convertEntityToDTO(deliver.getDistrictWork()));
+        deliverDTO.setCountWardWork(deliver.getWardsWork().size());
+        deliverDTO.setWardsWork(WardDTO.convertEntitiesToDTOs(deliver.getWardsWork()));
         deliverDTO.setCustomerId(deliver.getCustomer().getCustomerId());
         deliverDTO.setTransportProviderId(deliver.getTransportProvider().getTransportProviderId());
+        deliverDTO.setTransportProviderShortName(deliver.getTransportProvider().getShortName());
+
         return deliverDTO;
     }
 

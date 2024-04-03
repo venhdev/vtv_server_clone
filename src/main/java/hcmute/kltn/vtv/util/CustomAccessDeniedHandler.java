@@ -38,32 +38,5 @@ public class CustomAccessDeniedHandler extends SimpleUrlAuthenticationFailureHan
     private ErrorResponse buildErrorResponse() {
         return new ErrorResponse(HttpStatus.FORBIDDEN, 403, "Thông báo", "Truy cập bị từ chối!");
     }
-
-
-//    @Override
-//    public void onAuthenticationFailure(
-//            HttpServletRequest request,
-//            HttpServletResponse response,
-//            AuthenticationException exception
-//    ) throws IOException, ServletException {
-//        if (exception.getClass().equals(UnauthorizedAccessException.class)) {
-//            handleMissingTokenException(response, exception);
-//        } else {
-//            super.onAuthenticationFailure(request, response, exception);
-//        }
-//    }
-//
-//    private void handleMissingTokenException(HttpServletResponse response, AuthenticationException exception)
-//            throws IOException {
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.setContentType("application/json");
-//
-//        ErrorResponse errorResponse = new ErrorResponse(
-//                HttpStatus.UNAUTHORIZED, 401, "Thông báo", exception.getMessage()
-//        );
-//        objectMapper.writeValue(response.getWriter(), errorResponse);
-//    }
-
-
 }
 

@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/shipping/transport")
 @RequiredArgsConstructor
-public class TransportController {
+public class TransportController{
 
     private final ITransportService transportService;
 

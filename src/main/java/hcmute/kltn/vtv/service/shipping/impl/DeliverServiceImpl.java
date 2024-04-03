@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.shipping.impl;
 
+import hcmute.kltn.vtv.model.data.shipping.response.DeliverResponse;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.model.extra.TypeWork;
@@ -17,6 +18,14 @@ public class DeliverServiceImpl implements IDeliverService {
     private final DeliverRepository deliverRepository;
 
 
+
+    @Override
+    public DeliverResponse getDeliverResponseByUsername(String username) {
+        Deliver deliver = getDeliverByUername(username);
+        return DeliverResponse.deliverResponse(deliver, "Lấy thông tin nhân viên giao hàng thành công!", "OK");
+    }
+
+
     @Override
     public Deliver checkTypeWorkDeliverWithTransportStatus(String username, TransportStatus transportStatus) {
         Deliver deliver = getDeliverByUername(username);
@@ -27,7 +36,9 @@ public class DeliverServiceImpl implements IDeliverService {
     }
 
 
-    private Deliver getDeliverByUername(String username) {
+
+    @Override
+    public Deliver getDeliverByUername(String username) {
         checkExistByUsername(username);
         return deliverRepository.findByCustomerUsername(username)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người giao hàng có tên đăng nhập: " + username));
