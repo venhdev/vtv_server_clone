@@ -22,8 +22,10 @@ public class ListProductPageResponse extends ResponseAbstract {
     private List<ProductDTO> productDTOs;
 
 
+
+
     public static ListProductPageResponse listProductPageResponse(Page<Product> products,
-                                                                  int size, String message) {
+                                                                   String message) {
         ListProductPageResponse response = new ListProductPageResponse();
         response.setProductDTOs(ProductDTO.convertEntitiesToDTOs(products.getContent()));
         response.setCount(products.getNumberOfElements());

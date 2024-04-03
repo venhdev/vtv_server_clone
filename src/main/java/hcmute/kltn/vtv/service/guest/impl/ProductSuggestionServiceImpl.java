@@ -30,7 +30,7 @@ public class ProductSuggestionServiceImpl implements IProductSuggestionService {
         Page<Product> productPage = productRepository.suggestByRandomly(Status.ACTIVE.toString(), PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm phù hợp"));
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, "Lấy danh sách sản phẩm gợi ý thành công!");
+        return ListProductPageResponse.listProductPageResponse(productPage,"Lấy danh sách sản phẩm gợi ý thành công!");
     }
 
 
@@ -56,7 +56,7 @@ public class ProductSuggestionServiceImpl implements IProductSuggestionService {
             message = "Lấy danh sách sản phẩm gợi ý thành công!";
         }
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage,message);
     }
 
 
@@ -82,7 +82,7 @@ public class ProductSuggestionServiceImpl implements IProductSuggestionService {
             message = "Lấy danh sách sản phẩm gợi ý thành công!";
         }
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage,message);
     }
 
 

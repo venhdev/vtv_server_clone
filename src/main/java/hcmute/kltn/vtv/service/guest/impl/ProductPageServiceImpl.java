@@ -35,7 +35,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm theo cửa hàng thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm theo cửa hàng theo thứ tự bán chạy nhất thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm theo cửa hàng theo thứ tự mới nhất thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 
@@ -94,7 +94,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm theo danh mục con thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
 
     }
 
@@ -115,7 +115,7 @@ public class ProductPageServiceImpl implements IProductPageService {
 
         String message = "Lấy danh sách sản phẩm theo danh mục cha thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     public boolean isAdminOnlyInCategory(Long categoryId) {

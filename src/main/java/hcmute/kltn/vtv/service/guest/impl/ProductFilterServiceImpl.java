@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class ProductFilterServiceImpl implements IProductFilterService {
 
 
-    @Autowired
     private final ProductFilterRepository productFilterRepository;
 
 
@@ -27,7 +26,7 @@ public class ProductFilterServiceImpl implements IProductFilterService {
         String message = checkSortMessage(filter);
         Page<Product> productPage = filterProductPage(filter, page, size);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 
@@ -39,7 +38,7 @@ public class ProductFilterServiceImpl implements IProductFilterService {
         String message = checkSortMessage(filter) + " Trong khoảng giá từ " + minPrice + " VNĐ đến " + maxPrice + " VNĐ!";
         Page<Product> productPage = filterProductPagePriceRange(filter, page, size, minPrice, maxPrice);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 

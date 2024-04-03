@@ -141,7 +141,7 @@ public class ProductShopServiceImpl implements IProductShopService {
                 .orElseThrow(() -> new NotFoundException("Cửa hàng không có sản phẩm đang bán!"));
         String message = "Lấy danh sách sản phẩm theo trạng thái trong cửa hàng thành công.";
 
-        return ListProductPageResponse.listProductPageResponse(products, size, message);
+        return ListProductPageResponse.listProductPageResponse(products, message);
     }
 
 

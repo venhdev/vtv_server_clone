@@ -27,7 +27,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort);
         Page<Product> productPage = getProductPage(search, page, size, sort);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Trong khoảng giá từ " + minPrice + " VNĐ đến " + maxPrice + " VNĐ!";
         Page<Product> productPage = getProductPageAndPriceRange(search, page, size, sort, minPrice, maxPrice);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 
@@ -50,7 +50,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Của cửa hàng!";
         Page<Product> productPage = getProductPageOnShop(search, shopId, page, size, sort);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 
@@ -65,7 +65,7 @@ public class SearchProductServiceImpl implements ISearchProductService {
         String message = checkSortMessage(sort) + " Trong khoảng giá từ " + minPrice + " VNĐ đến " + maxPrice + " VNĐ!";
         Page<Product> productPage = getProductPagePriceRangeOnShop(search, shopId, page, size, sort, minPrice, maxPrice);
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
 

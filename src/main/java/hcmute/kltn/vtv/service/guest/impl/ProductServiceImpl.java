@@ -13,6 +13,7 @@ import hcmute.kltn.vtv.service.guest.IProductService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +26,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
@@ -40,7 +38,7 @@ public class ProductServiceImpl implements IProductService {
 
         int countOrder = productRepository.countOrdersByProductId(productId, OrderStatus.COMPLETED.toString());
 
-        return ProductResponse.productResponse(product, countOrder,"Lấy thông tin sản phẩm thành công!", "OK");
+        return ProductResponse.productResponse(product, countOrder, "Lấy thông tin sản phẩm thành công!", "OK");
     }
 
 
@@ -56,7 +54,7 @@ public class ProductServiceImpl implements IProductService {
         product.setSold(product.getSold() - quantity);
         try {
             productRepository.save(product);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new NotFoundException("Cập nhật số lượng sản phẩm bán thất bại!");
         }
     }
@@ -75,9 +73,17 @@ public class ProductServiceImpl implements IProductService {
     public ListProductPageResponse getListProductPageByCategoryId(Long categoryId, int page, int size) {
         if (checkExistCategoryHasChild(categoryId)) {
             List<Product> products = getProductsByCategoryAndDescendants(categoryId);
-            Page<Product> productPage = new PageImpl<>(products, PageRequest.of(page - 1, size), products.size());
-            return ListProductPageResponse.listProductPageResponse(productPage, size,
-                    "Lấy danh sách sản phẩm theo danh mục thành công!");
+
+            // Tính chỉ số bắt đầu của danh sách trong List
+            int startIndex = page * size;
+            int endIndex = Math.min(startIndex + size, products.size());
+            // Tạo một danh sách sản phẩm mới dựa trên phân trang
+            List<Product> pageProducts = products.subList(startIndex, endIndex);
+            // Tạo một trang mới từ danh sách sản phẩm phân trang và tổng số sản phẩm
+            Page<Product> productPage = new PageImpl<>(pageProducts, PageRequest.of(page - 1, size), products.size());
+
+            return ListProductPageResponse.listProductPageResponse(productPage,
+                    "Lấy danh sách sản phẩm thuộc danh mục con theo danh mục cha thành công!");
         } else {
             return getProductsByCategoryId(categoryId, page, size);
         }
@@ -90,7 +96,7 @@ public class ProductServiceImpl implements IProductService {
 
         String message = "Lấy danh sách sản phẩm theo danh mục thành công!";
 
-        return ListProductPageResponse.listProductPageResponse(productPage, size, message);
+        return ListProductPageResponse.listProductPageResponse(productPage, message);
     }
 
     private List<Product> getProductsByCategoryAndDescendants(Long categoryId) {
