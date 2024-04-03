@@ -53,7 +53,7 @@ public class DeliverServiceImpl implements IDeliverService {
 
     private boolean checkTypeWorkDeliverWithTransportStatus(TypeWork typeWork, TransportStatus transportStatus) {
         return switch (typeWork) {
-            case SHIPPER -> transportStatus == TransportStatus.PICKUP_PENDING ||
+            case SHIPPER -> transportStatus == TransportStatus.PICKED_UP ||
                     transportStatus == TransportStatus.SHIPPING || transportStatus == TransportStatus.IN_TRANSIT ||
                     transportStatus == TransportStatus.DELIVERED || transportStatus == TransportStatus.RETURNED;
             case MANAGER ->
@@ -73,7 +73,7 @@ public class DeliverServiceImpl implements IDeliverService {
                     transportStatus == TransportStatus.IN_TRANSIT || transportStatus == TransportStatus.RETURNED ||
                             transportStatus == TransportStatus.CANCEL;
             case PICKUP ->
-                    transportStatus == TransportStatus.PICKUP_PENDING || transportStatus == TransportStatus.IN_TRANSIT ||
+                    transportStatus == TransportStatus.PICKED_UP || transportStatus == TransportStatus.IN_TRANSIT ||
                             transportStatus == TransportStatus.SHIPPING || transportStatus == TransportStatus.RETURNED;
         };
     }

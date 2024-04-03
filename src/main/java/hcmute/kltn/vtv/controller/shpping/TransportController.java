@@ -4,6 +4,7 @@ package hcmute.kltn.vtv.controller.shpping;
 import hcmute.kltn.vtv.model.data.shipping.response.TransportResponse;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.service.shipping.ITransportService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +28,13 @@ public class TransportController{
                                                                             HttpServletRequest servletRequest) {
         if (!status.equals(TransportStatus.DELIVERED) && !status.equals(TransportStatus.PICKUP_PENDING)
                 && !status.equals(TransportStatus.IN_TRANSIT) && !status.equals(TransportStatus.WAREHOUSE) &&
-                !status.equals(TransportStatus.SHIPPING) && !status.equals(TransportStatus.RETURNED)) {
-            throw new IllegalArgumentException("Trạng thái không hợp lệ! Nhân viên vận chuyển chỉ có thể cập nhật trạng thái: " +
-                    "DELIVERED, PICKUP_PENDING, IN_TRANSIT, WAREHOUSE, SHIPPING, RETURNED");
+                !status.equals(TransportStatus.SHIPPING) && !status.equals(TransportStatus.RETURNED) &&
+                !status.equals(TransportStatus.CANCEL) && !status.equals(TransportStatus.PICKED_UP)){
+            throw new BadRequestException("Trạng thái không hợp lệ! Nhân viên vận chuyển chỉ có thể cập nhật trạng thái: " +
+                    "DELIVERED, PICKUP_PENDING, IN_TRANSIT, WAREHOUSE, SHIPPING, RETURNED, CANCEL, PICKED_UP");
         }
         if (wardCode == null || wardCode.isEmpty()) {
-            throw new IllegalArgumentException("Mã phường không được để trống!");
+            throw new BadRequestException("Mã phường không được để trống!");
         }
         String username = (String) servletRequest.getAttribute("username");
 

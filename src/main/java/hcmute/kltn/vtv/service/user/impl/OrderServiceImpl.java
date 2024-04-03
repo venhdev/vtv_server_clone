@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.service.user.impl;
 
-import hcmute.kltn.vtv.model.data.shipping.request.TransportHandleRequest;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithProductVariant;
 import hcmute.kltn.vtv.model.dto.shipping.ShippingDTO;

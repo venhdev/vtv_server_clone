@@ -25,6 +25,8 @@ public class DailyUpdateScheduler {
     private final ITokenSchedulerService tokenSchedulerService;
     @Autowired
     private final IOrderSchedulerService orderSchedulerService;
+//    private final ILoyaltyPointService loyaltyPointService;
+//    private final CustomerRepository customerRepository;
 
 
 
@@ -36,6 +38,10 @@ public class DailyUpdateScheduler {
         tokenSchedulerService.checkExpirationToken();
         tokenSchedulerService.deleteTokenExpiredAndRevoked();
         orderSchedulerService.autoCompleteOrderAfterFiveDayDelivered();
+//        List<Customer> customers = customerRepository.findAll();
+//        for (Customer customer : customers) {
+//            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
+//        }
 
 
 

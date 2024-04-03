@@ -14,9 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
@@ -28,8 +25,6 @@ public class OrderShopController {
     private final IOrderShopService orderShopService;
     private final IPageService pageService;
     private final IDateService dateService;
-
-
 
 
     @GetMapping("/list")
@@ -124,9 +119,11 @@ public class OrderShopController {
     public ResponseEntity<OrderResponse> updateStatusOrder(HttpServletRequest httpServletRequest,
                                                            @PathVariable UUID orderId,
                                                            @PathVariable OrderStatus status) {
-        if (status == OrderStatus.COMPLETED || status == OrderStatus.DELIVERED ||
-                status == OrderStatus.RETURNED || status == OrderStatus.REFUNDED) {
-            throw new BadRequestException("Không thể cập nhật trạng thái đơn hàng thành " + status + " từ cửa hàng.");
+        if (!status.equals(OrderStatus.WAITING) && !status.equals(OrderStatus.PICKUP_PENDING) &&
+                !status.equals(OrderStatus.PENDING) && !status.equals(OrderStatus.PROCESSING) &&
+                !status.equals(OrderStatus.CANCEL)) {
+            throw new BadRequestException("Trạng thái không hợp lệ! Đơn hàng chỉ có thể cập nhật trạng thái: " +
+                    "CANCELLED, DELIVERED, PENDING, SHIPPING");
         }
         String username = (String) httpServletRequest.getAttribute("username");
 

@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.data.shipping.response.TransportResponse;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
 import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.repository.shipping.TransportRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
@@ -104,10 +105,11 @@ public class TransportServiceImpl implements ITransportService {
            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
            checkDeliverCanUpdateStatus(transportId, deliver);
            Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
+           updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
 
            return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
        }catch (Exception e) {
-           throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển!");
+           throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
        }
     }
 
@@ -139,8 +141,29 @@ public class TransportServiceImpl implements ITransportService {
         transport.setUpdateAt(LocalDateTime.now());
 
         return transport;
-
     }
 
+
+    private void updateStatusOrderByDeliver(UUID orderId, TransportStatus transportStatus) {
+       try {
+           Order order = orderRepository.findByOrderId(orderId)
+                   .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
+           order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
+           orderRepository.save(order);
+       }catch (Exception e) {
+           throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng theo trạng thái vận chuyển của nhân viên vận chuyển!");
+       }
+    }
+
+
+    private OrderStatus convertTransportStatusToOrderStatus(TransportStatus transportStatus) {
+        return switch (transportStatus) {
+            case DELIVERED -> OrderStatus.DELIVERED;
+            case RETURNED -> OrderStatus.RETURNED;
+            case CANCEL -> OrderStatus.CANCEL;
+            case COMPLETED -> OrderStatus.COMPLETED;
+            default -> OrderStatus.SHIPPING;
+        };
+    }
 
 }
