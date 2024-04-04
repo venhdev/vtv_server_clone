@@ -364,10 +364,16 @@
   - Xem danh sách thương hiệu theo mã danh mục.
 
 
+- Quản lý thông tin của nhân viên vận chuyển:
+  - Xem thông tin nhân viên vận chuyển.
+
+[//]: # (  - Cập nhật thông tin nhân viên vận chuyển.)
+
+[//]: # (  - Xóa nhân viên vận chuyển.)
 
 
-
-
+- Quản lý đơn hàng của nhân viên vận chuyển:
+  - Cập nhật trạng thái đơn hàng và đơn vận chuyển.
 
 
 
