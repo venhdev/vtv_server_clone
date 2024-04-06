@@ -137,6 +137,28 @@ public class TransportServiceImpl implements ITransportService {
         }
     }
 
+
+    @Override
+    public ShopAndTransportResponse  getTransportsByWard(String wardCode, String username) {
+        try {
+            wardService.checkExistWardCode(wardCode);
+            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, TransportStatus.PICKED_UP);
+            List<Shop> shops = transportShopService.getShopsByWardCode(wardCode);
+            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(),  TransportStatus.PICKUP_PENDING)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ vận chuyển nào!"));
+
+            String message = "Lấy danh sách đơn vận chuyển theo mã phường: " + wardCode + " với trạng thái: "
+                    + convertTransportStatusToString( TransportStatus.PICKUP_PENDING);
+
+            return ShopAndTransportResponse.shopAndTransportResponse(shops, deliver.getWardsWork(), transports, message);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi lấy danh sách đơn vận chuyển theo mã phường: " + wardCode + "! " + e.getMessage());
+        }
+    }
+
+
+
+
     private void checkDeliverCanUpdateStatus(UUID transportId, Deliver deliver) {
         Transport transport = getTransportById(transportId);
         if (!deliver.getTransportProvider().getShortName().equals(transport.getShippingMethod())) {

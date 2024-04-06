@@ -50,4 +50,13 @@ public class TransportController {
 
         return ResponseEntity.ok(transportService.getTransportsByWardWorksDeliver(username));
     }
+
+
+    @GetMapping("/get/ward/{wardCode}")
+    public ResponseEntity<ShopAndTransportResponse> getTransportsByWard(@PathVariable("wardCode") String wardCode,
+                                                                        HttpServletRequest servletRequest) {
+        String username = (String) servletRequest.getAttribute("username");
+
+        return ResponseEntity.ok(transportService.getTransportsByWard(wardCode, username));
+    }
 }

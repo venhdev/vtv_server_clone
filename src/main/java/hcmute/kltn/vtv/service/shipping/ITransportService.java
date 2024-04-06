@@ -32,4 +32,6 @@ public interface ITransportService {
     TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled, TransportStatus transportStatus, String wardCode);
 
     ShopAndTransportResponse getTransportsByWardWorksDeliver(String username);
+
+    ShopAndTransportResponse  getTransportsByWard(String wardCode, String username) ;
 }

@@ -374,9 +374,8 @@
 
 - Quản lý đơn hàng của nhân viên vận chuyển:
   - Cập nhật trạng thái đơn hàng và đơn vận chuyển.
-
-
-
+  - Lấy danh sách đơn vận chuyển theo trạng thái chờ lấy hàng của nhân viên vận chuyển lấy hàng trong danh sách wardCodeWorks của nhân viên.
+    - Lấy danh sách đơn vận chuyển theo mã wardCode.
 
 
 
