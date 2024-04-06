@@ -1,9 +1,11 @@
 package hcmute.kltn.vtv.service.shipping.impl;
 
+import hcmute.kltn.vtv.model.data.shipping.request.ShopAndTransportResponse;
 import hcmute.kltn.vtv.model.data.shipping.response.TransportResponse;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
 import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.repository.shipping.TransportRepository;
@@ -12,6 +14,7 @@ import hcmute.kltn.vtv.service.location.IWardService;
 import hcmute.kltn.vtv.service.shipping.IDeliverService;
 import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
 import hcmute.kltn.vtv.service.shipping.ITransportService;
+import hcmute.kltn.vtv.service.shipping.ITransportShopService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -32,6 +36,7 @@ public class TransportServiceImpl implements ITransportService {
     private final IDeliverService deliverService;
     private final IWardService wardService;
     private final OrderRepository orderRepository;
+    private final ITransportShopService transportShopService;
 
     @Transactional
     @Override
@@ -49,7 +54,7 @@ public class TransportServiceImpl implements ITransportService {
     @Transactional
     public Transport updateStatusTransport(Transport transport, String wardCode, String username,
                                            boolean handled, TransportStatus transportStatus) {
-        transport.setTransportStatus(transportStatus);
+        transport.setStatus(transportStatus);
         transport.setUpdateAt(LocalDateTime.now());
         try {
             transportHandleService.addNewTransportHandleByOrderId(transport.getOrderId(), wardCode, username, handled, transportStatus);
@@ -100,28 +105,46 @@ public class TransportServiceImpl implements ITransportService {
     @Transactional
     public TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled,
                                                    TransportStatus transportStatus, String wardCode) {
-       try {
-           wardService.checkExistWardCode(wardCode);
-           Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
-           checkDeliverCanUpdateStatus(transportId, deliver);
-           Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
-           updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
+        try {
+            wardService.checkExistWardCode(wardCode);
+            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
+            checkDeliverCanUpdateStatus(transportId, deliver);
+            Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
+            updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
 
-           return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
-       }catch (Exception e) {
-           throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
-       }
+            return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
+        }
     }
 
+
+
+    @Override
+    public ShopAndTransportResponse getTransportsByWardWorksDeliver(String username) {
+        try {
+            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, TransportStatus.PICKED_UP);
+            List<Shop> shops = transportShopService.getShopsByWards(deliver.getWardsWork());
+            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(),  TransportStatus.PICKUP_PENDING)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ vận chuyển nào!"));
+
+            String message = "Lấy danh sách đơn vận chuyển theo phường làm việc của nhân viên vận chuyển thành công theo trạng thái: "
+                    + convertTransportStatusToString( TransportStatus.PICKUP_PENDING);
+
+            return ShopAndTransportResponse.shopAndTransportResponse(shops, deliver.getWardsWork(), transports, message);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi lấy danh sách đơn vận chuyển theo phường làm việc của nhân viên vận chuyển! " + e.getMessage());
+        }
+    }
 
     private void checkDeliverCanUpdateStatus(UUID transportId, Deliver deliver) {
         Transport transport = getTransportById(transportId);
         if (!deliver.getTransportProvider().getShortName().equals(transport.getShippingMethod())) {
             throw new BadRequestException("Nhân viên vận không cùng nhà vận chuyển với đơn hàng! Không thể cập nhật trạng thái!");
         }
-        if (transport.getTransportStatus().equals(TransportStatus.CANCEL) ||
-                transport.getTransportStatus().equals(TransportStatus.PENDING) ||
-                transport.getTransportStatus().equals(TransportStatus.WAITING)) {
+        if (transport.getStatus().equals(TransportStatus.CANCEL) ||
+                transport.getStatus().equals(TransportStatus.PENDING) ||
+                transport.getStatus().equals(TransportStatus.WAITING)) {
             throw new BadRequestException("Nhân viên vận không thể cập nhật trạng thái do đơn hàng đã được xử lý hoặc đã hủy!");
         }
     }
@@ -133,10 +156,11 @@ public class TransportServiceImpl implements ITransportService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
         Transport transport = new Transport();
         transport.setOrderId(orderId);
+        transport.setShopId(order.getShop().getShopId());
         transport.setWardCodeShop(order.getShop().getWard().getWardCode());
         transport.setWardCodeCustomer(order.getAddress().getWard().getWardCode());
         transport.setShippingMethod(order.getShippingMethod());
-        transport.setTransportStatus(TransportStatus.WAITING);
+        transport.setStatus(TransportStatus.WAITING);
         transport.setCreateAt(LocalDateTime.now());
         transport.setUpdateAt(LocalDateTime.now());
 
@@ -145,14 +169,14 @@ public class TransportServiceImpl implements ITransportService {
 
 
     private void updateStatusOrderByDeliver(UUID orderId, TransportStatus transportStatus) {
-       try {
-           Order order = orderRepository.findByOrderId(orderId)
-                   .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
-           order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
-           orderRepository.save(order);
-       }catch (Exception e) {
-           throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng theo trạng thái vận chuyển của nhân viên vận chuyển!");
-       }
+        try {
+            Order order = orderRepository.findByOrderId(orderId)
+                    .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
+            order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
+            orderRepository.save(order);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng theo trạng thái vận chuyển của nhân viên vận chuyển!");
+        }
     }
 
 
@@ -163,6 +187,23 @@ public class TransportServiceImpl implements ITransportService {
             case CANCEL -> OrderStatus.CANCEL;
             case COMPLETED -> OrderStatus.COMPLETED;
             default -> OrderStatus.SHIPPING;
+        };
+    }
+
+    private String convertTransportStatusToString(TransportStatus transportStatus) {
+        return switch (transportStatus) {
+            case PENDING -> "Chờ xác nhận";
+            case WAITING -> "Chờ xử lý";
+            case PROCESSING -> "Đang xử lý";
+            case PICKUP_PENDING -> "Chờ lấy hàng";
+            case PICKED_UP -> "Đã lấy hàng";
+            case SHIPPING -> "Đang giao hàng";
+            case IN_TRANSIT -> "Đang vận chuyển";
+            case WAREHOUSE -> "Đã về kho";
+            case DELIVERED -> "Đã giao hàng";
+            case RETURNED -> "Đã trả hàng";
+            case CANCEL -> "Đã hủy";
+            case COMPLETED -> "Đã hoàn thành";
         };
     }
 

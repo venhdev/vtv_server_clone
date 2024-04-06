@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.repository.vtv;
 
+import hcmute.kltn.vtv.model.entity.location.Ward;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.domain.Page;
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +19,11 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     Shop findByPhone(String phone);
 
     Shop findByCustomer_Username(String username);
+
+    Optional<List<Shop>> findAllByWardWardCodeAndStatus(String wardCode, Status status);
+
+    Optional<List<Shop>> findAllByWardInAndStatus(List<Ward> wards, Status status);
+
 
     Optional<Shop> findByCustomerUsername(String username);
 

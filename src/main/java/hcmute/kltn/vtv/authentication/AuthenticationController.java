@@ -21,8 +21,7 @@ import java.io.IOException;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    @Autowired
-    private IAuthenticationService authenticationService;
+    private final IAuthenticationService authenticationService;
 
 
 

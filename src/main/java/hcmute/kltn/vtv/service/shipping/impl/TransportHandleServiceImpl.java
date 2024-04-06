@@ -41,7 +41,7 @@ public class TransportHandleServiceImpl implements ITransportHandleService {
     @Override
     public void addNewTransportHandleByOrderId(UUID orderId, String wardCode, String username, boolean handled, TransportStatus transportStatus) {
         Transport transport = getTransportByOrderId(orderId);
-        transport.setTransportStatus(transportStatus);
+        transport.setStatus(transportStatus);
 
         TransportHandleRequest transportHandleRequest = TransportHandleRequest
                 .createTransportHandleRequest(transport.getTransportId(), username, wardCode, true, handled, transportStatus);

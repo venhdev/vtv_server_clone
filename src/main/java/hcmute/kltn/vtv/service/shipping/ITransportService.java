@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.shipping;
 
+import hcmute.kltn.vtv.model.data.shipping.request.ShopAndTransportResponse;
 import hcmute.kltn.vtv.model.data.shipping.response.TransportResponse;
 import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
@@ -29,4 +30,6 @@ public interface ITransportService {
 
     @Transactional
     TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled, TransportStatus transportStatus, String wardCode);
+
+    ShopAndTransportResponse getTransportsByWardWorksDeliver(String username);
 }

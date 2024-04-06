@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/transport-provider/manager/deliver")
+@RequestMapping("/api/shipping/transport-provider/manager/deliver")
 @RequiredArgsConstructor
 public class ManagerDeliverController {
 

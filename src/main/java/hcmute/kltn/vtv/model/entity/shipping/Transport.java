@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.model.entity.shipping;
 
-import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +23,8 @@ public class Transport {
     @Column(unique = true)
     private UUID orderId;
 
+    private Long shopId;
+
     private String wardCodeShop;
 
     private String wardCodeCustomer;
@@ -35,7 +36,7 @@ public class Transport {
     private LocalDateTime updateAt;
 
     @Enumerated(EnumType.STRING)
-    private TransportStatus transportStatus;
+    private TransportStatus status;
 
     @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TransportHandle> transportHandles;

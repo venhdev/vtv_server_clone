@@ -56,17 +56,17 @@ public class DeliverServiceImpl implements IDeliverService {
             case SHIPPER -> transportStatus == TransportStatus.PICKED_UP ||
                     transportStatus == TransportStatus.SHIPPING || transportStatus == TransportStatus.IN_TRANSIT ||
                     transportStatus == TransportStatus.DELIVERED || transportStatus == TransportStatus.RETURNED;
-            case MANAGER ->
+            case MANAGER -> transportStatus == TransportStatus.PICKED_UP ||
                     transportStatus == TransportStatus.SHIPPING || transportStatus == TransportStatus.IN_TRANSIT ||
                             transportStatus == TransportStatus.WAREHOUSE || transportStatus == TransportStatus.DELIVERED ||
                             transportStatus == TransportStatus.COMPLETED || transportStatus == TransportStatus.RETURNED ||
                             transportStatus == TransportStatus.CANCEL;
-            case PROVIDER ->
+            case PROVIDER -> transportStatus == TransportStatus.PICKED_UP ||
                     transportStatus == TransportStatus.PROCESSING || transportStatus == TransportStatus.WAITING ||
                             transportStatus == TransportStatus.WAREHOUSE || transportStatus == TransportStatus.SHIPPING ||
                             transportStatus == TransportStatus.DELIVERED || transportStatus == TransportStatus.RETURNED ||
                             transportStatus == TransportStatus.CANCEL;
-            case WAREHOUSE ->
+            case WAREHOUSE -> transportStatus == TransportStatus.PICKED_UP ||
                     transportStatus == TransportStatus.WAREHOUSE || transportStatus == TransportStatus.DELIVERED ||
                             transportStatus == TransportStatus.RETURNED || transportStatus == TransportStatus.CANCEL;
             case TRANSIT ->

@@ -50,7 +50,7 @@ public class SecurityConfig {
             "/api/product-suggestion/**",
 
             "/api/customer/notification",
-            "/api/shipping/**",
+//            "/api/shipping/**",
             "/api/product-filter/**",
 
 
@@ -123,18 +123,17 @@ public class SecurityConfig {
     };
 
     private static final String[] DELIVER_MANAGER_ROLE = {
-            "/api/deliver/**",
-            "/api/transport-provider/manager/deliver/**"
+            "/api/shipping/**"
     };
 
     private static final String[] DELIVER_ROLE = {
             "/api/shipping/deliver/**",
-            "/api/shipping/transport**"
+            "/api/shipping/transport/**"
     };
 
 
     private static final String[] PROVIDER_ROLE = {
-            "/api/transport-provider/**",
+            "/api/shipping/**",
     };
 
 
