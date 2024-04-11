@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.service.vtv.IOrderSchedulerService;
 import hcmute.kltn.vtv.service.vtv.ITokenSchedulerService;
 import hcmute.kltn.vtv.service.vtv.IVoucherSchedulerService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,21 +20,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DailyUpdateScheduler {
 
-    @Autowired
     private final IVoucherSchedulerService voucherSchedulerService;
-    @Autowired
     private final ITokenSchedulerService tokenSchedulerService;
-    @Autowired
     private final IOrderSchedulerService orderSchedulerService;
-//    private final ILoyaltyPointService loyaltyPointService;
+//    private final IWalletService walletService;
+
+    //    private final ILoyaltyPointService loyaltyPointService;
 //    private final CustomerRepository customerRepository;
-
-
 
 
     @PostConstruct
     public void onServerStart() {
-        System.out.println("Server started at " + LocalDate.now() + " - Performing initial update...");
+        System.out.println("Server kích hoạt lúc " + LocalDate.now() + " - Thực hiện cập nhật hàng ngày...");
         voucherSchedulerService.checkExpirationVoucher();
         tokenSchedulerService.checkExpirationToken();
         tokenSchedulerService.deleteTokenExpiredAndRevoked();
@@ -43,14 +41,19 @@ public class DailyUpdateScheduler {
 //            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
 //        }
 
+//        List<Customer> customers = customerRepository.findAll();
+//        for (Customer customer : customers) {
+//            walletService.addNewWalletAfterRegister(customer.getUsername());
+//        }
 
 
     }
 
+
     // This method will be executed every day at midnight
     @Scheduled(cron = "0 0 0 * * ?")
     public void performDailyUpdate() {
-        System.out.println("Daily update at " + LocalDate.now() + " - Performing daily update...");
+        System.out.println("Thực hiện cập nhật hàng ngày vào lúc " + LocalDate.now());
         voucherSchedulerService.checkExpirationVoucher();
         tokenSchedulerService.checkExpirationToken();
         tokenSchedulerService.deleteTokenExpiredAndRevoked();

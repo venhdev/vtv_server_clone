@@ -18,6 +18,7 @@ import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.IFcmService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,7 +52,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private final ICustomerService customerService;
     private final ILoyaltyPointService loyaltyPointService;
     private final IMailService mailService;
-
+    private final IWalletService walletService;
 
     @Override
     @Transactional
@@ -63,6 +64,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         try {
             customerRepository.save(customer);
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
+            walletService.addNewWalletAfterRegister(customer.getUsername());
             mailService.activateAccountSendOtpToEmail(customer.getUsername());
 
             String message = "Đăng ký tài khoản khách hàng thành công, " +
@@ -89,6 +91,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             customerRepository.save(customer);
             mailService.activateAccountSendOtpToEmail(customer.getUsername());
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
+            walletService.addNewWalletAfterRegister(customer.getUsername());
 
             return customer;
         } catch (Exception e) {

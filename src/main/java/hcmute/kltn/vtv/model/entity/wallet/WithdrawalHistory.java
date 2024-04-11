@@ -35,7 +35,8 @@ public class WithdrawalHistory {
 
     private LocalDateTime withdrawalAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "wallet_id")
-    private Wallet wallet;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "transaction_id")
+    private Transaction transaction;
+
 }

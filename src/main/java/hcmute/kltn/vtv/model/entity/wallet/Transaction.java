@@ -22,12 +22,14 @@ public class Transaction {
 
     private Long money;
 
+    private String type;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
     private LocalDateTime transactionAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
