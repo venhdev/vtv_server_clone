@@ -379,6 +379,11 @@
 
 
 
+- Quản lý ví tiền:
+ - Thêm ví tiền sau khi tạo tài khoản.
+ - Cập nhật ví tiền và tạo giao dịch ví tiền sau khi hoàn thành đơn hàng cho shop. (tổng tiền đơn hàng * 96 / 100 - mã giảm giá)
+ - Xem lịch sử giao dịch ví tiền.
+
 
 
 

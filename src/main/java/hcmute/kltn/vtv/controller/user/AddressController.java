@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AddressController {
 
-    @Autowired
     private final IAddressService addressService;
 
     @PostMapping("/add")

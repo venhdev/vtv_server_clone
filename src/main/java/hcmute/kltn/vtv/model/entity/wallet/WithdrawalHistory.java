@@ -18,6 +18,8 @@ public class WithdrawalHistory {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID withdrawalId;
 
+    private UUID transactionId;
+
     private Long money;
 
     private String method;
@@ -33,10 +35,7 @@ public class WithdrawalHistory {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private LocalDateTime withdrawalAt;
+    private LocalDateTime createAt;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
 
 }

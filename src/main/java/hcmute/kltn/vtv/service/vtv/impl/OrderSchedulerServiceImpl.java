@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.vtv.IOrderSchedulerService;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderSchedulerServiceImpl implements IOrderSchedulerService {
 
-    @Autowired
     private final OrderRepository orderRepository;
+    private final IWalletService walletService;
 
     @Override
     @Transactional
@@ -38,7 +39,11 @@ public class OrderSchedulerServiceImpl implements IOrderSchedulerService {
                 // Nếu đã qua 5 ngày kể từ ngày giao hàng, cập nhật trạng thái đơn hàng thành đã nhận hàng
                 order.setStatus(OrderStatus.COMPLETED);
                 try {
-
+                    walletService.updateWalletByUsername(
+                            order.getShop().getCustomer().getUsername(),
+                            order.getOrderId(),
+                            order.getTotalPrice() * 96 / 100 - order.getDiscountShop(),
+                            "COMPLETED_ORDER");
                     orderRepository.save(order);
                 } catch (Exception e) {
                     e.printStackTrace();

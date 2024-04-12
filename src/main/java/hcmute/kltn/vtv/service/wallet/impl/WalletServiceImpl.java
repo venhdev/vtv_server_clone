@@ -62,6 +62,7 @@ public class WalletServiceImpl implements IWalletService {
         try {
 
             walletRepository.save(wallet);
+            System.out.println("wallet: " + wallet);
             transactionService.addNewTransaction(wallet, orderId, money, type);
         } catch (Exception e) {
             throw new IllegalArgumentException("Cập nhật ví tiền thất bại! " + e.getMessage());

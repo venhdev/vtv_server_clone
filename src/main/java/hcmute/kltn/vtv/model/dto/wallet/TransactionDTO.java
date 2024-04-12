@@ -20,7 +20,7 @@ public class TransactionDTO {
     private Long money;
     private String type;
     private Status status;
-    private LocalDateTime transactionAt;
+    private LocalDateTime createAt;
 
 
     public static TransactionDTO convertEntityToDTO(Transaction transaction) {
@@ -31,7 +31,7 @@ public class TransactionDTO {
         transactionDTO.setMoney(transaction.getMoney());
         transactionDTO.setType(transaction.getType());
         transactionDTO.setStatus(transaction.getStatus());
-        transactionDTO.setTransactionAt(transaction.getTransactionAt());
+        transactionDTO.setCreateAt(transaction.getCreateAt());
 
         return transactionDTO;
     }
@@ -42,7 +42,7 @@ public class TransactionDTO {
     public static List<TransactionDTO> convertEntitiesToDTOs(List<Transaction> transactions) {
         return transactions.stream()
                 .map(TransactionDTO::convertEntityToDTO)
-                .sorted((o1, o2) -> o2.getTransactionAt().compareTo(o1.getTransactionAt()))
+                .sorted((o1, o2) -> o2.getCreateAt().compareTo(o1.getCreateAt()))
                 .collect(Collectors.toList());
     }
 

@@ -18,6 +18,7 @@ import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.vtv.shippingstrategy.*;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
@@ -51,6 +52,8 @@ public class OrderServiceImpl implements IOrderService {
     private final INotificationService notificationService;
     private final ITransportService transportService;
     private final ITransportHandleService transportHandleService;
+    private final IWalletService walletService;
+
 
 
     @Override
@@ -238,6 +241,13 @@ public class OrderServiceImpl implements IOrderService {
             try {
                 transportHandleService.addNewTransportHandleByOrderId(
                         orderId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.COMPLETED);
+
+                walletService.updateWalletByUsername(
+                        order.getShop().getCustomer().getUsername(),
+                        order.getOrderId(),
+                        order.getTotalPrice() * 96 / 100 - order.getDiscountShop(),
+                        "COMPLETED_ORDER");
+
                 orderRepository.save(order);
 
                 String messageEmail = "Xác nhận đã nhận hàng thành công.";
