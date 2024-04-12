@@ -32,6 +32,10 @@ public class CategoryShop {
 
     private LocalDateTime updateAt;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shop_id", nullable = false)
+    private Shop shop;
+
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

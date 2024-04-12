@@ -17,12 +17,18 @@ public class CategoryShopRequest {
 
     private String name;
 
-    private MultipartFile image;
-
     private boolean changeImage;
 
-    private List<Long> productIds;
+    private MultipartFile image;
 
+
+    public void validateCreate(){
+        if (!this.changeImage){
+            throw new BadRequestException("Hình ảnh không được để trống khi tạo danh mục!");
+        }
+
+        validate();
+    }
 
     public void validate() {
         if (this.name == null || this.name.isEmpty()) {

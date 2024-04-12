@@ -16,25 +16,29 @@ public class CategoryShopDTO {
 
     private Long categoryShopId;
 
+    private Long shopId;
+
     private String name;
 
     private String image;
 
     private int countProduct;
 
-    private List<Long> productIds;
+    private List<ProductDTO> productDTOs;
+
 
 
     public static CategoryShopDTO convertEntityToDTO(CategoryShop categoryShop) {
         CategoryShopDTO categoryShopDTO = new CategoryShopDTO();
         categoryShopDTO.setCategoryShopId(categoryShop.getCategoryShopId());
+        categoryShopDTO.setShopId(categoryShop.getShop().getShopId());
         categoryShopDTO.setName(categoryShop.getName());
         categoryShopDTO.setImage(categoryShop.getImage());
-        categoryShopDTO.setProductIds(categoryShop.getProducts() == null ? new ArrayList<>() :
-                categoryShop.getProducts().stream().map(Product::getProductId).toList());
+        categoryShopDTO.setProductDTOs(categoryShop.getProducts().size() > 0 ? null : ProductDTO.convertEntitiesToDTOs(categoryShop.getProducts()));
         categoryShopDTO.setCountProduct(categoryShop.getProducts().size());
         return categoryShopDTO;
     }
+
 
     public static List<CategoryShopDTO> convertEntitiesToDTOs(List<CategoryShop> categoryShops) {
         List<CategoryShopDTO> categoryShopDTOs = new ArrayList<>();
