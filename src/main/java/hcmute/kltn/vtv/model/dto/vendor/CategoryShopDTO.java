@@ -34,8 +34,16 @@ public class CategoryShopDTO {
         categoryShopDTO.setShopId(categoryShop.getShop().getShopId());
         categoryShopDTO.setName(categoryShop.getName());
         categoryShopDTO.setImage(categoryShop.getImage());
-        categoryShopDTO.setProductDTOs(categoryShop.getProducts().size() > 0 ? null : ProductDTO.convertEntitiesToDTOs(categoryShop.getProducts()));
         categoryShopDTO.setCountProduct(categoryShop.getProducts().size());
+
+        return categoryShopDTO;
+    }
+
+
+    public static CategoryShopDTO convertDetailEntityToDTO(CategoryShop categoryShop) {
+        CategoryShopDTO categoryShopDTO = convertEntityToDTO(categoryShop);
+        categoryShopDTO.setProductDTOs(!categoryShop.getProducts().isEmpty() ? null : ProductDTO.convertEntitiesToDTOs(categoryShop.getProducts()));
+
         return categoryShopDTO;
     }
 

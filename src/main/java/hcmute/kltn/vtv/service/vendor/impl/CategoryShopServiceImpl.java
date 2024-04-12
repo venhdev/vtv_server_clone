@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.model.entity.vendor.CategoryShop;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.vendor.CategoryShopRepository;
+import hcmute.kltn.vtv.service.guest.ICategoryShopGuestService;
 import hcmute.kltn.vtv.service.vendor.ICategoryShopService;
 import hcmute.kltn.vtv.service.vendor.IProductShopService;
 import hcmute.kltn.vtv.service.vendor.IShopService;
@@ -27,6 +28,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
     private final IImageService imageService;
     private final IProductShopService productShopService;
     private final IShopService shopService;
+    private final ICategoryShopGuestService categoryShopGuestService;
 
 
     @Override
@@ -39,7 +41,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
         try {
             categoryShopRepository.save(categoryShop);
 
-            return CategoryShopResponse.categoryShopResponse(categoryShop, "Thêm danh mục thành công!", "success");
+            return CategoryShopResponse.categoryShopResponse(categoryShop, "Thêm danh mục thành công!", "Success");
         }catch (Exception e) {
             throw new InternalServerErrorException("Thêm danh mục của cửa hàng thất bại! Vui lòng thử lại sau! " + e.getMessage());
         }

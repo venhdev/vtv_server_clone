@@ -16,7 +16,7 @@ public class CategoryShopResponse extends ResponseAbstract {
 
     public static CategoryShopResponse categoryShopResponse(CategoryShop categoryShop, String message, String status) {
         CategoryShopResponse categoryShopResponse = new CategoryShopResponse();
-        categoryShopResponse.setCategoryShopDTO(CategoryShopDTO.convertEntityToDTO(categoryShop));
+        categoryShopResponse.setCategoryShopDTO(CategoryShopDTO.convertDetailEntityToDTO(categoryShop));
         categoryShopResponse.setMessage(message);
         categoryShopResponse.setStatus(status);
         categoryShopResponse.setCode(200);

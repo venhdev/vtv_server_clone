@@ -50,15 +50,19 @@ public class SecurityConfig {
             "/api/product-suggestion/**",
 
             "/api/customer/notification",
-//            "/api/shipping/**",
             "/api/product-filter/**",
+
+            "/api/category-shop/**",
+
+
+
+
 
 
             "/api/customer/reset-password",
             "/api/customer/active-account",
             "/api/customer/active-account/send-email",
             "/api/customer/forgot-password",
-
 
             "/v2/api-docs",
             "/v3/api-docs",

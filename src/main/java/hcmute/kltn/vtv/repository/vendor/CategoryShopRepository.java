@@ -5,11 +5,19 @@ import hcmute.kltn.vtv.model.entity.vendor.CategoryShop;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface CategoryShopRepository extends JpaRepository<CategoryShop, Long> {
 
 
-    boolean existsByName(String name);
+    boolean existsByCategoryShopId(Long categoryShopId);
 
     boolean existsByNameAndCategoryShopIdNot(String name, Long shopId);
+
+    Optional<CategoryShop> findByCategoryShopId(Long categoryShopId);
+
+    Optional<List<CategoryShop>> findAllByShopShopId(Long shopId);
+
 }

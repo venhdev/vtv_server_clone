@@ -3,30 +3,17 @@ package hcmute.kltn.vtv.service.guest.impl;
 import hcmute.kltn.vtv.model.data.guest.ShopDetailResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.Status;
-import hcmute.kltn.vtv.repository.vtv.CategoryRepository;
-import hcmute.kltn.vtv.repository.user.FollowedShopRepository;
-import hcmute.kltn.vtv.repository.vendor.ProductRepository;
 import hcmute.kltn.vtv.repository.vtv.ShopRepository;
 import hcmute.kltn.vtv.service.guest.IShopGuestService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ShopGuestServiceImpl implements IShopGuestService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ShopRepository shopRepository;
-    @Autowired
-    private FollowedShopRepository followedShopRepository;
-    // @Autowired
-    // ModelMapper modelMapper;]]
+    private final ShopRepository shopRepository;
 
 
     @Override
@@ -44,6 +31,14 @@ public class ShopGuestServiceImpl implements IShopGuestService {
         }
 
         return shop;
+    }
+
+
+    @Override
+    public void checkExistsById(Long shopId) {
+        if (!shopRepository.existsById(shopId)) {
+            throw new NotFoundException("Không tìm thấy cửa hàng có mã: " + shopId);
+        }
     }
 
     @Override
