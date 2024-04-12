@@ -1,22 +1,29 @@
 package hcmute.kltn.vtv.service.wallet.impl;
 
 
+import hcmute.kltn.vtv.model.data.wallet.response.WalletResponse;
+import hcmute.kltn.vtv.model.entity.wallet.Transaction;
 import hcmute.kltn.vtv.model.entity.wallet.Wallet;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.wallet.WalletRepository;
+import hcmute.kltn.vtv.service.wallet.ITransactionService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class WalletServiceImpl implements IWalletService {
 
     private final WalletRepository walletRepository;
+    private final ITransactionService transactionService;
+
 
     @Async
     @Override
@@ -33,6 +40,69 @@ public class WalletServiceImpl implements IWalletService {
     }
 
 
+    @Override
+    @Transactional
+    public Transaction updateWalletAndCreateTransaction(Wallet wallet, UUID orderId, Long money, String type) {
+        updateBalance(wallet, money);
+        try {
+            walletRepository.save(wallet);
+
+            return transactionService.addNewTransaction(wallet, orderId, money, type);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cập nhật ví thất bại! " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public void updateWalletByUsername(String username, UUID orderId, Long money, String type) {
+        Wallet wallet = getWalletByUsername(username);
+        updateBalance(wallet, money);
+        try {
+
+            walletRepository.save(wallet);
+            transactionService.addNewTransaction(wallet, orderId, money, type);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cập nhật ví tiền thất bại! " + e.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public WalletResponse getWalletResponseByUsername(String username) {
+        checkExistWalletByUsername(username);
+        Wallet wallet = getWalletByUsername(username);
+
+        return WalletResponse.walletResponse(wallet, "Lấy thông tin ví thành công", "OK");
+    }
+
+
+
+
+
+
+
+    private void updateBalance(Wallet wallet, Long money) {
+        wallet.setBalance(wallet.getBalance() + money);
+        wallet.setUpdateAt(LocalDateTime.now());
+    }
+
+
+    private Wallet getWalletByUsername(String username) {
+        return walletRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy thông tin ví của tài khoản " + username));
+    }
+
+
+    private void checkExistWalletByUsername(String username) {
+        if (!walletRepository.existsByUsername(username)) {
+            throw new NotFoundException("Không tìm thấy ví của tài khoản " + username);
+        }
+    }
+
+
     private Wallet createWalletByUsername(String username) {
         Wallet wallet = new Wallet();
         wallet.setUsername(username);
@@ -43,7 +113,6 @@ public class WalletServiceImpl implements IWalletService {
 
         return wallet;
     }
-
 
 
 }

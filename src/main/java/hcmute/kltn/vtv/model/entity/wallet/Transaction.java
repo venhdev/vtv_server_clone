@@ -20,6 +20,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID transactionId;
 
+    private UUID orderId;
+
     private Long money;
 
     private String type;
@@ -27,13 +29,11 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private LocalDateTime transactionAt;
+    private LocalDateTime createAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
+
 }

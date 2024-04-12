@@ -4,9 +4,7 @@ import hcmute.kltn.vtv.model.entity.wallet.Transaction;
 import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,7 +27,7 @@ public class TransactionDTO {
         TransactionDTO transactionDTO = new TransactionDTO();
         transactionDTO.setTransactionId(transaction.getTransactionId());
         transactionDTO.setWalletId(transaction.getWallet().getWalletId());
-        transactionDTO.setOrderId(transaction.getOrder().getOrderId());
+        transactionDTO.setOrderId(transaction.getOrderId());
         transactionDTO.setMoney(transaction.getMoney());
         transactionDTO.setType(transaction.getType());
         transactionDTO.setStatus(transaction.getStatus());
