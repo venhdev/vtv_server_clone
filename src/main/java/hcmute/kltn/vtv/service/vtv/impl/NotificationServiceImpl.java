@@ -74,7 +74,7 @@ public class NotificationServiceImpl implements INotificationService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy thông báo nào"));
 
         try {
-            notificationRepository.save(notification);
+            notificationRepository.delete(notification);
 
             return NotificationResponse.notificationResponse(getNotifications(username, 1, 20), "Xóa thông báo thành công.");
         } catch (Exception e) {
