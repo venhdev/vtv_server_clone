@@ -385,9 +385,27 @@
  - Xem lịch sử giao dịch ví tiền.
 
 
+- Quản lý danh mục của cừa hàng từ quyền vendor:
+  - Thêm danh mục.
+  - Cập nhật thông tin danh mục.
+  - Xóa danh mục.
+  - Xem danh sách danh mục.
+  - Thêm sản phẩm vào danh mục.
+  - Xóa sản phẩm khỏi danh mục.
 
 
+- Quản lý danh mục của cừa hàng từ quyền guest:
+  - Xem danh sách danh mục.
+  - Xem chi tiết danh mục.
+  - Xem danh sách sản phẩm theo danh mục.
 
+[//]: # (  - Xem danh sách sản phẩm bán chạy theo danh mục.)
+
+[//]: # (  - Xem danh sách sản phẩm mới nhất theo danh mục.)
+
+[//]: # (  - Tim kiếm sản phẩm theo tên và danh mục.)
+
+[//]: # (  - Xem danh sách sản phẩm theo giá và danh mục.)
 
 
 

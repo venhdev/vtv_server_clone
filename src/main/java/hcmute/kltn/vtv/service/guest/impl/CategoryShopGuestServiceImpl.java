@@ -37,20 +37,23 @@ public class CategoryShopGuestServiceImpl implements ICategoryShopGuestService {
     }
 
 
+    @Override
+    public void checkExistsById(Long categoryShopId) {
+        if (!categoryShopRepository.existsByCategoryShopId(categoryShopId)) {
+            throw new NotFoundException("Không tồn tại danh mục cửa hàng có id: " + categoryShopId);
+        }
+    }
 
 
-
-    private CategoryShop getCategoryShopByCategoryShopId(Long categoryShopId) {
+    @Override
+    public CategoryShop getCategoryShopByCategoryShopId(Long categoryShopId) {
         return categoryShopRepository.findByCategoryShopId(categoryShopId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh mục cửa hàng có id: " + categoryShopId));
     }
 
 
-    private void checkExistsById(Long categoryShopId) {
-        if (!categoryShopRepository.existsByCategoryShopId(categoryShopId)) {
-            throw new NotFoundException("Không tồn tại danh mục cửa hàng có id: " + categoryShopId);
-        }
-    }
+
+
 
     private List<CategoryShop> getCategoryShopByShopId(Long shopId) {
         return categoryShopRepository.findAllByShopShopId(shopId)

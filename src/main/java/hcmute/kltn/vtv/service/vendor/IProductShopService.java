@@ -4,8 +4,11 @@ package hcmute.kltn.vtv.service.vendor;
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductRequest;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
+import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface IProductShopService {
     @Transactional
@@ -21,6 +24,10 @@ public interface IProductShopService {
     ProductResponse restoreProductById(Long productId, String username);
 
     ListProductPageResponse getListProductPageByUsernameAndStatus(String username, int page, int size, Status status);
+
+    void checkProductIdsInShop(List<Long> productIds, Long shopId);
+
+    List<Product> getProductsByProductIds(List<Long> productIds);
 //    ProductResponse addNewProduct(ProductRequest request);
 //
 //    ProductResponse getProductDetail(Long productId, String username);

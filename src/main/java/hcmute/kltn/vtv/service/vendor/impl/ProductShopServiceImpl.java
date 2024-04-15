@@ -20,7 +20,6 @@ import hcmute.kltn.vtv.service.vendor.IShopService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -35,18 +34,12 @@ import java.util.stream.Collectors;
 public class ProductShopServiceImpl implements IProductShopService {
 
 
-    @Autowired
-    private IShopService shopService;
-    @Autowired
-    private BrandRepository brandRepository;
-    @Autowired
-    private ICategoryService categoryService;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private IProductVariantShopService productVariantShopService;
-    @Autowired
-    private IImageService imageService;
+    private final IShopService shopService;
+    private final BrandRepository brandRepository;
+    private final ICategoryService categoryService;
+    private final ProductRepository productRepository;
+    private final IProductVariantShopService productVariantShopService;
+    private final IImageService imageService;
 
 
     @Override
@@ -113,7 +106,6 @@ public class ProductShopServiceImpl implements IProductShopService {
     }
 
 
-
     @Override
     @Transactional
     public ProductResponse restoreProductById(Long productId, String username) {
@@ -142,6 +134,25 @@ public class ProductShopServiceImpl implements IProductShopService {
         String message = "Lấy danh sách sản phẩm theo trạng thái trong cửa hàng thành công.";
 
         return ListProductPageResponse.listProductPageResponse(products, message);
+    }
+
+
+
+    @Override
+    public void checkProductIdsInShop(List<Long> productIds, Long shopId) {
+        if (productIds.isEmpty()) {
+            throw new BadRequestException("Danh sách sản phẩm không được để trống!");
+        }
+        if (!productRepository.existsByProductIdInAndShopShopId(productIds, shopId)) {
+            throw new BadRequestException("Có sản phẩm không tồn tại trong cửa hàng!");
+        }
+    }
+
+
+    @Override
+    public List<Product> getProductsByProductIds(List<Long> productIds) {
+        return productRepository.findAllByProductIdIn(productIds)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm nào trong danh sách mã sản phẩm!"));
     }
 
 

@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public enum TypeWork {
-    SHIPPER,
-    MANAGER,
-    PROVIDER,
-    WAREHOUSE,
-    TRANSIT,
-    PICKUP;
+    SHIPPER, // DELIVERED, IN_TRANSIT
+    MANAGER, //
+    PROVIDER, //
+    WAREHOUSE, //
+    TRANSIT, // IN_TRANSIT
+    PICKUP; // PICKED_UP
 }

@@ -42,7 +42,7 @@ public class CategoryShopDTO {
 
     public static CategoryShopDTO convertDetailEntityToDTO(CategoryShop categoryShop) {
         CategoryShopDTO categoryShopDTO = convertEntityToDTO(categoryShop);
-        categoryShopDTO.setProductDTOs(!categoryShop.getProducts().isEmpty() ? null : ProductDTO.convertEntitiesToDTOs(categoryShop.getProducts()));
+        categoryShopDTO.setProductDTOs(!categoryShop.getProducts().isEmpty() ? ProductDTO.convertEntitiesToDTOs(categoryShop.getProducts()) : new ArrayList<>());
 
         return categoryShopDTO;
     }
