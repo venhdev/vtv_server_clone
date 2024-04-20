@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/shop-detail")
+@RequestMapping("/api/shop")
 @RequiredArgsConstructor
 public class ShopDetailController {
 
-    @Autowired
-    private IShopGuestService shopDetailService;
-    @Autowired
-    private IFollowedGuestService followedGuestService;
+    private final IShopGuestService shopDetailService;
+    private final IFollowedGuestService followedGuestService;
 
 //    @GetMapping("/shop/{shopId}")
 //    public ResponseEntity<ShopDetailResponse> getShopDetailByShopId(@PathVariable Long shopId,

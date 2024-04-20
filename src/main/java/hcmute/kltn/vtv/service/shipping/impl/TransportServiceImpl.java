@@ -77,6 +77,9 @@ public class TransportServiceImpl implements ITransportService {
     public Transport updateStatusTransportByTransportId(UUID transportId, String wardCode, String username,
                                                         boolean handled, TransportStatus transportStatus) {
         Transport transport = getTransportById(transportId);
+        if (transport.getStatus().equals(TransportStatus.COMPLETED)){
+            throw new BadRequestException("Dịch vụ vận chuyển đã hoàn thành không thể cập nhật trạng thái!");
+        }
         updateStatusTransport(transport, wardCode, username, handled, transportStatus);
         return getTransportById(transportId);
     }
