@@ -10,5 +10,5 @@ public interface ICommentService {
 
     List<CommentDTO> getListCommentDTO(UUID reviewId);
 
-    ListCommentResponse getComments(UUID reviewId);
+    ListCommentResponse getCommentsByReviewId(UUID reviewId);
 }

@@ -8,6 +8,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CommentRepository;
 import hcmute.kltn.vtv.service.guest.ICommentService;
 import hcmute.kltn.vtv.service.user.IReviewCustomerService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,49 +20,34 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements ICommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
+    private final CommentRepository commentRepository;
     private final IReviewCustomerService reviewCustomerService;
 
     @Override
     public List<CommentDTO> getListCommentDTO(UUID reviewId) {
         reviewCustomerService.checkReview(reviewId);
 
-        List<Comment> comments = commentRepository.findAllByReviewReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new BadRequestException("Không có bình luận nào cho đánh giá này."));
-
-        // System.out.println("CommentDTO.convertEntitiesToDTOs(comments) = " +
-        // CommentDTO.convertEntitiesToDTOs(comments));
+        List<Comment> comments = getCommentsByReviewIdAndStatus(reviewId, Status.ACTIVE);
 
         return CommentDTO.convertEntitiesToDTOs(comments);
     }
 
     @Override
-    public ListCommentResponse getComments(UUID reviewId) {
+    public ListCommentResponse getCommentsByReviewId(UUID reviewId) {
         reviewCustomerService.checkReview(reviewId);
 
-        List<Comment> comments = commentRepository.findAllByReviewReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new BadRequestException("Không có bình luận nào cho đánh giá này."));
+        List<Comment> comments = getCommentsByReviewIdAndStatus(reviewId, Status.ACTIVE);
 
-        return listCommentResponse(comments, reviewId);
+        return ListCommentResponse.listCommentResponse(comments, reviewId,
+                "Lấy danh sách bình luận của đánh giá theo mã đánh giá thành công.", "OK");
     }
 
-    private ListCommentResponse listCommentResponse(List<Comment> comments, UUID reviewId) {
-        ListCommentResponse response = new ListCommentResponse();
-        response.setCommentDTOs(CommentDTO.convertEntitiesToDTOs(comments));
 
-        System.out
-                .println("CommentDTO.convertEntitiesToDTOs(comments) = " + CommentDTO.convertEntitiesToDTOs(comments));
-
-        response.setCount(comments.size());
-        System.out.println("comments.size() = " + comments.size());
-        response.setReviewId(reviewId);
-        System.out.println("reviewId = " + reviewId);
-        response.setMessage("Lấy danh sách bình luận của đánh giá thành công.");
-        response.setCode(200);
-        response.setStatus("OK");
-        return response;
+    private List<Comment> getCommentsByReviewIdAndStatus(UUID reviewId, Status status) {
+        return commentRepository.findAllByReviewReviewIdAndStatus(reviewId, status)
+                .orElseThrow(() -> new NotFoundException("Không có bình luận nào cho đánh giá này."));
     }
+
+
 
 }
