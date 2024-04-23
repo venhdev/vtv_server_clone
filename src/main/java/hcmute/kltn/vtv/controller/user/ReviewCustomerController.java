@@ -21,8 +21,7 @@ public class ReviewCustomerController {
     @Autowired
     private IReviewCustomerService reviewService;
 
-    @Autowired
-    private ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
     @PostMapping("/add")
     public ResponseEntity<ReviewResponse> addNewReview(@ModelAttribute ReviewRequest reviewRequest,
@@ -41,8 +40,8 @@ public class ReviewCustomerController {
     }
 
 
-    @PatchMapping("/delete/{reviewId}")
-    public ResponseEntity<ReviewResponse> deleteReview(@PathVariable UUID reviewId,
+    @DeleteMapping("/delete/{reviewId}")
+    public ResponseEntity<ReviewResponse> deleteReviewByReviewId(@PathVariable UUID reviewId,
                                                        HttpServletRequest request) {
 
         String username = (String) request.getAttribute("username");

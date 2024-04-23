@@ -20,27 +20,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements IReviewService {
 
-    @Autowired
     private final ReviewRepository reviewRepository;
-    @Autowired
     private final IReviewCustomerService reviewCustomerService;
 
     @Override
     public ReviewResponse getReviewDetailById(UUID reviewId) {
         Review review = reviewCustomerService.checkReview(reviewId);
-        // List<CommentDTO> commentDTOs = commentService.getListCommentDTO(reviewId);
-        //
-        // ReviewDTO reviewDTO = ReviewDTO.convertEntityToDTO(review);
-        // reviewDTO.setCommentDTOs(commentDTOs);
 
-        ReviewResponse reviewResponse = new ReviewResponse();
-        reviewResponse.setReviewDTO(ReviewDTO.convertEntityToDTO(review));
-        reviewResponse.setProductId(review.getProduct().getProductId());
-        reviewResponse.setMessage("Lấy thông tin đánh giá thành công.");
-        reviewResponse.setStatus("OK");
-        reviewResponse.setCode(200);
-
-        return reviewResponse;
+        return ReviewResponse.reviewResponse(review, "Lấy thông tin đánh giá thành công!", "OK");
     }
 
     @Override
@@ -49,7 +36,7 @@ public class ReviewServiceImpl implements IReviewService {
         List<Review> reviews = reviewRepository.findAllByProductProductIdAndStatus(productId, Status.ACTIVE)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
-        return listReviewResponse(reviews, "Lấy danh sách đánh giá thành công!", productId);
+        return ListReviewResponse.listReviewResponse(reviews, "Lấy danh sách đánh giá thành công!", productId, averageRating(reviews));
     }
 
     @Override
@@ -59,7 +46,7 @@ public class ReviewServiceImpl implements IReviewService {
                 .findAllByProductProductIdAndRatingAndStatus(productId, rating, Status.ACTIVE)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
-        return listReviewResponse(reviews, "Lấy danh sách đánh giá theo xếp hạng thành công!", productId);
+        return ListReviewResponse.listReviewResponse(reviews, "Lấy danh sách đánh giá theo xếp hạng thành công!", productId, averageRating(reviews));
     }
 
     @Override
@@ -68,7 +55,7 @@ public class ReviewServiceImpl implements IReviewService {
         List<Review> reviews = reviewRepository.findAllByProductProductIdAndImageNotNull(productId)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy đánh giá nào!"));
 
-        return listReviewResponse(reviews, "Lấy danh sách đánh giá có hình ảnh thành công!", productId);
+        return ListReviewResponse.listReviewResponse(reviews, "Lấy danh sách đánh giá có hình ảnh thành công!", productId, averageRating(reviews));
     }
 
     @Override
@@ -93,17 +80,6 @@ public class ReviewServiceImpl implements IReviewService {
         return !reviews.isEmpty() ? sum / reviews.size() : 0;
     }
 
-    private ListReviewResponse listReviewResponse(List<Review> reviews, String message, Long productId) {
-        ListReviewResponse listReviewResponse = new ListReviewResponse();
-        listReviewResponse.setReviewDTOs(ReviewDTO.convertEntitiesToDTOs(reviews));
-        listReviewResponse.setCount(reviews.size());
-        listReviewResponse.setProductId(productId);
-        listReviewResponse.setMessage(message);
-        listReviewResponse.setStatus("OK");
-        listReviewResponse.setCode(200);
-        listReviewResponse.setAverageRating(averageRating(reviews));
 
-        return listReviewResponse;
-    }
 
 }

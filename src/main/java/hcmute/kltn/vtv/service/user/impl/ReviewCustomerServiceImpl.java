@@ -105,8 +105,8 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
 
     @Override
     public Review checkReview(UUID reviewId) {
-        Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại!"));
+        Review review = reviewRepository.findByReviewId(reviewId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đánh giá theo mã đánh giá!"));
         if (review.getStatus() == Status.DELETED) {
             throw new BadRequestException("Đánh giá này đã bị xóa!");
         }
@@ -147,7 +147,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
 
 
     private void checkExistReview(UUID reviewId) {
-        if (reviewRepository.existsByReviewId(reviewId)) {
+        if (!reviewRepository.existsByReviewId(reviewId)) {
             throw new BadRequestException("Đánh giá không tồn tại!");
         }
     }

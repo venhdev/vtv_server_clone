@@ -27,6 +27,9 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     Optional<Review> findByOrderItemOrderItemId(UUID orderItemId);
 
+
+    Optional<Review> findByReviewId(UUID reviewId);
+
     Optional<Review> findByReviewIdAndStatus(UUID reviewId, Status status);
 
     Optional<List<Review>> findAllByProductProductIdAndStatus(Long productId, Status status);
