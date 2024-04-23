@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +27,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfig {
 
 
+
     private static final String[] NO_AUTH = {
             "/api/auth/**",
             "/api/product/**",
@@ -38,7 +38,6 @@ public class SecurityConfig {
             "/api/comment/**",
             "/api/chat/**",
             "/api/location/**",
-            "/api/vendor/product/add2",
 
             "/api/payment/**",
             "/api/category/**",
@@ -76,12 +75,16 @@ public class SecurityConfig {
             "/swagger-ui.html"
     };
 
+
+
+
+
+
     private static final String[] CUSTOMER_ROLE = {
             "/api/customer/**",
             "/api/favorite-product/**",
             "/api/vendor/register/**",
             "/api/followed-shop/**",
-            "/api/shop-detail/**",
             "/api/cart/**",
             "/api/order/**",
 

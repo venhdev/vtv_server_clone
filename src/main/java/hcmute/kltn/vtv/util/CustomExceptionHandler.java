@@ -139,14 +139,23 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
-
         String errorMessage = "Phiên đăng nhập đã hết hạn.";
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo",
-                errorMessage);
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo", errorMessage);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
+
+
+//    @ExceptionHandler(ExpiredJwtException.class)
+//    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
+//        ErrorResponse errorResponse = new ErrorResponse();
+//        errorResponse.setStatus(HttpStatus.UNAUTHORIZED);
+//        errorResponse.setMessage("JWT token has expired");
+//        errorResponse.setCode(HttpStatus.UNAUTHORIZED.value());
+//
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+//    }
 
 
 
