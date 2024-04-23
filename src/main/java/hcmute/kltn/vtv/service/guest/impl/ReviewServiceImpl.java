@@ -3,14 +3,13 @@ package hcmute.kltn.vtv.service.guest.impl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.guest.ListReviewResponse;
 import hcmute.kltn.vtv.model.data.user.response.ReviewResponse;
-import hcmute.kltn.vtv.model.dto.user.ReviewDTO;
 import hcmute.kltn.vtv.model.entity.user.Review;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.ReviewRepository;
 import hcmute.kltn.vtv.service.guest.IReviewService;
 import hcmute.kltn.vtv.service.user.IReviewCustomerService;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +70,27 @@ public class ReviewServiceImpl implements IReviewService {
 
         return averageRating(reviews);
     }
+
+
+    @Override
+    public float averageRatingByShopId(Long shopId) {
+        List<Review> reviews = getReviewsByShopId(shopId);
+
+        return averageRatingShop(reviews);
+    }
+
+
+
+    private List<Review> getReviewsByShopId(Long shopId) {
+        return reviewRepository.findAllByProductShopShopId(shopId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đánh giá nào!"));
+    }
+
+    private float averageRatingShop(List<Review> reviews) {
+        //return after ',' the first 2 digits
+        return (float) (Math.round((float) averageRating(reviews) * 100.0) / 100.0);
+    }
+
 
     private long averageRating(List<Review> reviews) {
         long sum = 0;

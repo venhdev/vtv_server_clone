@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 
 public interface ICommentCustomerService {
-    CommentResponse addNewComment(CommentRequest request);
+    CommentResponse addNewCommentByCustomer(CommentRequest request);
 
     @Transactional
     CommentResponse deleteComment(UUID commentId, String username);

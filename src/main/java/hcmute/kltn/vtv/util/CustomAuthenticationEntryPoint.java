@@ -30,6 +30,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 
     private ErrorResponse buildErrorResponse() {
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo", "Bạn chưa đăng nhập!");
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED, 401, "Thông báo", "Bạn chưa đăng nhập");
     }
+
 }

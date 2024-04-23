@@ -52,6 +52,12 @@ public class CategoryShopGuestServiceImpl implements ICategoryShopGuestService {
     }
 
 
+    @Override
+    public int countCategoryShopByShopId(Long shopId) {
+        return categoryShopRepository.countCategoryShopByShopShopId(shopId);
+    }
+
+
 
 
 

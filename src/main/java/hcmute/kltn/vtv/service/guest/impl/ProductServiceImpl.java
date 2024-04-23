@@ -12,7 +12,6 @@ import hcmute.kltn.vtv.repository.vtv.CategoryRepository;
 import hcmute.kltn.vtv.service.guest.IProductService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -139,6 +138,12 @@ public class ProductServiceImpl implements IProductService {
                 : "Lấy danh sách sản phẩm bán chạy thành công!";
 
         return ListProductResponse.listProductResponse(products, message, "OK");
+    }
+
+
+    @Override
+    public int countProductByShopId(Long shopId) {
+        return productRepository.countByShopShopIdAndStatus(shopId, Status.ACTIVE);
     }
 
 

@@ -38,6 +38,8 @@ public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
     Optional<List<Review>> findAllByProductProductIdAndRatingAndStatus(Long productId, int rating, Status status);
 
+    Optional<List<Review>> findAllByProductShopShopId(Long shopId);
+
     int countByProductProductId(Long productId);
 
 }

@@ -17,4 +17,6 @@ public interface IReviewService {
     int countReviewByProductId(Long productId);
 
     float countAverageRatingByProductId(Long productId);
+
+    float averageRatingByShopId(Long shopId);
 }

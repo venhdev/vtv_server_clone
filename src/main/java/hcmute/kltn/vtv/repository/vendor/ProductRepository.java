@@ -41,7 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     int countOrdersByProductId(Long productId, String status);
 
-
+    int countByShopShopIdAndStatus(Long shopId, Status status);
 
 
 

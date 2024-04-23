@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FollowedGuestServiceImpl implements IFollowedGuestService {
 
-    @Autowired
     private final FollowedShopRepository followedShopRepository;
 
     @Override
-    public int countFollowedShop(Long shopId) {
+    public int countFollowedByShop(Long shopId) {
         return followedShopRepository.countByShopShopId(shopId);
     }
 

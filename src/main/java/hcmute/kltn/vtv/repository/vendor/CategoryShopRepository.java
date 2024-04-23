@@ -23,7 +23,7 @@ public interface CategoryShopRepository extends JpaRepository<CategoryShop, Long
 
     boolean existsByProductsInAndCategoryShopId(Collection<List<Product>> products, Long categoryShopId);
 
-
+    int countCategoryShopByShopShopId(Long shopId);
 
 
     boolean existsByNameAndCategoryShopIdNot(String name, Long shopId);

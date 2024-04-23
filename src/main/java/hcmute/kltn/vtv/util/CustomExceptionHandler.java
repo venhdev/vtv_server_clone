@@ -135,6 +135,8 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(errorResponse);
     }
 
+
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
 
@@ -144,6 +146,10 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
+
+
+
+
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
@@ -225,6 +231,9 @@ public class CustomExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
+
+
 
 
 

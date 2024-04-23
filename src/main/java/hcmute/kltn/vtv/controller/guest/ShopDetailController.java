@@ -4,7 +4,6 @@ import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.service.guest.IFollowedGuestService;
 import hcmute.kltn.vtv.service.guest.IShopGuestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,9 +30,7 @@ public class ShopDetailController {
 
     @GetMapping("/count-followed/{shopId}")
     public ResponseEntity<Integer> countFollowedShop(@PathVariable Long shopId) {
-        if (shopId == null) {
-            throw new BadRequestException("Mã cửa hàng không được để trống!");
-        }
-        return ResponseEntity.ok(followedGuestService.countFollowedShop(shopId));
+
+        return ResponseEntity.ok(followedGuestService.countFollowedByShop(shopId));
     }
 }

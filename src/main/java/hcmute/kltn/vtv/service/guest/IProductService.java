@@ -25,5 +25,7 @@ public interface IProductService {
 //    ListProductResponse getListProductByPriceRange(Long shopId, Long minPrice, Long maxPrice);
 
 
+    int countProductByShopId(Long shopId);
+
     Product getProductById(Long productId);
 }

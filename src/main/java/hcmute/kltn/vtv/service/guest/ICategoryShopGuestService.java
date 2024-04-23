@@ -12,4 +12,6 @@ public interface ICategoryShopGuestService {
     void checkExistsById(Long categoryShopId);
 
     CategoryShop getCategoryShopByCategoryShopId(Long categoryShopId);
+
+    int countCategoryShopByShopId(Long shopId);
 }

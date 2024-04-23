@@ -9,5 +9,5 @@ public interface IShopGuestService {
 
     void checkExistsById(Long shopId);
 
-    ShopDetailResponse getShopDetailByShopId(Long shopId, String username);
+    ShopDetailResponse getShopDetailByShopId(Long shopId);
 }
