@@ -18,18 +18,18 @@ public class CommentCustomerController {
     private final ICommentCustomerService commentCustomerService;
 
     @PostMapping("/add")
-    public ResponseEntity<CommentResponse> addNewComment(@RequestBody CommentRequest request,
-            HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommentResponse> addNewCommentByCustomer(@RequestBody CommentRequest request,
+                                                                   HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         request.setUsername(username);
         request.setShop(false);
         request.validate();
-        return ResponseEntity.ok(commentCustomerService.addNewComment(request));
+        return ResponseEntity.ok(commentCustomerService.addNewCommentByCustomer(request));
     }
 
     @PatchMapping("/delete/{commentId}")
     public ResponseEntity<CommentResponse> deleteComment(@PathVariable UUID commentId,
-            HttpServletRequest httpServletRequest) {
+                                                         HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         return ResponseEntity.ok(commentCustomerService.deleteComment(commentId, username));
     }

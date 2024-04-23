@@ -19,12 +19,12 @@ public class CommentShopController {
     private final ICommentCustomerService commentCustomerService;
 
     @PostMapping("/add")
-    public ResponseEntity<CommentResponse> addNewComment(@RequestBody CommentRequest request,
-            HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CommentResponse> addNewCommentByShop(@RequestBody CommentRequest request,
+                                                               HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         request.setUsername(username);
         request.setShop(true);
         request.validate();
-        return ResponseEntity.ok(commentCustomerService.addNewComment(request));
+        return ResponseEntity.ok(commentCustomerService.addNewCommentByCustomer(request));
     }
 }

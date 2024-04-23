@@ -35,7 +35,7 @@ public class CommentCustomerServiceImpl implements ICommentCustomerService {
 
     @Override
     @Transactional
-    public CommentResponse addNewComment(CommentRequest request) {
+    public CommentResponse addNewCommentByCustomer(CommentRequest request) {
         Comment comment = createCommentByCommentRequest(request);
         try {
             commentRepository.save(comment);
