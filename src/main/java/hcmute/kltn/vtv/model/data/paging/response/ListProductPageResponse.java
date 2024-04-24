@@ -37,4 +37,16 @@ public class ListProductPageResponse extends ResponseAbstract {
         response.setCode(200);
         return response;
     }
+
+
+    public static ListProductPageResponse listProductPageResponse(String message, int page, int size) {
+        ListProductPageResponse response = new ListProductPageResponse();
+        response.setCount(0);
+        response.setSize(size);
+        response.setPage(page);
+        response.setMessage(message);
+        response.setStatus("OK");
+        response.setCode(200);
+        return response;
+    }
 }

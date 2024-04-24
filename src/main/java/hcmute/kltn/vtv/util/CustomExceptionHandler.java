@@ -183,6 +183,8 @@ public class CustomExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         String errorMessage = "Dữ liệu không hợp lệ!";
+
+//        String errorMessage = "Dữ liệu không hợp lệ! " + ex.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, 400, "Thông báo", errorMessage);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

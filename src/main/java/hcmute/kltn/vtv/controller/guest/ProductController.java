@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
     private final IProductService productService;
-    @Autowired
     private final IFavoriteProductGuestService favoriteProductGuestService;
-    @Autowired
     private final IPageService pageService;
 
 

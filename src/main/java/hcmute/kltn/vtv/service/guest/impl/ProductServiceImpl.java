@@ -73,12 +73,18 @@ public class ProductServiceImpl implements IProductService {
         if (checkExistCategoryHasChild(categoryId)) {
             List<Product> products = getProductsByCategoryAndDescendants(categoryId);
 
-            // Tính chỉ số bắt đầu của danh sách trong List
-            int startIndex = page * size;
+            // Calculate the start index of the sublist
+            int startIndex = (page-1) * size;
+            // If startIndex is greater than products.size(), there are no more products to display
+            if (startIndex >= products.size()) {
+                return  ListProductPageResponse.listProductPageResponse("Không còn sản phẩm nào để hiển thị!", page, size);
+            }
+
+            // Calculate the end index of the sublist
             int endIndex = Math.min(startIndex + size, products.size());
-            // Tạo một danh sách sản phẩm mới dựa trên phân trang
+            // Create a new sublist based on pagination
             List<Product> pageProducts = products.subList(startIndex, endIndex);
-            // Tạo một trang mới từ danh sách sản phẩm phân trang và tổng số sản phẩm
+            // Create a new page from the sublist of products and the total number of products
             Page<Product> productPage = new PageImpl<>(pageProducts, PageRequest.of(page - 1, size), products.size());
 
             return ListProductPageResponse.listProductPageResponse(productPage,
@@ -87,6 +93,27 @@ public class ProductServiceImpl implements IProductService {
             return getProductsByCategoryId(categoryId, page, size);
         }
     }
+
+
+//    @Override
+//    public ListProductPageResponse getListProductPageByCategoryId(Long categoryId, int page, int size) {
+//        if (checkExistCategoryHasChild(categoryId)) {
+//            List<Product> products = getProductsByCategoryAndDescendants(categoryId);
+//
+//            // Tính chỉ số bắt đầu của danh sách trong List
+//            int startIndex = page * size;
+//            int endIndex = Math.min(startIndex + size, products.size());
+//            // Tạo một danh sách sản phẩm mới dựa trên phân trang
+//            List<Product> pageProducts = products.subList(startIndex, endIndex);
+//            // Tạo một trang mới từ danh sách sản phẩm phân trang và tổng số sản phẩm
+//            Page<Product> productPage = new PageImpl<>(pageProducts, PageRequest.of(page - 1, size), products.size());
+//
+//            return ListProductPageResponse.listProductPageResponse(productPage,
+//                    "Lấy danh sách sản phẩm thuộc danh mục con theo danh mục cha thành công!");
+//        } else {
+//            return getProductsByCategoryId(categoryId, page, size);
+//        }
+//    }
 
     private ListProductPageResponse getProductsByCategoryId(Long categoryId, int page, int size) {
         Page<Product> productPage = productRepository
