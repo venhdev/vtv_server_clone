@@ -138,10 +138,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value =
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY RAND()",
-            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
+            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> suggestBySearchHistoryAndRandomly(
             @Param("searchText") String searchText,
@@ -196,10 +196,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value =
             "SELECT * " +
                     "FROM product p " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY p.create_at DESC",
-            countQuery = "SELECT COUNT(*) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
+            countQuery = "SELECT COUNT(*) FROM product p WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortByNewest(
             @Param("searchText") String searchText,
@@ -210,10 +210,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value =
             "SELECT * " +
                     "FROM product p " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY p.sold DESC",
-            countQuery = "SELECT COUNT(*) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+            countQuery = "SELECT COUNT(*) FROM product p WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortByBestSelling(
@@ -226,14 +226,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY pv.price ASC",
             countQuery = "SELECT COUNT(DISTINCT p.product_id) " +
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status ",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortByPriceAsc(
@@ -247,14 +247,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY CASE WHEN :searchText IS NULL THEN pv.price END DESC",
             countQuery = "SELECT COUNT(DISTINCT p.product_id) " +
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status ",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortByPriceDesc(
@@ -266,10 +266,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value =
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "ORDER BY RAND()",
-            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
+            countQuery = "SELECT COUNT(DISTINCT p.product_id) FROM product p WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) AND p.status = :status",
             nativeQuery = true)
     Optional<Page<Product>> searchFullTextByNameAndStatusAndSortRandomly(
             @Param("searchText") String searchText,
@@ -284,7 +284,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN product_variant pv ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice " +
@@ -293,7 +293,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice",
@@ -309,7 +309,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN product_variant pv ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice " +
@@ -318,7 +318,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice",
@@ -335,7 +335,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN product_variant pv ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice " +
@@ -344,7 +344,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice",
@@ -361,7 +361,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN product_variant pv ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice " +
@@ -370,7 +370,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice",
@@ -387,7 +387,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "SELECT DISTINCT p.* " +
                     "FROM product p " +
                     "JOIN product_variant pv ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice " +
@@ -396,7 +396,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
                     "AND pv.price <= :maxPrice",
@@ -419,7 +419,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -431,7 +431,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -453,7 +453,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -465,7 +465,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -487,7 +487,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -499,7 +499,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -521,7 +521,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -533,7 +533,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -555,7 +555,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -567,7 +567,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "AND pv.price >= :minPrice " +
@@ -588,7 +588,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN shop s " +
                     "ON p.shop_id = s.shop_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "ORDER BY p.create_at DESC",
@@ -596,7 +596,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "FROM product p " +
                     "JOIN shop s " +
                     "ON p.shop_id = s.shop_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status",
             nativeQuery = true)
@@ -612,7 +612,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                    "FROM product p " +
                     "JOIN shop s " +
                     "ON p.shop_id = s.shop_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "ORDER BY p.sold DESC",
@@ -620,7 +620,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                    "FROM product p " +
                     "JOIN shop s " +
                     "ON p.shop_id = s.shop_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status",
             nativeQuery = true)
@@ -637,7 +637,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "ORDER BY pv.price ASC",
@@ -647,7 +647,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status ",
             nativeQuery = true)
@@ -665,7 +665,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "ORDER BY pv.price DESC",
@@ -675,7 +675,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                     "ON p.shop_id = s.shop_id " +
                     "JOIN product_variant pv " +
                     "ON p.product_id = pv.product_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status ",
             nativeQuery = true)
@@ -691,7 +691,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                    "FROM product p " +
                     "JOIN shop s " +
                     "ON p.shop_id = s.shop_id " +
-                    "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                    "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                     "AND s.shop_id = :shopId " +
                     "AND p.status = :status " +
                     "ORDER BY RAND()",
@@ -700,7 +700,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                             "FROM product p " +
                             "JOIN shop s " +
                             "ON p.shop_id = s.shop_id " +
-                            "WHERE MATCH(p.name, p.description) AGAINST (:searchText IN BOOLEAN MODE) " +
+                            "WHERE MATCH(p.name) AGAINST (:searchText IN BOOLEAN MODE) " +
                             "AND s.shop_id = :shopId " +
                             "AND p.status = :status",
             nativeQuery = true)
