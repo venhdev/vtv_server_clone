@@ -15,22 +15,19 @@ import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements ICartService {
 
-    @Autowired
     private final CartRepository cartRepository;
-    @Autowired
     private final ICustomerService customerService;
-    @Autowired
     private final IProductVariantService productVariantService;
 
 
@@ -252,9 +249,27 @@ public class CartServiceImpl implements ICartService {
     }
 
 
+    @Override
+    public void checkExistsCartIdsInUsername(List<UUID> cartIds, String username) {
+        if (!cartRepository.existsByCartIdInAndCustomerUsernameAndStatus(cartIds, username, CartStatus.CART)) {
+            throw new NotFoundException("Không tìm thấy giỏ hàng trong tài khoản của bạn.");
+        }
+    }
+
+
+    @Override
+    public HashMap<Long, List<Cart>> groupCartByShopId(List<Cart> carts) {
+        return carts.stream()
+                .collect(Collectors.groupingBy(cart -> cart.getProductVariant().getProduct().getShop().getShopId(),
+                        HashMap::new, Collectors.toList()));
+    }
+
+
+
+
     private void checkExistsCartIdAndUsername(UUID cartId, String username) {
         checkCartIdExists(cartId);
-        if (!cartRepository.existsByCartIdAndCustomerUsername(cartId, username)) {
+        if (!cartRepository.existsByCartIdAndCustomerUsernameAndStatus(cartId, username, CartStatus.CART)) {
             throw new NotFoundException("Bạn không có quyền truy cập giỏ hàng này.");
         }
     }

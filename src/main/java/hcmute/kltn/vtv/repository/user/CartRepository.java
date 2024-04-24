@@ -15,6 +15,10 @@ public interface CartRepository extends JpaRepository<Cart, UUID> {
 
     boolean existsByCartIdAndCustomerUsername(UUID cartId, String username);
 
+    boolean existsByCartIdAndCustomerUsernameAndStatus(UUID cartId, String username, CartStatus status);
+
+    boolean existsByCartIdInAndCustomerUsernameAndStatus(List<UUID> cartIds, String username, CartStatus status);
+
     boolean existsByProductVariantProductVariantIdAndCustomerUsernameAndStatus(Long productVariantId, String username,
                                                                                CartStatus status);
 
@@ -32,4 +36,6 @@ public interface CartRepository extends JpaRepository<Cart, UUID> {
 
     Optional<List<Cart>> findAllByCustomerUsernameAndProductVariantProductShopShopIdAndStatus(String username,
             Long shopId, CartStatus status);
+
+
 }

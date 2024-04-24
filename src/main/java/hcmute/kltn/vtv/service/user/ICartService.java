@@ -9,6 +9,7 @@ import hcmute.kltn.vtv.model.entity.vendor.ProductVariant;
 import hcmute.kltn.vtv.model.extra.CartStatus;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -51,4 +52,8 @@ public interface ICartService {
 
     @Transactional
     Cart updateOrderCart(UUID cartId, String username, CartStatus status);
+
+    void checkExistsCartIdsInUsername(List<UUID> cartIds, String username);
+
+    HashMap<Long, List<Cart>> groupCartByShopId(List<Cart> carts);
 }

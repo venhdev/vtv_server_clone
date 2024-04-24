@@ -3,9 +3,11 @@ package hcmute.kltn.vtv.controller.user;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithProductVariant;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
+import hcmute.kltn.vtv.model.data.user.response.MultipleOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderItemResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.service.user.IMultipleOrderService;
 import hcmute.kltn.vtv.service.user.IOrderService;
 import hcmute.kltn.vtv.service.user.impl.OrderItemServiceImpl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
@@ -25,7 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderController {
 
-    @Autowired
+    private final IMultipleOrderService multipleOrderService;
     private final IOrderService orderService;
 
 
@@ -48,6 +50,16 @@ public class OrderController {
 
         String username = (String) request.getAttribute("username");
         return ResponseEntity.ok(orderService.createOrderWithCart(orderRequestWithCart, username));
+    }
+
+
+    @PostMapping("/add/with-cart")
+    public ResponseEntity<OrderResponse> addNewOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
+                                                             HttpServletRequest request) {
+        OrderRequestWithCart.validate(orderRequestWithCart);
+        String username = (String) request.getAttribute("username");
+
+        return ResponseEntity.ok(orderService.addNewOrderWithCart(orderRequestWithCart, username));
     }
 
 
@@ -82,14 +94,7 @@ public class OrderController {
     }
 
 
-    @PostMapping("/add/with-cart")
-    public ResponseEntity<OrderResponse> addNewOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
-                                                             HttpServletRequest request) {
-        OrderRequestWithCart.validate(orderRequestWithCart);
-        String username = (String) request.getAttribute("username");
 
-        return ResponseEntity.ok(orderService.addNewOrderWithCart(orderRequestWithCart, username));
-    }
 
     @PostMapping("/add/with-product-variant")
     public ResponseEntity<OrderResponse> addNewOrderWithProductVariant(@RequestBody OrderRequestWithProductVariant orderRequestWithProductVariant,
@@ -99,6 +104,19 @@ public class OrderController {
 
         return ResponseEntity.ok(orderService.addNewOrderWithProductVariant(orderRequestWithProductVariant, username));
     }
+
+
+    @PostMapping("/create/multiple/by-cartIds")
+    public ResponseEntity<MultipleOrderResponse> createMultipleOrderByCartIds(@RequestBody List<UUID> cartIds,
+                                                                              HttpServletRequest request) {
+        if (cartIds.isEmpty()) {
+            throw new NotFoundException("Danh sách mã giỏ hàng không được để trống!");
+        }
+
+        String username = (String) request.getAttribute("username");
+        return ResponseEntity.ok(multipleOrderService.createMultipleOrderByCartIds(cartIds, username));
+    }
+
 
 
     @GetMapping("/list")
@@ -139,10 +157,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.completeOrderById(username, orderId));
     }
 
-//    @GetMapping("/order-item/detail/{orderItemId}")
-//    public ResponseEntity<OrderItemResponse> getOrderItemByOrderItemId(@PathVariable UUID orderItemId,
-//                                                                       HttpServletRequest requestHttp) {
-//        return ResponseEntity.ok(orderItemService.getOrderItemByOrderItemId(orderItemId));
-//    }
+
+
+
+
+
 
 }
