@@ -486,7 +486,7 @@ public class OrderServiceImpl implements IOrderService {
         Long loyaltyPoint = order.getLoyaltyPointHistory() != null ? order.getLoyaltyPointHistory().getPoint() : 0;
         order.setShippingMethod(shippingMethod);
         order.setShippingFee(shippingFee);
-        order.setPaymentTotal(order.getTotalPrice() + shippingFee + order.getDiscountShop() + order.getDiscountSystem() + loyaltyPoint);
+        order.setPaymentTotal(order.getTotalPrice() + shippingFee + order.getDiscountShop() + order.getDiscountSystem() - loyaltyPoint);
         if (order.getPaymentTotal() < 0) {
             order.setPaymentTotal(0L);
         }
@@ -502,7 +502,7 @@ public class OrderServiceImpl implements IOrderService {
         loyaltyPointHistory.setLoyaltyPoint(loyaltyPoint);
 
         order.setLoyaltyPointHistory(loyaltyPointHistory);
-        order.setPaymentTotal(order.getTotalPrice() - loyaltyPointHistory.getPoint());
+//        order.setPaymentTotal(order.getTotalPrice() - loyaltyPointHistory.getPoint());
     }
 
 

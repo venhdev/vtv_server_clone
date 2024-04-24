@@ -26,6 +26,7 @@ public class ShopDetailController {
         return ResponseEntity.ok(shopDetailService.getShopDetailByShopId(shopId));
     }
 
+
     @GetMapping("/count-followed/{shopId}")
     public ResponseEntity<Integer> countFollowedShop(@PathVariable Long shopId) {
 

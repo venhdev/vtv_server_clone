@@ -24,7 +24,6 @@ public class ShopGuestServiceImpl implements IShopGuestService {
 
     @Override
     public ShopDetailResponse getShopDetailByShopId(Long shopId) {
-
         Shop shop = getShopById(shopId);
         int countFollowed = followedGuestService.countFollowedByShop(shopId);
         int countProduct = productService.countProductByShopId(shopId);
@@ -42,7 +41,6 @@ public class ShopGuestServiceImpl implements IShopGuestService {
 
         Shop shop =  shopRepository.findById(shopId)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng theo mã cửa hàng!"));
-
         if (shop.getStatus().equals(Status.DELETED)) {
             throw new NotFoundException("Cửa hàng đã bị xóa!");
         }
