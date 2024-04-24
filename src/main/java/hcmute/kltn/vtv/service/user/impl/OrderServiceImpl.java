@@ -480,30 +480,31 @@ public class OrderServiceImpl implements IOrderService {
         order.setVoucherOrders(voucherOrders);
     }
 
-    private void updateShippingInCreateOrder(Order order, String shippingMethod) {
-        Long shippingFee = shippingFeeByShippingMethodAndCustomerWardCodeAndShopWardCode(shippingMethod,
-                order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode());
-        Long loyaltyPoint = order.getLoyaltyPointHistory() != null ? order.getLoyaltyPointHistory().getPoint() : 0;
-        order.setShippingMethod(shippingMethod);
-        order.setShippingFee(shippingFee);
-        order.setPaymentTotal(order.getTotalPrice() + shippingFee + order.getDiscountShop() + order.getDiscountSystem() - loyaltyPoint);
-        if (order.getPaymentTotal() < 0) {
-            order.setPaymentTotal(0L);
-        }
-    }
-
 
     private void updateLoyaltyPointHistoryInCreateOrder(Order order) {
         LoyaltyPoint loyaltyPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername());
 
         Long point = order.getTotalPrice() <= loyaltyPoint.getTotalPoint() ? order.getTotalPrice() : loyaltyPoint.getTotalPoint();
         LoyaltyPointHistory loyaltyPointHistory = new LoyaltyPointHistory();
-        loyaltyPointHistory.setPoint(point);
+        loyaltyPointHistory.setPoint(-point);
         loyaltyPointHistory.setLoyaltyPoint(loyaltyPoint);
 
         order.setLoyaltyPointHistory(loyaltyPointHistory);
-//        order.setPaymentTotal(order.getTotalPrice() - loyaltyPointHistory.getPoint());
     }
+
+
+    private void updateShippingInCreateOrder(Order order, String shippingMethod) {
+        Long shippingFee = shippingFeeByShippingMethodAndCustomerWardCodeAndShopWardCode(shippingMethod,
+                order.getAddress().getWard().getWardCode(), order.getShop().getWard().getWardCode());
+        Long loyaltyPoint = order.getLoyaltyPointHistory() != null ? order.getLoyaltyPointHistory().getPoint() : 0;
+        order.setShippingMethod(shippingMethod);
+        order.setShippingFee(shippingFee);
+        order.setPaymentTotal(order.getTotalPrice() + shippingFee + order.getDiscountShop() + order.getDiscountSystem() + loyaltyPoint);
+        if (order.getPaymentTotal() < 0) {
+            order.setPaymentTotal(0L);
+        }
+    }
+
 
 
     private void addOrderItemsToOrder(Order order, List<UUID> cartIds, String username) {
