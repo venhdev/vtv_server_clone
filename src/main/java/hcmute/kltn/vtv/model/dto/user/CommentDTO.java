@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import lombok.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -40,17 +41,25 @@ public class CommentDTO {
         return commentDTO;
     }
 
-    public static List<CommentDTO> convertEntitiesToDTOs(List<Comment> comments) {
-        List<CommentDTO> commentDTOs = new ArrayList<>();
-        // comments.forEach(comment -> commentDTOs.add(convertEntityToDTO(comment)));
-        for (Comment comment : comments) {
-            if (comment.getStatus() == Status.ACTIVE) {
-                commentDTOs.add(convertEntityToDTO(comment));
-            }
-        }
-        commentDTOs.sort(Comparator.comparing(CommentDTO::getCreateDate));
+//    public static List<CommentDTO> convertEntitiesToDTOs(List<Comment> comments) {
+//        List<CommentDTO> commentDTOs = new ArrayList<>();
+//        for (Comment comment : comments) {
+//            if (comment.getStatus() == Status.ACTIVE) {
+//                commentDTOs.add(convertEntityToDTO(comment));
+//            }
+//        }
+//        commentDTOs.sort(Comparator.comparing(CommentDTO::getCreateDate));
+//
+//        return commentDTOs;
+//    }
 
-        return commentDTOs;
+
+    public static List<CommentDTO> convertEntitiesToDTOs(List<Comment> comments) {
+        return comments.stream()
+                .filter(comment -> comment.getStatus() == Status.ACTIVE)
+                .map(CommentDTO::convertEntityToDTO)
+                .sorted(Comparator.comparing(CommentDTO::getCreateDate))
+                .collect(Collectors.toList());
     }
 
 }
