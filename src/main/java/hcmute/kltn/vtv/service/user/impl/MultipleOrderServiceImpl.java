@@ -1,5 +1,7 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.model.data.user.request.MultipleOrderRequestWithCart;
+import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.response.MultipleOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.entity.user.Cart;
@@ -43,7 +45,6 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
     private final IWalletService walletService;
 
 
-
     @Override
     public MultipleOrderResponse createMultipleOrderByCartIds(List<UUID> cartIds, String username) {
         cartService.checkDuplicateCartIds(cartIds);
@@ -51,14 +52,50 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
         List<Cart> carts = cartService.getListCartByUsernameAndIds(username, cartIds);
         HashMap<Long, List<Cart>> mapShopIdToCart = cartService.groupCartByShopId(carts);
-        List<OrderResponse> mapCreateOrderResponse = createOrdersByMapCarts(mapShopIdToCart, username);
+        List<OrderResponse> mapCreateOrderResponse = createOrderResponsesByMapCarts(mapShopIdToCart, username);
 
-        return  MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Tạo đơn nhiều đơn hàng thành công!", "OK");
+        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Tạo đơn nhiều đơn hàng thành công!", "OK");
     }
 
 
+    @Override
+    public MultipleOrderResponse createMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
 
-    public List<OrderResponse> createOrdersByMapCarts(Map<Long, List<Cart>> mapShopIdToCart, String username) {
+        List<OrderResponse> mapCreateOrderResponse = createMultipleOrderResponsesByRequest(request, username);
+
+        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Cập nhật tạo nhiều đơn hàng thành công!", "OK");
+    }
+
+
+    @Override
+    public MultipleOrderResponse addNewMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
+        List<OrderResponse> mapCreateOrderResponse = addNewMultipleOrderResponsesByRequest(request, username);
+
+        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Đặt hàng nhiều đơn hàng thành công!", "Success");
+    }
+
+
+    private List<OrderResponse> addNewMultipleOrderResponsesByRequest(MultipleOrderRequestWithCart request, String username) {
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (OrderRequestWithCart orderRequestWithCart : request.getOrderRequestWithCarts()) {
+            orderResponses.add(orderService.addNewOrderWithCart(orderRequestWithCart, username));
+        }
+
+        return orderResponses;
+    }
+
+
+    private List<OrderResponse> createMultipleOrderResponsesByRequest(MultipleOrderRequestWithCart request, String username) {
+        List<OrderResponse> orderResponses = new ArrayList<>();
+        for (OrderRequestWithCart orderRequestWithCart : request.getOrderRequestWithCarts()) {
+            orderResponses.add(orderService.createOrderWithCart(orderRequestWithCart, username));
+        }
+
+        return orderResponses;
+    }
+
+
+    private List<OrderResponse> createOrderResponsesByMapCarts(Map<Long, List<Cart>> mapShopIdToCart, String username) {
         List<OrderResponse> orderResponses = new ArrayList<>();
         for (Map.Entry<Long, List<Cart>> entry : mapShopIdToCart.entrySet()) {
             List<UUID> cartIds = entry.getValue().stream().map(Cart::getCartId).toList();

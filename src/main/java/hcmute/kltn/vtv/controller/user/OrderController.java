@@ -1,20 +1,18 @@
 package hcmute.kltn.vtv.controller.user;
 
+import hcmute.kltn.vtv.model.data.user.request.MultipleOrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithCart;
 import hcmute.kltn.vtv.model.data.user.request.OrderRequestWithProductVariant;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.MultipleOrderResponse;
-import hcmute.kltn.vtv.model.data.user.response.OrderItemResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.user.IMultipleOrderService;
 import hcmute.kltn.vtv.service.user.IOrderService;
-import hcmute.kltn.vtv.service.user.impl.OrderItemServiceImpl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +42,7 @@ public class OrderController {
     }
 
     @PostMapping("/create-update/with-cart")
-    public ResponseEntity<OrderResponse> createOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
+        public ResponseEntity<OrderResponse> createOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
                                                              HttpServletRequest request) {
         OrderRequestWithCart.validate(orderRequestWithCart);
 
@@ -115,6 +113,24 @@ public class OrderController {
 
         String username = (String) request.getAttribute("username");
         return ResponseEntity.ok(multipleOrderService.createMultipleOrderByCartIds(cartIds, username));
+    }
+
+
+    @PostMapping("/create/multiple/by-request")
+    public ResponseEntity<MultipleOrderResponse> createMultipleOrderByRequestRequest(@RequestBody MultipleOrderRequestWithCart request,
+                                                                                    HttpServletRequest requestHttp) {
+        MultipleOrderRequestWithCart.validate(request);
+        String username = (String) requestHttp.getAttribute("username");
+        return ResponseEntity.ok(multipleOrderService.createMultipleOrderByRequest(request, username));
+    }
+
+
+    @PostMapping("/add/multiple/by-request")
+    public ResponseEntity<MultipleOrderResponse> addNewMultipleOrderByRequest(@RequestBody MultipleOrderRequestWithCart request,
+                                                                                     HttpServletRequest requestHttp) {
+        MultipleOrderRequestWithCart.validate(request);
+        String username = (String) requestHttp.getAttribute("username");
+        return ResponseEntity.ok(multipleOrderService.addNewMultipleOrderByRequest(request, username));
     }
 
 
