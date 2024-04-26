@@ -294,6 +294,14 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
     private void checkStatus(Order order, OrderStatus status) {
 
+        if(order.getStatus().equals(OrderStatus.DELIVERED)){
+            throw new BadRequestException("Đơn hàng đã được giao!");
+        }
+
+        if (order.getStatus().equals(OrderStatus.UNPAID)) {
+            throw new BadRequestException("Đơn hàng chưa được thanh toán!");
+        }
+
         if (order.getStatus().equals(OrderStatus.CANCEL)) {
             throw new BadRequestException("Đơn hàng đã bị hủy!");
         }

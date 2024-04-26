@@ -123,7 +123,7 @@ public class OrderShopController {
                 !status.equals(OrderStatus.PENDING) && !status.equals(OrderStatus.PROCESSING) &&
                 !status.equals(OrderStatus.CANCEL)) {
             throw new BadRequestException("Trạng thái không hợp lệ! Đơn hàng chỉ có thể cập nhật trạng thái: " +
-                    "CANCELLED, DELIVERED, PENDING, SHIPPING");
+                    "CANCEL, WAITING, PICKUP_PENDING, PENDING, PROCESSING");
         }
         String username = (String) httpServletRequest.getAttribute("username");
 
