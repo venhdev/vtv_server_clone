@@ -68,13 +68,18 @@ public class OrderServiceImpl implements IOrderService {
         Order order = createBaseOrder(username, address);
         updateCreateOrderByOrderItemsPaymentMethod(order, orderItems, "COD");
 
-        updateLoyaltyPointHistoryInCreateOrder(order);
+//        updateLoyaltyPointHistoryInCreateOrder(order);
         updateShippingInCreateOrder(order, "VTV Express");
+
+
 
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
 
-        return OrderResponse.orderResponse(order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.", "OK");
+        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
+
+        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách mã giỏ hàng.", "OK");
+
     }
 
 
@@ -90,13 +95,15 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderItem> orderItems = orderItemService.createOrderItemsByMapProductVariantIdsAndQuantities(order.getCustomer(),
                 productVariantIdsAndQuantities);
         updateCreateOrderByOrderItemsPaymentMethod(order, orderItems, "COD");
-        updateLoyaltyPointHistoryInCreateOrder(order);
+//        updateLoyaltyPointHistoryInCreateOrder(order);
         updateShippingInCreateOrder(order, "VTV Express");
 
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
 
-        return OrderResponse.orderResponse(order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
+        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
+
+        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
     }
 
 
@@ -113,7 +120,9 @@ public class OrderServiceImpl implements IOrderService {
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
 
-        return OrderResponse.orderResponse(order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
+        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
+
+        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
     }
 
 
@@ -129,7 +138,9 @@ public class OrderServiceImpl implements IOrderService {
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
 
-        return OrderResponse.orderResponse(order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.", "OK");
+        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
+
+        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.", "OK");
     }
 
 

@@ -15,6 +15,8 @@ import lombok.*;
 @AllArgsConstructor
 public class OrderResponse extends ResponseAbstract {
 
+    private Long totalPoint;
+
     private OrderDTO orderDTO;
 
     private TransportDTO transportDTO;
@@ -35,7 +37,6 @@ public class OrderResponse extends ResponseAbstract {
     public static OrderResponse orderResponse(Order order, ShippingDTO shippingDTO, String message, String status) {
         OrderResponse response = orderResponse(order, message, status);
         response.setShippingDTO(shippingDTO);
-        response.setCode(200);
 
         return response;
     }
@@ -43,12 +44,16 @@ public class OrderResponse extends ResponseAbstract {
     public static OrderResponse orderResponse(Order order, Transport transport, ShippingDTO shippingDTO, String message, String status) {
         OrderResponse response = orderResponse(order, shippingDTO, message, status);
         response.setTransportDTO(TransportDTO.convertEntityToDTO(transport));
-        response.setCode(200);
 
         return response;
     }
 
+    public static OrderResponse orderResponse(Long totalPoint, Order order, ShippingDTO shippingDTO, String message, String status) {
+        OrderResponse response = orderResponse(order, shippingDTO, message, status);
+        response.setTotalPoint(totalPoint);
 
+        return response;
+    }
 
 
 }
