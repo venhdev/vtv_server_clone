@@ -66,17 +66,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = createBaseOrder(username, address);
         updateCreateOrderByOrderItemsPaymentMethod(order, orderItems, "COD");
-
-//        updateLoyaltyPointHistoryInCreateOrder(order);
         updateShippingInCreateOrder(order, "VTV Express");
-
-
-//        ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
-//                order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
-//
-//        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
-//
-//        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách mã giỏ hàng.", "OK");
 
         return handleAfterCreateOrder(order, "VTV Express", address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách mã giỏ hàng.");
@@ -96,15 +86,8 @@ public class OrderServiceImpl implements IOrderService {
         List<OrderItem> orderItems = orderItemService.createOrderItemsByMapProductVariantIdsAndQuantities(order.getCustomer(),
                 productVariantIdsAndQuantities);
         updateCreateOrderByOrderItemsPaymentMethod(order, orderItems, "COD");
-//        updateLoyaltyPointHistoryInCreateOrder(order);
         updateShippingInCreateOrder(order, "VTV Express");
 
-//        ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
-//                order.getShop().getWard().getWardCode(), "VTV Express").getShippingDTO();
-//
-//        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
-//
-//        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
 
         return handleAfterCreateOrder(order, "VTV Express", address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.");
@@ -121,14 +104,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = createOrderByOrderRequestWithProductVariant(request, username, address);
 
-//        ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
-//                order.getShop().getWard().getWardCode(), request.getShippingMethod()).getShippingDTO();
-//
-//        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
-//
-//        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.", "OK");
-
-        return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
+      return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.");
     }
 
@@ -141,13 +117,6 @@ public class OrderServiceImpl implements IOrderService {
         Address address = addressService.checkAddress(request.getAddressId(), username);
 
         Order order = createOrderByOrderRequestWithCartIds(request, username, address);
-
-//        ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(address.getWard().getWardCode(),
-//                order.getShop().getWard().getWardCode(), request.getShippingMethod()).getShippingDTO();
-//
-//        Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
-//
-//        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.", "OK");
 
         return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.");
