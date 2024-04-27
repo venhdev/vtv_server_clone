@@ -18,6 +18,7 @@ import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -68,6 +69,7 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
 
     @Override
+    @Transactional
     public MultipleOrderResponse addNewMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
         List<OrderResponse> mapCreateOrderResponse = addNewMultipleOrderResponsesByRequest(request, username);
 
