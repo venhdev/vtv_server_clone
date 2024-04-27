@@ -87,6 +87,7 @@ public class SecurityConfig {
             "/api/followed-shop/**",
             "/api/cart/**",
             "/api/order/**",
+            "/api/vnpay/**",
 
             // "/api/payment/**",
 
