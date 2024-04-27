@@ -7,6 +7,7 @@ import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.entity.user.Cart;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.guest.IProductVariantService;
+import hcmute.kltn.vtv.service.guest.IVoucherService;
 import hcmute.kltn.vtv.service.location.IDistanceLocationService;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
 import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
@@ -43,7 +44,7 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
     private final INotificationService notificationService;
     private final ITransportService transportService;
     private final ITransportHandleService transportHandleService;
-    private final IWalletService walletService;
+    private final IVoucherService voucherService;
 
 
     @Override
@@ -61,7 +62,7 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
     @Override
     public MultipleOrderResponse createMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
-
+        checkVoucherSystem(request);
         List<OrderResponse> mapCreateOrderResponse = createMultipleOrderResponsesByRequest(request, username);
 
         return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Cập nhật tạo nhiều đơn hàng thành công!", "OK");
@@ -71,9 +72,29 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
     @Override
     @Transactional
     public MultipleOrderResponse addNewMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
+        checkVoucherSystem(request);
         List<OrderResponse> mapCreateOrderResponse = addNewMultipleOrderResponsesByRequest(request, username);
 
         return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Đặt hàng nhiều đơn hàng thành công!", "Success");
+    }
+
+    private void checkVoucherSystem(MultipleOrderRequestWithCart request) {
+        Map<String, Integer> voucherCodes = new HashMap<>();
+        for (OrderRequestWithCart orderRequestWithCart : request.getOrderRequestWithCarts()) {
+            if (orderRequestWithCart.getSystemVoucherCode() != null) {
+                if (voucherCodes.containsKey(orderRequestWithCart.getSystemVoucherCode())) {
+                    voucherCodes.put(orderRequestWithCart.getSystemVoucherCode(), voucherCodes.get(orderRequestWithCart.getSystemVoucherCode()) + 1);
+                } else {
+                    voucherCodes.put(orderRequestWithCart.getSystemVoucherCode(), 1);
+                }
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : voucherCodes.entrySet()) {
+            if (entry.getValue() > 1) {
+                voucherService.checkQuantityVoucher(entry.getKey(), entry.getValue());
+            }
+        }
     }
 
 

@@ -18,9 +18,8 @@ public interface IVoucherService {
 
     ListVoucherResponse allVoucher();
 
-    VoucherResponse voucherResponse(Voucher voucher);
 
-    ListVoucherResponse listVoucherResponse(List<Voucher> vouchers, String message);
+    void checkQuantityVoucher(String voucherCode, Integer quantity);
 
     Voucher getVoucherById(Long voucherId);
 }
