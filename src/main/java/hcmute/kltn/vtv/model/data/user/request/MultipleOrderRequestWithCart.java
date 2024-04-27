@@ -33,11 +33,11 @@ public class MultipleOrderRequestWithCart {
 //    }
 
 
-
     public static void validate(MultipleOrderRequestWithCart request) {
         validateOrderRequestWithCarts(request.getOrderRequestWithCarts());
         checkLoyaltyPoints(request.getOrderRequestWithCarts());
         checkVoucherSystem(request.getOrderRequestWithCarts());
+        checkPaymentMethod(request.getOrderRequestWithCarts());
     }
 
     private static void validateOrderRequestWithCarts(List<OrderRequestWithCart> orderRequestWithCarts) {
@@ -70,6 +70,15 @@ public class MultipleOrderRequestWithCart {
             }
             if (countVoucherSystem > 1) {
                 throw new BadRequestException("Chỉ được sử dụng 1 mã voucher hệ thống!");
+            }
+        }
+    }
+
+    public static void checkPaymentMethod(List<OrderRequestWithCart> orderRequestWithCarts) {
+        String paymentMethod = orderRequestWithCarts.get(0).getPaymentMethod();
+        for (OrderRequestWithCart orderRequestWithCart : orderRequestWithCarts) {
+            if (!orderRequestWithCart.getPaymentMethod().equals(paymentMethod)) {
+                throw new BadRequestException("Phương thức thanh toán không hợp lệ! Vui lòng chọn cùng 1 phương thức thanh toán.");
             }
         }
     }
