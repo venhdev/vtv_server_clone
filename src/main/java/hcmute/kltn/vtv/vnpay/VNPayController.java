@@ -34,7 +34,7 @@ public class VNPayController {
                                                   @RequestParam String vnp_TxnRef,
                                                   HttpServletRequest req) throws Exception {
         String ipAddress = VNPayConfig.getIpAddress(req);
-        VNPayDTO vnPayDTO = vnPayService.checkPayment(UUID.fromString(vnp_TxnRef), ipAddress, req);
+        VNPayDTO vnPayDTO = vnPayService.checkPaymentByVNPay(UUID.fromString(vnp_TxnRef), ipAddress, req);
         if (!vnPayDTO.getResponseCode().equals("00")) {
             throw new BadRequestException("Thanh toán không thành công cho đơn hàng #" + vnp_TxnRef + "!");
         }
