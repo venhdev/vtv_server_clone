@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.storage.HttpMethod;
 import com.google.gson.JsonObject;
 import hcmute.kltn.vtv.service.user.IOrderService;
-import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.vnpay.VNPayConfig;
 import hcmute.kltn.vtv.vnpay.model.VNPayDTO;
 import hcmute.kltn.vtv.vnpay.model.VNPayResponse;
@@ -51,6 +50,36 @@ public class VNPayServiceImpl implements IVNPayService {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
+
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo đơn hàng thành công.", "success");
+    }
+
+
+    @Override
+    public VNPayResponse createPaymentByVNPayWithMultipleOrder(List<UUID> orderIds, String ipAddress, String username) {
+        Long amount  = 0L;
+        for (UUID orderId : orderIds) {
+            amount += orderService.getTotalPaymentByOrderId(orderId, username);
+        }
+        String vnp_TxnRef = orderIds.stream().map(UUID::toString).reduce((s1, s2) -> s1 + "," + s2).orElse("");
+        Map<String, String> vnp_Params = getVNPayParams(amount, vnp_TxnRef, ipAddress);
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        Collections.sort(fieldNames);
+        StringJoiner hashData = new StringJoiner("&");
+        StringJoiner query = new StringJoiner("&");
+        for (String fieldName : fieldNames) {
+            String fieldValue = vnp_Params.get(fieldName);
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                //Build hash data
+                hashData.add(fieldName + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                //Build query
+                query.add(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII) + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
         return VNPayResponse.vnPayResponse(paymentUrl, "Tạo đơn hàng thành công.", "success");
     }

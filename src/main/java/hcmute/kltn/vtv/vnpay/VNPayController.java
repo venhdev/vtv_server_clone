@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,16 @@ public class VNPayController {
         return ResponseEntity.ok(vnPayService.createPaymentByVNPay(orderId, ipAddress, username));
     }
 
+
+    @PostMapping("/create-payment/multiple-order")
+    public ResponseEntity<VNPayResponse> createPaymentByVNPayWithMultipleOrder(@RequestBody List<UUID> orderIds,
+                                                                               HttpServletRequest req) {
+        String ipAddress = VNPayConfig.getIpAddress(req);
+        String username = (String) req.getAttribute("username");
+
+        return ResponseEntity.ok(vnPayService.createPaymentByVNPayWithMultipleOrder(orderIds, ipAddress, username));
+    }
+
     @GetMapping("/return")
     public ResponseEntity<VNPayDTO> returnPayment(@RequestParam String vnp_ResponseCode,
                                                   @RequestParam String vnp_TxnRef,
@@ -38,7 +49,15 @@ public class VNPayController {
         if (!vnPayDTO.getResponseCode().equals("00")) {
             throw new BadRequestException("Thanh toán không thành công cho đơn hàng #" + vnp_TxnRef + "!");
         }
-        orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(vnp_TxnRef));
+
+        if (vnp_TxnRef.contains(",")) {
+            String[] orderIds = vnp_TxnRef.split(",");
+            for (String orderId : orderIds) {
+                orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(orderId));
+            }
+        } else {
+            orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(vnp_TxnRef));
+        }
 
         return ResponseEntity.ok(vnPayDTO);
     }
