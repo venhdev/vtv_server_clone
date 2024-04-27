@@ -15,24 +15,6 @@ public class MultipleOrderRequestWithCart {
 
     private List<OrderRequestWithCart> orderRequestWithCarts;
 
-//    public static void validate(MultipleOrderRequestWithCart request) {
-//        if (request.getOrderRequestWithCarts() == null || request.getOrderRequestWithCarts().isEmpty()) {
-//            throw new BadRequestException("Danh sách đơn hàng không được để trống!");
-//        }
-//
-//        int countLoyalty = 0;
-//        for (OrderRequestWithCart orderRequestWithCart : request.getOrderRequestWithCarts()) {
-//            OrderRequestWithCart.validate(orderRequestWithCart);
-//            if (orderRequestWithCart.isUseLoyaltyPoint()) {
-//                countLoyalty++;
-//            }
-//            if (countLoyalty > 1) {
-//                throw new BadRequestException("Chỉ được sử dụng 1 lần điểm thưởng!");
-//            }
-//        }
-//    }
-
-
     public static void validate(MultipleOrderRequestWithCart request) {
         validateOrderRequestWithCarts(request.getOrderRequestWithCarts());
         checkLoyaltyPoints(request.getOrderRequestWithCarts());
