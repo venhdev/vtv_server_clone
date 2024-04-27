@@ -11,6 +11,7 @@ import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.vtv.impl.DateServiceImpl;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
@@ -51,7 +52,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
     private final INotificationService notificationService;
     private final ITransportService transportService;
     private final ITransportHandleService transportHandleService;
-
+    private final IWalletService walletService;
 
     @Override
     public PageOrderResponse getPageOrder(String username, int page, int size) {
@@ -199,6 +200,10 @@ public class OrderShopServiceImpl implements IOrderShopService {
 
     @Transactional
     public OrderResponse cancelOrderByShop(Order order) {
+
+        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
+            walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "REFUND");
+        }
 
         order.setStatus(OrderStatus.CANCEL);
         order.setUpdateAt(LocalDateTime.now());

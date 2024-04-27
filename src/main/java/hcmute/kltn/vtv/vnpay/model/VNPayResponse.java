@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.vnpay;
+package hcmute.kltn.vtv.vnpay.model;
 
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;

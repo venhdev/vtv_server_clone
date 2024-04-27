@@ -52,6 +52,7 @@ public class SecurityConfig {
             "/api/product-filter/**",
 
             "/api/category-shop/**",
+            "/api/vnpay/return/**",
 
 
 

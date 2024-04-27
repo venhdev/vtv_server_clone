@@ -47,4 +47,5 @@ public interface IOrderService {
     String messageByOrderStatus(OrderStatus status);
 
 
+    Long getTotalPaymentByOrderId(UUID orderId, String username);
 }

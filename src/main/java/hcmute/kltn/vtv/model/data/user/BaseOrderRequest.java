@@ -33,8 +33,8 @@ public abstract class BaseOrderRequest {
             throw new BadRequestException("Phương thức thanh toán không được để trống! ");
         }
 
-        if (!paymentMethod.equals("COD")) {
-            throw new BadRequestException("Phương thanh toán không hợp lệ! Hiện tại chỉ hỗ trợ COD");
+        if (!paymentMethod.equals("COD") && !paymentMethod.equals("VNPay") && !paymentMethod.equals("Wallet")) {
+            throw new BadRequestException("Phương thanh toán không hợp lệ! Hiện tại chỉ hỗ trợ COD, VNPay, Wallet");
         }
 
         if (shippingMethod == null || shippingMethod.isEmpty()) {

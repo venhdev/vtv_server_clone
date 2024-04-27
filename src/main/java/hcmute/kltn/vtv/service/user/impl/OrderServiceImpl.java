@@ -263,7 +263,7 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderRepository.findByOrderIdAndCustomerUsername(orderId, username)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng theo mã đơn hàng của tài khoản!"));
 
-        if (order.getStatus().equals(OrderStatus.PENDING)) {
+        if (order.getStatus().equals(OrderStatus.PENDING) || order.getStatus().equals(OrderStatus.UNPAID)) {
             return cancelOrder(order);
         }
         if (order.getStatus().equals(OrderStatus.PROCESSING)) {
@@ -286,6 +286,18 @@ public class OrderServiceImpl implements IOrderService {
             case WAITING -> "Lấy danh sách đơn hàng yêu cầu xử lý thành công.";
             default -> "Lấy danh sách đơn hàng thành công.";
         };
+    }
+
+
+    @Override
+    public Long getTotalPaymentByOrderId(UUID orderId, String username) {
+        Order order = orderRepository.findByOrderIdAndCustomerUsername(orderId, username)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng theo mã đơn hàng của tài khoản!"));
+        if (!order.getStatus().equals(OrderStatus.UNPAID)) {
+            throw new BadRequestException("Không thể thanh toán đơn hàng #" + orderId + "! Chỉ có thể thanh toán đơn hàng chưa thanh toán.");
+        }
+
+        return order.getPaymentTotal();
     }
 
 
@@ -323,6 +335,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Transactional
     public OrderResponse cancelOrder(Order order) {
+
+        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
+            walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "REFUND");
+        }
+
         order.setStatus(OrderStatus.CANCEL);
         order.setUpdateAt(LocalDateTime.now());
         try {
@@ -409,7 +426,11 @@ public class OrderServiceImpl implements IOrderService {
     private Order createAddNewOrderWithCart(OrderRequestWithCart request, String username) {
         Address address = addressService.checkAddress(request.getAddressId(), username);
         Order order = createBaseOrder(username, address);
-        order.setStatus(OrderStatus.PENDING);
+        if (request.getPaymentMethod().equals("COD")){
+            order.setStatus(OrderStatus.PENDING);
+        }else {
+            order.setStatus(OrderStatus.UNPAID);
+        }
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
         }
