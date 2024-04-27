@@ -29,7 +29,7 @@ public class VNPayController {
         return ResponseEntity.ok(vnPayService.createPaymentByVNPay(orderId, ipAddress, username));
     }
 
-    @PostMapping("/return")
+    @GetMapping("/return")
     public ResponseEntity<VNPayDTO> returnPayment(@RequestParam String vnp_ResponseCode,
                                                   @RequestParam String vnp_TxnRef,
                                                   HttpServletRequest req) throws Exception {
