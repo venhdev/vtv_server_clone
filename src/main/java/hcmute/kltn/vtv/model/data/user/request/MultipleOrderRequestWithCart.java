@@ -18,7 +18,7 @@ public class MultipleOrderRequestWithCart {
     public static void validate(MultipleOrderRequestWithCart request) {
         validateOrderRequestWithCarts(request.getOrderRequestWithCarts());
         checkLoyaltyPoints(request.getOrderRequestWithCarts());
-        checkVoucherSystem(request.getOrderRequestWithCarts());
+//        checkVoucherSystem(request.getOrderRequestWithCarts());
         checkPaymentMethod(request.getOrderRequestWithCarts());
     }
 
@@ -44,17 +44,17 @@ public class MultipleOrderRequestWithCart {
         }
     }
 
-    public static void checkVoucherSystem(List<OrderRequestWithCart> orderRequestWithCarts) {
-        int countVoucherSystem = 0;
-        for (OrderRequestWithCart orderRequestWithCart : orderRequestWithCarts) {
-            if (orderRequestWithCart.getSystemVoucherCode() != null) {
-                countVoucherSystem++;
-            }
-            if (countVoucherSystem > 1) {
-                throw new BadRequestException("Chỉ được sử dụng 1 mã voucher hệ thống!");
-            }
-        }
-    }
+//    public static void checkVoucherSystem(List<OrderRequestWithCart> orderRequestWithCarts) {
+//        int countVoucherSystem = 0;
+//        for (OrderRequestWithCart orderRequestWithCart : orderRequestWithCarts) {
+//            if (orderRequestWithCart.getSystemVoucherCode() != null) {
+//                countVoucherSystem++;
+//            }
+//            if (countVoucherSystem > 1) {
+//                throw new BadRequestException("Chỉ được sử dụng 1 mã voucher hệ thống!");
+//            }
+//        }
+//    }
 
     public static void checkPaymentMethod(List<OrderRequestWithCart> orderRequestWithCarts) {
         String paymentMethod = orderRequestWithCarts.get(0).getPaymentMethod();
