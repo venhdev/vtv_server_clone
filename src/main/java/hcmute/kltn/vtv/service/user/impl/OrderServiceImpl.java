@@ -430,6 +430,7 @@ public class OrderServiceImpl implements IOrderService {
             order.setStatus(OrderStatus.PENDING);
         }else {
             order.setStatus(OrderStatus.UNPAID);
+            order.setPaymentMethod(request.getPaymentMethod());
         }
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
