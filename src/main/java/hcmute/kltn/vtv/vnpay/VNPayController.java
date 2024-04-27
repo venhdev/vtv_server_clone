@@ -45,15 +45,15 @@ public class VNPayController {
                                                   @RequestParam String vnp_TxnRef,
                                                   HttpServletRequest req) throws Exception {
         String ipAddress = VNPayConfig.getIpAddress(req);
-        VNPayDTO vnPayDTO = vnPayService.checkPaymentByVNPay(UUID.fromString(vnp_TxnRef), ipAddress, req);
+        VNPayDTO vnPayDTO = vnPayService.checkPaymentByVNPay(vnp_TxnRef, ipAddress, req);
         if (!vnPayDTO.getResponseCode().equals("00")) {
-            throw new BadRequestException("Thanh toán không thành công cho đơn hàng #" + vnp_TxnRef + "!");
+            throw new BadRequestException("Đơn hàng chưa được thanh toán hoặc đã xử lý trước đó!");
         }
 
         if (vnp_TxnRef.contains(",")) {
             String[] orderIds = vnp_TxnRef.split(",");
             for (String orderId : orderIds) {
-                orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(orderId));
+                orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(orderId.trim()));
             }
         } else {
             orderVNPayService.updateOrderStatusAfterPayment(UUID.fromString(vnp_TxnRef));

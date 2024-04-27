@@ -51,7 +51,7 @@ public class VNPayServiceImpl implements IVNPayService {
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
 
-        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo đơn hàng thành công.", "success");
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho đơn hàng thành công.", "Success");
     }
 
 
@@ -81,14 +81,14 @@ public class VNPayServiceImpl implements IVNPayService {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
 
-        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo đơn hàng thành công.", "success");
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho nhiều đơn hàng thành công.", "Success");
     }
 
 
     @Override
-    public VNPayDTO checkPaymentByVNPay(UUID orderId, String ipAddress, HttpServletRequest req) throws Exception {
+    public VNPayDTO checkPaymentByVNPay(String vnp_TxnRef, String ipAddress, HttpServletRequest req) throws Exception {
 
-        JsonObject vnpParams = getVNPayParams(orderId, ipAddress);
+        JsonObject vnpParams = getVNPayParams(vnp_TxnRef, ipAddress);
         return sendPostRequest(VNPayConfig.vnp_ApiUrl, vnpParams);
 
 //        JsonObject vnp_Params = getVNPayParams(orderId, ipAddress);
@@ -154,12 +154,12 @@ public class VNPayServiceImpl implements IVNPayService {
         }
     }
 
-    private JsonObject getVNPayParams(UUID orderId, String ipAddress) {
+    private JsonObject getVNPayParams(String vnp_TxnRef, String ipAddress) {
         String vnp_RequestId = VNPayConfig.getRandomNumber(8);
         String vnp_Version = "2.1.0";
         String vnp_Command = "querydr";
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
-        String vnp_TxnRef = orderId.toString();
+//        String vnp_TxnRef = orderId.toString();
         String vnp_OrderInfo = "Kiem tra ket qua GD OrderId:" + vnp_TxnRef;
         String vnp_TransDate = getVNPayCreateDate();
 
