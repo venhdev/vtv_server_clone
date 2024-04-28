@@ -21,4 +21,8 @@ public interface IWalletService {
     void updateWalletByUsername(String username, UUID orderId, Long money, String type);
 
     WalletResponse getWalletResponseByUsername(String username);
+
+    Long getBalanceByUsername(String username);
+
+    void checkBalanceByUsernameAndMoney(String username, Long money);
 }

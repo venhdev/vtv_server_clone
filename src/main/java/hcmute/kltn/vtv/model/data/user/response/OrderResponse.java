@@ -15,6 +15,8 @@ import lombok.*;
 @AllArgsConstructor
 public class OrderResponse extends ResponseAbstract {
 
+    private Long balance;
+
     private Long totalPoint;
 
     private OrderDTO orderDTO;
@@ -48,8 +50,9 @@ public class OrderResponse extends ResponseAbstract {
         return response;
     }
 
-    public static OrderResponse orderResponse(Long totalPoint, Order order, ShippingDTO shippingDTO, String message, String status) {
+    public static OrderResponse orderResponse(Long balance, Long totalPoint, Order order, ShippingDTO shippingDTO, String message, String status) {
         OrderResponse response = orderResponse(order, shippingDTO, message, status);
+        response.setBalance(balance);
         response.setTotalPoint(totalPoint);
 
         return response;

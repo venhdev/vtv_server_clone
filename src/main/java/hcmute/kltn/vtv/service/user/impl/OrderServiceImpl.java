@@ -138,6 +138,9 @@ public class OrderServiceImpl implements IOrderService {
             if (request.isUseLoyaltyPoint()) {
                 addLoyaltyPointHistoryToOrder(order);
             }
+            if (request.getPaymentMethod().equals("wallet")) {
+                walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
+            }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
             transportService.addNewTransport(order.getOrderId());
@@ -304,8 +307,8 @@ public class OrderServiceImpl implements IOrderService {
     private OrderResponse handleAfterCreateOrder(Order order, String shippingMethod, String addressWardCode, String shopWardCode, String message) {
         ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(addressWardCode, shopWardCode, shippingMethod).getShippingDTO();
         Long totalPoint = loyaltyPointService.getLoyaltyPointByUsername(order.getCustomer().getUsername()).getTotalPoint();
-
-        return OrderResponse.orderResponse(totalPoint, order, shippingDTO, message, "OK");
+        Long balance = walletService.getBalanceByUsername(order.getCustomer().getUsername());
+        return OrderResponse.orderResponse(balance, totalPoint, order, shippingDTO, message, "OK");
     }
 
 
@@ -398,6 +401,9 @@ public class OrderServiceImpl implements IOrderService {
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
         }
+        if (request.getPaymentMethod().equals("wallet")) {
+            walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
+        }
         updateCreateOrderByVoucherOrder(order, request.getShopVoucherCode(), request.getSystemVoucherCode());
         updateShippingInCreateOrder(order, request.getShippingMethod());
 
@@ -416,6 +422,9 @@ public class OrderServiceImpl implements IOrderService {
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
         }
+        if (request.getPaymentMethod().equals("wallet")) {
+            walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
+        }
         updateCreateOrderByVoucherOrder(order, request.getShopVoucherCode(), request.getSystemVoucherCode());
         updateShippingInCreateOrder(order, request.getShippingMethod());
 
@@ -426,11 +435,14 @@ public class OrderServiceImpl implements IOrderService {
     private Order createAddNewOrderWithCart(OrderRequestWithCart request, String username) {
         Address address = addressService.checkAddress(request.getAddressId(), username);
         Order order = createBaseOrder(username, address);
-        if (request.getPaymentMethod().equals("COD")){
-            order.setStatus(OrderStatus.PENDING);
-        }else {
+        if (request.getPaymentMethod().equals("VNPay")){
             order.setStatus(OrderStatus.UNPAID);
+        }else {
+            order.setStatus(OrderStatus.PENDING);
             order.setPaymentMethod(request.getPaymentMethod());
+            if (request.getPaymentMethod().equals("wallet")) {
+                walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
+            }
         }
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());

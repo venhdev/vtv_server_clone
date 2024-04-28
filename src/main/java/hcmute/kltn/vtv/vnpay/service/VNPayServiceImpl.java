@@ -87,35 +87,9 @@ public class VNPayServiceImpl implements IVNPayService {
 
     @Override
     public VNPayDTO checkPaymentByVNPay(String vnp_TxnRef, String ipAddress, HttpServletRequest req) throws Exception {
-
         JsonObject vnpParams = getVNPayParams(vnp_TxnRef, ipAddress);
+
         return sendPostRequest(VNPayConfig.vnp_ApiUrl, vnpParams);
-
-//        JsonObject vnp_Params = getVNPayParams(orderId, ipAddress);
-//
-//        URL url = new URL (VNPayConfig.vnp_ApiUrl);
-//        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-//        con.setRequestMethod("POST");
-//        con.setRequestProperty("Content-Type", "application/json");
-//        con.setDoOutput(true);
-//        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-//        wr.writeBytes(vnp_Params.toString());
-//        wr.flush();
-//        wr.close();
-//
-//        BufferedReader in = new BufferedReader(
-//                new InputStreamReader(con.getInputStream()));
-//        String output;
-//        StringBuffer response = new StringBuffer();
-//        while ((output = in.readLine()) != null) {
-//            response.append(output);
-//        }
-//        in.close();
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//
-//        return mapper.readValue(response.toString(), VNPayDTO.class);
-
     }
 
 
@@ -159,7 +133,6 @@ public class VNPayServiceImpl implements IVNPayService {
         String vnp_Version = "2.1.0";
         String vnp_Command = "querydr";
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
-//        String vnp_TxnRef = orderId.toString();
         String vnp_OrderInfo = "Kiem tra ket qua GD OrderId:" + vnp_TxnRef;
         String vnp_TransDate = getVNPayCreateDate();
 

@@ -80,6 +80,22 @@ public class WalletServiceImpl implements IWalletService {
     }
 
 
+    @Override
+    public Long getBalanceByUsername(String username) {
+        Wallet wallet = getWalletByUsername(username);
+        return wallet.getBalance();
+    }
+
+
+    @Override
+    public void checkBalanceByUsernameAndMoney(String username, Long money) {
+        Wallet wallet = getWalletByUsername(username);
+        if (wallet.getBalance() < money) {
+            throw new IllegalArgumentException("Số dư trong ví không đủ để thực hiện giao dịch");
+        }
+    }
+
+
 
 
 

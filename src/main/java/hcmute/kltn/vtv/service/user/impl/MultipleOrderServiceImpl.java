@@ -28,23 +28,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
-    private final OrderRepository orderRepository;
     private final IOrderService orderService;
-    private final IOrderItemService orderItemService;
-    private final IVoucherOrderService voucherOrderService;
     private final ICartService cartService;
-    private final ICustomerService customerService;
-    private final IAddressService addressService;
-    private final IDistanceLocationService distanceLocationService;
-    private final IProductVariantService productVariantService;
-    private final IVoucherCustomerService voucherCustomerService;
-    private final IShippingService shippingService;
-    private final ILoyaltyPointService loyaltyPointService;
-    private final IMailService mailService;
-    private final INotificationService notificationService;
-    private final ITransportService transportService;
-    private final ITransportHandleService transportHandleService;
     private final IVoucherService voucherService;
+    private final IWalletService walletService;
 
 
     @Override
@@ -54,18 +41,23 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
         List<Cart> carts = cartService.getListCartByUsernameAndIds(username, cartIds);
         HashMap<Long, List<Cart>> mapShopIdToCart = cartService.groupCartByShopId(carts);
-        List<OrderResponse> mapCreateOrderResponse = createOrderResponsesByMapCarts(mapShopIdToCart, username);
+        List<OrderResponse> orderResponses = createOrderResponsesByMapCarts(mapShopIdToCart, username);
 
-        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Tạo đơn nhiều đơn hàng thành công!", "OK");
+
+        return MultipleOrderResponse.multipleOrderResponse(orderResponses, "Tạo đơn nhiều đơn hàng thành công!", "OK");
     }
 
 
     @Override
     public MultipleOrderResponse createMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
         checkVoucherSystem(request);
-        List<OrderResponse> mapCreateOrderResponse = createMultipleOrderResponsesByRequest(request, username);
+        List<OrderResponse> orderResponses = createMultipleOrderResponsesByRequest(request, username);
+        if (request.getOrderRequestWithCarts().get(0).getPaymentMethod().equals("wallet")) {
+            Long totalPayment = totalPaymentByOrderResponses(orderResponses);
+            walletService.checkBalanceByUsernameAndMoney(username, totalPayment);
+        }
 
-        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Cập nhật tạo nhiều đơn hàng thành công!", "OK");
+        return MultipleOrderResponse.multipleOrderResponse(orderResponses, "Cập nhật tạo nhiều đơn hàng thành công!", "OK");
     }
 
 
@@ -73,10 +65,14 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
     @Transactional
     public MultipleOrderResponse addNewMultipleOrderByRequest(MultipleOrderRequestWithCart request, String username) {
         checkVoucherSystem(request);
-        List<OrderResponse> mapCreateOrderResponse = addNewMultipleOrderResponsesByRequest(request, username);
-
-        return MultipleOrderResponse.multipleOrderResponse(mapCreateOrderResponse, "Đặt hàng nhiều đơn hàng thành công!", "Success");
+        List<OrderResponse> orderResponses = addNewMultipleOrderResponsesByRequest(request, username);
+        if (request.getOrderRequestWithCarts().get(0).getPaymentMethod().equals("wallet")) {
+            Long totalPayment = totalPaymentByOrderResponses(orderResponses);
+            walletService.checkBalanceByUsernameAndMoney(username, totalPayment);
+        }
+        return MultipleOrderResponse.multipleOrderResponse(orderResponses, "Đặt hàng nhiều đơn hàng thành công!", "Success");
     }
+
 
     private void checkVoucherSystem(MultipleOrderRequestWithCart request) {
         Map<String, Integer> voucherCodes = new HashMap<>();
@@ -127,6 +123,14 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
 
         return orderResponses;
     }
+
+
+    private Long totalPaymentByOrderResponses(List<OrderResponse> orderResponses) {
+        return orderResponses.stream()
+                .mapToLong(orderResponse -> orderResponse.getOrderDTO().getPaymentTotal())
+                .sum();
+    }
+
 
 
 }
