@@ -53,8 +53,7 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
         checkVoucherSystem(request);
         List<OrderResponse> orderResponses = createMultipleOrderResponsesByRequest(request, username);
         if (request.getOrderRequestWithCarts().get(0).getPaymentMethod().equals("wallet")) {
-            Long totalPayment = totalPaymentByOrderResponses(orderResponses);
-            walletService.checkBalanceByUsernameAndMoney(username, totalPayment);
+            walletService.checkBalanceByUsernameAndMoney(username, totalPaymentByOrderResponses(orderResponses));
         }
 
         return MultipleOrderResponse.multipleOrderResponse(orderResponses, "Cập nhật tạo nhiều đơn hàng thành công!", "OK");
@@ -67,9 +66,9 @@ public class MultipleOrderServiceImpl implements IMultipleOrderService {
         checkVoucherSystem(request);
         List<OrderResponse> orderResponses = addNewMultipleOrderResponsesByRequest(request, username);
         if (request.getOrderRequestWithCarts().get(0).getPaymentMethod().equals("wallet")) {
-            Long totalPayment = totalPaymentByOrderResponses(orderResponses);
-            walletService.checkBalanceByUsernameAndMoney(username, totalPayment);
+            walletService.checkBalanceByUsernameAndMoney(username, totalPaymentByOrderResponses(orderResponses));
         }
+
         return MultipleOrderResponse.multipleOrderResponse(orderResponses, "Đặt hàng nhiều đơn hàng thành công!", "Success");
     }
 
