@@ -122,6 +122,16 @@ public class TransportServiceImpl implements ITransportService {
     }
 
 
+    @Override
+    public TransportResponse getTransportResponseByTransportId(UUID transportId) {
+        try {
+            Transport transport = getTransportById(transportId);
+            return TransportResponse.transportResponse(transport, "Lấy thông tin dịch vụ vận chuyển thành công!", "OK");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi lấy thông tin dịch vụ vận chuyển theo id: " + transportId + "! " + e.getMessage());
+        }
+    }
+
 
     @Override
     public ShopAndTransportResponse getTransportsByWardWorksDeliver(String username) {

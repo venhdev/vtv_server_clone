@@ -52,6 +52,13 @@ public class TransportController {
     }
 
 
+    @GetMapping("/get/{transportId}")
+    public ResponseEntity<TransportResponse> getTransportResponseByTransportId(@PathVariable("transportId") UUID transportId) {
+
+        return ResponseEntity.ok(transportService.getTransportResponseByTransportId(transportId));
+    }
+
+
     @GetMapping("/get/ward/{wardCode}")
     public ResponseEntity<ShopAndTransportResponse> getTransportsByWard(@PathVariable("wardCode") String wardCode,
                                                                         HttpServletRequest servletRequest) {
