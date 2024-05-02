@@ -175,7 +175,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng trong cửa hàng!"));
         checkStatus(order, status);
 
-        if (status.equals(OrderStatus.CANCEL)) {
+        if (status.equals(OrderStatus.CANCEL) || status.equals(OrderStatus.RETURNED)) {
             return cancelOrderByShop(order);
         }
 
@@ -324,9 +324,10 @@ public class OrderShopServiceImpl implements IOrderShopService {
         }
 
         if (!status.equals(OrderStatus.PENDING) && !status.equals(OrderStatus.PROCESSING) &&
-                !status.equals(OrderStatus.PICKUP_PENDING) && !status.equals(OrderStatus.WAITING)) {
+                !status.equals(OrderStatus.PICKUP_PENDING) && !status.equals(OrderStatus.WAITING) &&
+                !status.equals(OrderStatus.CANCEL)) {
             throw new BadRequestException("Trạng thái không hợp lệ! Cửa hàng chỉ có thể cập nhật trạng thái: " +
-                    "PENDING, PROCESSING, PICKUP_PENDING, WAITING");
+                    "PENDING, PROCESSING, PICKUP_PENDING, WAITING, CANCEL");
         }
 
     }
