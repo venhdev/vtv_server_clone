@@ -18,5 +18,5 @@ public interface IManagerProductService {
 
     ListManagerProductResponse getListManagerProductByProductName(int page, int size, String productName);
 
-    void checkRequestPageParams(int page, int size);
+//    void checkRequestPageParams(int page, int size);
 }

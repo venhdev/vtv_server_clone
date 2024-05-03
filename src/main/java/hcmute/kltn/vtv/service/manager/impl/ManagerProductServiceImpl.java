@@ -3,7 +3,6 @@ package hcmute.kltn.vtv.service.manager.impl;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListManagerProductResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerProductResponse;
-import hcmute.kltn.vtv.model.dto.manager.ManagerProductDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.model.entity.vendor.ProductVariant;
@@ -14,9 +13,9 @@ import hcmute.kltn.vtv.repository.vendor.ProductVariantRepository;
 import hcmute.kltn.vtv.repository.manager.ManagerProductRepository;
 import hcmute.kltn.vtv.service.manager.IManagerProductService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,14 +28,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerProductServiceImpl implements IManagerProductService {
 
-    @Autowired
     private final ManagerProductRepository managerProductRepository;
-    @Autowired
     private final ProductRepository productRepository;
-    @Autowired
     private final ICustomerService customerService;
-    @Autowired
     private final ProductVariantRepository productVariantRepository;
+
 
     @Override
     @Transactional
@@ -44,82 +40,59 @@ public class ManagerProductServiceImpl implements IManagerProductService {
         Customer manager = customerService.getCustomerByUsername(username);
         Product product = checkProductByProductId(productId);
 
-        ManagerProduct managerProduct = new ManagerProduct();
-        if (managerProductRepository.existsByProduct_ProductId(productId)) {
-            managerProduct = managerProductRepository.findByProduct_ProductId(productId)
-                    .orElseThrow(() -> new BadRequestException("Không tìm thấy sản phẩm"));
-            if (managerProduct.isLock()) {
-                throw new BadRequestException("Sản phẩm đã bị khóa");
-            }
+        ManagerProduct managerProduct;
+        if (managerProductRepository.existsByProductProductIdAndLock(productId, true)) {
+            throw new BadRequestException("Sản phẩm đã bị khóa bởi bạn");
+        } else if (managerProductRepository.existsByProduct_ProductId(productId)) {
+            managerProduct = updateManagerProduct(productId, manager, note, true, false);
         } else {
-            managerProduct.setProduct(product);
-            managerProduct.setManager(manager);
-            managerProduct.setCreateAt(LocalDateTime.now());
+            managerProduct = createManagerProduct(product, manager, note);
         }
-        managerProduct.setUpdateAt(LocalDateTime.now());
-        managerProduct.setLock(true);
-        managerProduct.setDelete(false);
-        managerProduct.setNote(note);
-        product.setUpdateAt(managerProduct.getUpdateAt());
         try {
+            updateStatusProductByStatusAndStatusEqual(product, Status.LOCKED, Status.ACTIVE);
             managerProductRepository.save(managerProduct);
-            lockProduct(product);
 
-            ManagerProductResponse managerProductResponse = new ManagerProductResponse();
-            managerProductResponse.setManagerProductDTO(ManagerProductDTO.convertEntityToDTO(managerProduct));
-            managerProductResponse.setStatus("success");
-            managerProductResponse.setMessage("Khóa sản phẩm thành công");
-            managerProductResponse.setCode(200);
-
-            return managerProductResponse;
+            String successMessage = String.format("Khóa sản phẩm thành công: %s của cửa háng: %s bàng mã: %s với nguyên nhân: %s thành công",
+                    product.getName(), product.getShop().getName(), product.getProductId(), note);
+            return ManagerProductResponse.managerProductResponse(managerProduct, successMessage, "Success");
         } catch (Exception e) {
-            throw new BadRequestException("Khóa sản phẩm thất bại");
+            throw new InternalServerErrorException("Khóa sản phẩm thất bại! " + e.getMessage());
         }
     }
 
     @Override
     @Transactional
     public ManagerProductResponse unLockProductByProductId(Long productId, String username, String note) {
-
         Product product = checkProductByProductId(productId);
+        Customer manager = customerService.getCustomerByUsername(username);
 
-        ManagerProduct managerProduct = checkManagerProduct(productId, username);
-
-        managerProduct.setUpdateAt(LocalDateTime.now());
-        managerProduct.setLock(false);
-        managerProduct.setDelete(true);
-        managerProduct.setNote(note);
-
-        product.setUpdateAt(managerProduct.getUpdateAt());
+        ManagerProduct managerProduct;
+        if (!managerProductRepository.existsByProduct_ProductId(productId) && !managerProductRepository.existsByProductProductIdAndLock(productId, true)) {
+            throw new BadRequestException("Sản phẩm chưa bị khóa");
+        }
+        managerProduct = updateManagerProduct(productId, manager, note, false, true);
 
         try {
+            updateStatusProductByStatusAndStatusEqual(product, Status.ACTIVE, Status.LOCKED);
             managerProductRepository.save(managerProduct);
 
-            unLockProduct(product);
+            String message = "Mở khóa sản phẩm thành công: " + product.getName() + " của cửa háng: " + product.getShop().getName() + " bàng mã: " + product.getProductId() + " với nguyên nhân: " + note + " thành công";
 
-            ManagerProductResponse managerProductResponse = new ManagerProductResponse();
-            managerProductResponse.setManagerProductDTO(ManagerProductDTO.convertEntityToDTO(managerProduct));
-            managerProductResponse.setStatus("success");
-            managerProductResponse.setMessage("Mở khóa sản phẩm thành công");
-            managerProductResponse.setCode(200);
-
-            return managerProductResponse;
+            return ManagerProductResponse.managerProductResponse(managerProduct, message, "Success");
         } catch (Exception e) {
             throw new BadRequestException("Mở khóa sản phẩm thất bại");
         }
     }
 
+
     @Override
     public ListManagerProductResponse getListManagerProduct(int page, int size) {
-        int totalManagerProduct = managerProductRepository.countAllByLock(true);
-        int totalPage = (int) Math.ceil((double) totalManagerProduct / size);
-
         Page<ManagerProduct> managerProducts = managerProductRepository
                 .findAllByLock(true, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách sản phẩm đã khóa"));
         String message = "Lấy danh sách sản phẩm đã khóa thành công";
 
-        return listManagerProductResponse(managerProducts.getContent(), page, totalPage, size, message);
+        return ListManagerProductResponse.listManagerProductResponse(managerProducts, message, "OK");
     }
 
 
@@ -129,51 +102,58 @@ public class ManagerProductServiceImpl implements IManagerProductService {
     }
 
 
-
-
-
-
     @Override
     public ListManagerProductResponse getListManagerProductByProductName(int page, int size, String productName) {
-        int totalManagerProduct = managerProductRepository.countAllByLockAndProductNameContains(true, productName);
-        int totalPage = (int) Math.ceil((double) totalManagerProduct / size);
 
         Page<ManagerProduct> managerProducts = managerProductRepository
                 .findAllByLockAndProductNameContains(true, productName, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách sản phẩm đã khóa"));
         String message = "Lấy danh sách sản phẩm đã khóa thành công";
 
-        return listManagerProductResponse(managerProducts.getContent(), page, totalPage, size, message);
+        return ListManagerProductResponse.listManagerProductResponse(managerProducts, message, "OK");
     }
 
-    private ListManagerProductResponse listManagerProductResponse(List<ManagerProduct> managerProducts, int page,
-            int totalPage, int size, String message) {
-        ListManagerProductResponse listManagerProductResponse = new ListManagerProductResponse();
-        listManagerProductResponse.setCount(managerProducts.size());
-        listManagerProductResponse.setTotalPage(totalPage);
-        listManagerProductResponse
-                .setManagerProductDTOs(ManagerProductDTO.convertEntitiesToDTOs(managerProducts));
-        listManagerProductResponse.setMessage(message);
-        listManagerProductResponse.setStatus("OK");
-        listManagerProductResponse.setCode(200);
-        listManagerProductResponse.setPage(page);
-        listManagerProductResponse.setSize(size);
 
-        return listManagerProductResponse;
+//    @Override
+//    public void checkRequestPageParams(int page, int size) {
+//        if (page < 0) {
+//            throw new NotFoundException("Trang không được nhỏ hơn 0!");
+//        }
+//        if (size < 0) {
+//            throw new NotFoundException("Kích thước trang không được nhỏ hơn 0!");
+//        }
+//        if (size > 500) {
+//            throw new NotFoundException("Kích thước trang không được lớn hơn 200!");
+//        }
+//    }
+
+
+    private ManagerProduct updateManagerProduct(Long productId, Customer manager, String note, boolean lock, boolean delete) {
+        ManagerProduct managerProduct = managerProductRepository.findByProduct_ProductId(productId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm có mã: " + productId));
+        managerProduct.setManager(manager);
+        managerProduct.setLock(lock);
+        managerProduct.setDelete(delete);
+        managerProduct.setNote(note);
+        managerProduct.setUpdateAt(LocalDateTime.now());
+
+        return managerProduct;
     }
 
-    @Override
-    public void checkRequestPageParams(int page, int size) {
-        if (page < 0) {
-            throw new NotFoundException("Trang không được nhỏ hơn 0!");
-        }
-        if (size < 0) {
-            throw new NotFoundException("Kích thước trang không được nhỏ hơn 0!");
-        }
-        if (size > 500) {
-            throw new NotFoundException("Kích thước trang không được lớn hơn 200!");
-        }
+
+    private ManagerProduct createManagerProduct(Product product, Customer manager, String note) {
+        ManagerProduct managerProduct = new ManagerProduct();
+        managerProduct.setProduct(product);
+        managerProduct.setManager(manager);
+        managerProduct.setCreateAt(LocalDateTime.now());
+        managerProduct.setUpdateAt(LocalDateTime.now());
+        managerProduct.setLock(true);
+        managerProduct.setDelete(false);
+        managerProduct.setNote(note);
+
+        return managerProduct;
     }
+
 
     public ManagerProduct checkManagerProduct(Long productId, String username) {
         ManagerProduct managerProduct = managerProductRepository.findByProduct_ProductId(productId)
@@ -188,58 +168,41 @@ public class ManagerProductServiceImpl implements IManagerProductService {
         return managerProduct;
     }
 
-    @Transactional
-    public void unLockProduct(Product product) {
-        product.setStatus(Status.ACTIVE);
 
-        List<ProductVariant> productVariants = product.getProductVariants();
+    @Transactional
+    public void updateStatusProductByStatusAndStatusEqual(Product product, Status status, Status statusEqual) {
+        if (product.getStatus().equals(statusEqual)) {
+            product.setStatus(status);
+            product.setUpdateAt(LocalDateTime.now());
+            try {
+                productRepository.save(product);
+                updateStatusProductVariantsByStatusAndStatusEqual(product.getProductVariants(), status, statusEqual);
+            } catch (Exception e) {
+                throw new BadRequestException("Cập nhật trạng thái sản phẩm thất bại");
+            }
+        }
+    }
+
+
+    @Transactional
+    public void updateStatusProductVariantsByStatusAndStatusEqual(List<ProductVariant> productVariants, Status status, Status statusEqual) {
         for (ProductVariant productVariant : productVariants) {
-            if (productVariant.getStatus().equals(Status.LOCKED)) {
-                productVariant.setStatus(Status.ACTIVE);
-                productVariant.setUpdateAt(product.getUpdateAt());
+            if (productVariant.getStatus().equals(statusEqual)) {
+                productVariant.setStatus(status);
+                productVariant.setUpdateAt(LocalDateTime.now());
                 try {
                     productVariantRepository.save(productVariant);
                 } catch (Exception e) {
-                    throw new BadRequestException("Mở khóa biến thể sản phẩm thất bại");
+                    throw new IllegalArgumentException("Cập nhật trạng thái biến thể sản phẩm thất bại ở biến thể: " + productVariant.getProductVariantId());
                 }
             }
-
-        }
-
-        try {
-            productRepository.save(product);
-        } catch (Exception e) {
-            throw new BadRequestException("Mở khóa sản phẩm thất bại");
         }
     }
 
-    @Transactional
-    public void lockProduct(Product product) {
-        product.setStatus(Status.LOCKED);
-
-        List<ProductVariant> productVariants = product.getProductVariants();
-        for (ProductVariant productVariant : productVariants) {
-            if (productVariant.getStatus().equals(Status.ACTIVE)) {
-                productVariant.setStatus(Status.LOCKED);
-                productVariant.setUpdateAt(product.getUpdateAt());
-            }
-            try {
-                productVariantRepository.save(productVariant);
-            } catch (Exception e) {
-                throw new BadRequestException("Khóa biến thể sản phẩm thất bại");
-            }
-        }
-
-        try {
-            productRepository.save(product);
-        } catch (Exception e) {
-            throw new BadRequestException("Khóa sản phẩm thất bại");
-        }
-    }
 
     private Product checkProductByProductId(Long productId) {
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BadRequestException("Không tìm thấy sản phẩm"));
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm có mã: " + productId));
 
         if (product.getStatus().equals(Status.DELETED)) {
             throw new BadRequestException("Sản phẩm đã bị xóa");
@@ -247,8 +210,6 @@ public class ManagerProductServiceImpl implements IManagerProductService {
 
         return product;
     }
-
-
 
 
 }

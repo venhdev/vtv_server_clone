@@ -13,6 +13,8 @@ public interface ManagerProductRepository extends JpaRepository<ManagerProduct, 
 
     Optional<ManagerProduct> findByProduct_ProductId(Long productId);
 
+    boolean existsByProductProductIdAndLock(Long productId, boolean lock);
+
     int countAllByLock(boolean lock); //
 
     Optional<Page<ManagerProduct>> findAllByLock(boolean lock, Pageable pageable);
