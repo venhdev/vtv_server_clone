@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerCategoryController {
 
 
-    @Autowired
     private final IManagerCategoryService managerCategoryService;
 
     @PostMapping("/add")

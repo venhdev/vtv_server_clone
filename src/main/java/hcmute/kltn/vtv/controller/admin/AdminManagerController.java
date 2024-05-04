@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminManagerController {
 
-    @Autowired
-    private IAdminRoleManagerService managerAdminService;
+
+    private final IAdminRoleManagerService managerAdminService;
 
     @PostMapping("/add-role-manager")
     public ResponseEntity<ManagerResponse> addRoleManager(@RequestParam String usernameCustomer,

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ManagerCustomerController {
 
-    @Autowired
-    private IManagerCustomerService managerCustomerService;
+    private final IManagerCustomerService managerCustomerService;
 
     @GetMapping("/list/by-status/{status}")
     public ResponseEntity<ListCustomerManagerResponse> getListCustomerByStatus(@RequestParam int page,

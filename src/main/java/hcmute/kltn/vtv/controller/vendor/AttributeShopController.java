@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AttributeShopController {
 
-    @Autowired
-    private IAttributeShopService attributeService;
+    private final IAttributeShopService attributeService;
 
     @PostMapping("/add")
     public ResponseEntity<AttributeResponse> addNewAttribute(AttributeRequest attributeRequest,

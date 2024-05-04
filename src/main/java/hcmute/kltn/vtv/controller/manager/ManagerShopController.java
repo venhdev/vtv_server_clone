@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ManagerShopController {
 
-    @Autowired
-    private IManagerShopService managerShopService;
+    private final IManagerShopService managerShopService;
 
     @GetMapping("/id/{shopId}")
     public ResponseEntity<ManagerShopResponse> getShopById(@PathVariable Long shopId) {

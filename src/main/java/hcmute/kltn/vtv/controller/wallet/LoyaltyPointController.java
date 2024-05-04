@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoyaltyPointController {
 
-    @Autowired
-    private ILoyaltyPointService loyaltyPointService;
+    private final ILoyaltyPointService loyaltyPointService;
 
 
     @GetMapping("/get")

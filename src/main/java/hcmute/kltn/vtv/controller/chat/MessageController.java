@@ -17,8 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MessageController {
 
-    @Autowired
-    private IMessageService messageService;
+    private final IMessageService messageService;
 
 
     @GetMapping("/list/room-chat/{roomChatId}/page/{page}/size/{size}")

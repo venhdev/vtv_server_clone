@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class VoucherAdminController {
 
-    @Autowired
-    private IVoucherAdminService voucherAdminService;
+    private final IVoucherAdminService voucherAdminService;
 
     @PostMapping("/add")
     public ResponseEntity<VoucherAdminResponse> addNewVoucherAdmin(@RequestBody VoucherAdminRequest request,

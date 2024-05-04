@@ -20,7 +20,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CartController {
 
-    @Autowired
     private final ICartService cartService;
 
     @PostMapping("/add")

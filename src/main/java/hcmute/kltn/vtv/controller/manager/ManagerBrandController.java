@@ -18,7 +18,6 @@ public class ManagerBrandController {
 
 
 
-    @Autowired
     private final IManagerBrandService managerBrandService;
 
 

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BrandController {
 
-    @Autowired
     private final IBrandService brandService;
 
 

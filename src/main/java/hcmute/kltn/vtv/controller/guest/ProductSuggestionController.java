@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductSuggestionController {
 
-    @Autowired
     private final IProductSuggestionService productSuggestionService;
-    @Autowired
     private final IPageService pageService;
 
     @GetMapping("/get-page/randomly")

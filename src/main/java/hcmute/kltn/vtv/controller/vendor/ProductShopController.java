@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductShopController {
 
-    @Autowired
     private final IProductShopService productShopService;
-    @Autowired
     private final IPageService pageService;
 
 

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ManagerController {
 
-    @Autowired
-    private IManagerService managerService;
+    private final IManagerService managerService;
 
     @GetMapping("/info")
     public ResponseEntity<ManagerResponse> getManagerInfo(HttpServletRequest servletRequest) {

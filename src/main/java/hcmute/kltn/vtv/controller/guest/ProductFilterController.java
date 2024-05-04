@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductFilterController {
 
 
-    @Autowired
     private final IProductFilterService productFilterService;
-    @Autowired
     private final IPageService pageService;
 
 

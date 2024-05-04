@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class VoucherShopController {
 
-    @Autowired
-    private IVoucherShopService voucherShopService;
+    private final  IVoucherShopService voucherShopService;
 
     @PostMapping("/add")
     public ResponseEntity<VoucherShopResponse> addNewVoucher(@RequestBody VoucherShopRequest request,

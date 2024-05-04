@@ -18,8 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReviewCustomerController {
 
-    @Autowired
-    private IReviewCustomerService reviewService;
+    private final IReviewCustomerService reviewService;
 
     private final ReviewRepository reviewRepository;
 

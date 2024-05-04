@@ -15,13 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductPageController {
 
-    @Autowired
-    private IProductPageService productPageService;
-
-    @Autowired
+    private final IProductPageService productPageService;
     private final IPageService pageService;
-
-    @Autowired
     private final IProductService productService;
 
     @GetMapping("/list")

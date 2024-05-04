@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductSuggestionCustomerController {
 
-    @Autowired
     private final IProductSuggestionCustomerService productSuggestionService;
-    @Autowired
     private final IPageService pageService;
 
     @GetMapping("/get-page/search-history")

@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FollowedShopController {
 
-    @Autowired
-    private IFollowedShopService followedShopService;
+    private final  IFollowedShopService followedShopService;
 
     @PostMapping("/add")
     public ResponseEntity<FollowedShopResponse> addNewFollowedShop(@RequestParam Long shopId,

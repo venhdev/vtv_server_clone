@@ -18,9 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    @Autowired
     private final INotificationService notificationService;
-    @Autowired
     private final IPageService pageService;
 
     @GetMapping("/get-page")

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class ShopController {
 
-    @Autowired
     private final IShopService shopService;
 
     @PostMapping("/register")

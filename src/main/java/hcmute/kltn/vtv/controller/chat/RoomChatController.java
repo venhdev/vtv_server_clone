@@ -18,8 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RoomChatController {
 
-    @Autowired
-    private IRoomChatService roomChatService;
+    private final IRoomChatService roomChatService;
 
 
     @PostMapping("/create-room")

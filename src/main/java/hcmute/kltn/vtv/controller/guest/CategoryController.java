@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
 
-    @Autowired
     private final ICategoryService categoryService;
 
     @GetMapping("/all-parent")
@@ -32,10 +31,6 @@ public class CategoryController {
     }
 
 
-//    @GetMapping("/all-category/by-shop/{shopId}")
-//    public ResponseEntity<CategoriesResponse> getCategoryByShopId(@PathVariable Long shopId) {
-//        return ResponseEntity.ok(categoryService.getAllCategoryByShopId(shopId));
-//    }
 
 
 

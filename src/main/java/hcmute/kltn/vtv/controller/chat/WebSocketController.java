@@ -18,8 +18,8 @@ import java.security.Principal;
 public class WebSocketController {
 
 
-    SimpMessagingTemplate simpMessagingTemplate;
     private final IChatService chatService;
+    SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/message")
     @SendTo("/topic/{romChatId}/public")
