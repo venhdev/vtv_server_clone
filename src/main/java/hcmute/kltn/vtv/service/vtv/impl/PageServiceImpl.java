@@ -11,6 +11,19 @@ import org.springframework.stereotype.Service;
 public class PageServiceImpl implements IPageService {
 
 
+    @Override
+    public void validatePageNumberAndSize(int page, int size) {
+        if (page < 0) {
+            throw new NotFoundException("Số trang không được nhỏ hơn 0!");
+        }
+        if (size < 0) {
+            throw new NotFoundException("Số lượng không được nhỏ hơn 0!");
+        }
+        if (size > 200) {
+            throw new NotFoundException("Số lượng không được lớn hơn 200!");
+        }
+    }
+
 
     @Override
     public void checkRequestProductPageParams(int page, int size) {

@@ -23,13 +23,12 @@ import java.util.UUID;
 public class SearchHistoryServiceImpl implements ISearchHistoryService {
 
 
-    @Autowired
     private final SearchHistoryRepository searchHistoryRepository;
 
 
     @Override
-    public SearchHistoryPageResponse getSearchHistoryByUsername(String username, int size, int page) {
-        Page<SearchHistory> searchHistories = searchHistoryPage(username, size, page);
+    public SearchHistoryPageResponse getSearchHistoryByUsername(String username, int page, int size) {
+        Page<SearchHistory> searchHistories = searchHistoryPage(username, page, size);
 
         return searchHistoryPageResponse(searchHistories, size, "Lấy lịch sử tìm kiếm thành công!", "OK");
     }
@@ -65,8 +64,7 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
     @Transactional
     public SearchHistoryPageResponse deleteSearchHistory(String username, UUID searchHistoryId) {
 
-//        searchHistoryRepository.findByUsernameAndSearchHistoryId(username, searchHistoryId)
-//                .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch sử tìm kiếm!"));
+
         try {
             searchHistoryRepository.deleteByUsernameAndSearchHistoryId(username, searchHistoryId);
             Page<SearchHistory> searchHistories = searchHistoryPage(username, 10, 1);
@@ -109,7 +107,7 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
         return response;
     }
 
-    private Page<SearchHistory> searchHistoryPage(String username, int size, int page) {
+    private Page<SearchHistory> searchHistoryPage(String username, int page, int size){
         return searchHistoryRepository.findByUsernameOrderByCreateAtDesc(username, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch sử tìm kiếm!"));
     }

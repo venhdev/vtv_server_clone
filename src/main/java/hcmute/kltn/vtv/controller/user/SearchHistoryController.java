@@ -3,6 +3,7 @@ package hcmute.kltn.vtv.controller.user;
 
 import hcmute.kltn.vtv.model.data.user.response.SearchHistoryPageResponse;
 import hcmute.kltn.vtv.service.user.ISearchHistoryService;
+import hcmute.kltn.vtv.service.vtv.IPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SearchHistoryController {
 
-
-    @Autowired
+    private final IPageService pageService;
     private final ISearchHistoryService searchHistoryService;
 
-    @GetMapping("/get-page")
-    public ResponseEntity<SearchHistoryPageResponse> getSearchHistoryByUsername(HttpServletRequest request) {
+    @GetMapping("/get/page/{page}/size/{size}")
+    public ResponseEntity<SearchHistoryPageResponse> getSearchHistoryByUsername(@PathVariable("page") int page,
+                                                                                @PathVariable("size") int size,
+                                                                                HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
+        pageService.validatePageNumberAndSize(page, size);
 
-        return ResponseEntity.ok(searchHistoryService.getSearchHistoryByUsername(username, 10, 1));
+        return ResponseEntity.ok(searchHistoryService.getSearchHistoryByUsername(username, page, size));
     }
 
 
     @PostMapping("/add")
     public ResponseEntity<SearchHistoryPageResponse> addNewSearchHistory(@Param("search") String search,
-            HttpServletRequest request) {
+                                                                         HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
         return ResponseEntity.ok(searchHistoryService.addNewSearchHistory(username, search));
@@ -40,7 +43,7 @@ public class SearchHistoryController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<SearchHistoryPageResponse> deleteSearchHistoryById(@Param("searchHistoryId") UUID searchHistoryId,
-            HttpServletRequest request) {
+                                                                             HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
         return ResponseEntity.ok(searchHistoryService.deleteSearchHistory(username, searchHistoryId));

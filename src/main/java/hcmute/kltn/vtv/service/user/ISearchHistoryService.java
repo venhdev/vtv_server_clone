@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ISearchHistoryService {
 
-    SearchHistoryPageResponse getSearchHistoryByUsername(String username, int size, int page);
+    SearchHistoryPageResponse getSearchHistoryByUsername(String username, int page, int size);
 
     @Transactional
     SearchHistoryPageResponse addNewSearchHistory(String username, String search);

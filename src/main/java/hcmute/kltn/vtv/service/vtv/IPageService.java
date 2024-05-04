@@ -1,6 +1,8 @@
 package hcmute.kltn.vtv.service.vtv;
 
 public interface IPageService {
+    void validatePageNumberAndSize(int page, int size);
+
     void checkRequestProductPageParams(int page, int size);
 
     void checkRequestOrderPageParams(int page, int size);
