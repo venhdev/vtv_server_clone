@@ -1,7 +1,9 @@
 package hcmute.kltn.vtv.service.user.impl;
 
 
+import hcmute.kltn.vtv.model.data.guest.ResponseClass;
 import hcmute.kltn.vtv.model.data.user.response.SearchHistoryPageResponse;
+import hcmute.kltn.vtv.model.data.user.response.SearchHistoryResponse;
 import hcmute.kltn.vtv.model.dto.user.SearchHistoryDTO;
 import hcmute.kltn.vtv.model.entity.user.SearchHistory;
 import hcmute.kltn.vtv.repository.user.SearchHistoryRepository;
@@ -30,15 +32,14 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
     public SearchHistoryPageResponse getSearchHistoryByUsername(String username, int page, int size) {
         Page<SearchHistory> searchHistories = searchHistoryPage(username, page, size);
 
-        return searchHistoryPageResponse(searchHistories, size, "Lấy lịch sử tìm kiếm thành công!", "OK");
+        return SearchHistoryPageResponse.searchHistoryPageResponse(searchHistories, size, "Lấy lịch sử tìm kiếm thành công!", "OK");
     }
 
 
     @Override
     @Transactional
-    public SearchHistoryPageResponse addNewSearchHistory(String username, String search) {
+    public SearchHistoryResponse addNewSearchHistory(String username, String search) {
         SearchHistory searchHistory = new SearchHistory();
-
         if (searchHistoryRepository.existsByUsernameAndSearch(username, search)) {
             searchHistory = searchHistoryRepository.findByUsernameAndSearch(username, search)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch sử tìm kiếm!"));
@@ -50,10 +51,8 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
 
         try {
             searchHistoryRepository.save(searchHistory);
-            Page<SearchHistory> searchHistories = searchHistoryPage(username, 10, 1);
 
-            return searchHistoryPageResponse(searchHistories, 10,
-                    "Thêm lịch sử tìm kiếm thành công!", "Success");
+            return SearchHistoryResponse.searchHistoryResponse(searchHistory, "Thêm lịch sử tìm kiếm thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi thêm lịch sử tìm kiếm!");
         }
@@ -62,15 +61,12 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
 
     @Override
     @Transactional
-    public SearchHistoryPageResponse deleteSearchHistory(String username, UUID searchHistoryId) {
-
-
+    public ResponseClass deleteSearchHistory(String username, UUID searchHistoryId) {
         try {
             searchHistoryRepository.deleteByUsernameAndSearchHistoryId(username, searchHistoryId);
             Page<SearchHistory> searchHistories = searchHistoryPage(username, 10, 1);
 
-            return searchHistoryPageResponse(searchHistories, 10,
-                    "Xóa lịch sử tìm kiếm thành công!", "Success");
+            return ResponseClass.responseClass("Xóa lịch sử tìm kiếm thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi xóa lịch sử tìm kiếm!");
         }
@@ -92,22 +88,7 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
     }
 
 
-    private SearchHistoryPageResponse searchHistoryPageResponse(Page<SearchHistory> searchHistories, int size, String message, String status) {
-
-        SearchHistoryPageResponse response = new SearchHistoryPageResponse();
-        response.setCount(searchHistories.getContent().size());
-        response.setPage(searchHistories.getNumber() + 1);
-        response.setSize(size);
-        response.setTotalPage(searchHistories.getTotalPages());
-        response.setCode(200);
-        response.setMessage(message);
-        response.setStatus(status);
-        response.setSearchHistoryDTOs(SearchHistoryDTO.convertEntitiesToDTOs(searchHistories.getContent()));
-
-        return response;
-    }
-
-    private Page<SearchHistory> searchHistoryPage(String username, int page, int size){
+    private Page<SearchHistory> searchHistoryPage(String username, int page, int size) {
         return searchHistoryRepository.findByUsernameOrderByCreateAtDesc(username, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy lịch sử tìm kiếm!"));
     }

@@ -1,7 +1,9 @@
 package hcmute.kltn.vtv.controller.user;
 
 
+import hcmute.kltn.vtv.model.data.guest.ResponseClass;
 import hcmute.kltn.vtv.model.data.user.response.SearchHistoryPageResponse;
+import hcmute.kltn.vtv.model.data.user.response.SearchHistoryResponse;
 import hcmute.kltn.vtv.service.user.ISearchHistoryService;
 import hcmute.kltn.vtv.service.vtv.IPageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,8 +35,8 @@ public class SearchHistoryController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<SearchHistoryPageResponse> addNewSearchHistory(@Param("search") String search,
-                                                                         HttpServletRequest request) {
+    public ResponseEntity<SearchHistoryResponse> addNewSearchHistory(@Param("search") String search,
+                                                                     HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
         return ResponseEntity.ok(searchHistoryService.addNewSearchHistory(username, search));
@@ -42,8 +44,8 @@ public class SearchHistoryController {
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<SearchHistoryPageResponse> deleteSearchHistoryById(@Param("searchHistoryId") UUID searchHistoryId,
-                                                                             HttpServletRequest request) {
+    public ResponseEntity<ResponseClass> deleteSearchHistoryById(@Param("searchHistoryId") UUID searchHistoryId,
+                                                                 HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
         return ResponseEntity.ok(searchHistoryService.deleteSearchHistory(username, searchHistoryId));
