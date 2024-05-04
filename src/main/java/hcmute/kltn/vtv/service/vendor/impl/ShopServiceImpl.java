@@ -26,15 +26,10 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ShopServiceImpl implements IShopService {
 
-    @Autowired
-    private ShopRepository shopRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private CustomerServiceImpl customerService;
-    @Autowired
+    private final ShopRepository shopRepository;
+    private final CustomerRepository customerRepository;
+    private final CustomerServiceImpl customerService;
     private final IImageService imageService;
-    @Autowired
     private final IWardService wardService;
 
     @Override

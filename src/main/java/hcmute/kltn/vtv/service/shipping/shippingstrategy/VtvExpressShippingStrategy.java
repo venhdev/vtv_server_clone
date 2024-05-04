@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.service.vtv.shippingstrategy;
+package hcmute.kltn.vtv.service.shipping.shippingstrategy;
 
 import lombok.RequiredArgsConstructor;
 

@@ -23,10 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttributeShopServiceImpl implements IAttributeShopService {
 
-    @Autowired
-    private AttributeRepository attributeRepository;
-    @Autowired
-    private IShopService shopService;
+    private final AttributeRepository attributeRepository;
+    private final IShopService shopService;
 
 
     @Override

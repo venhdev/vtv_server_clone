@@ -14,6 +14,7 @@ import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -27,13 +28,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MailServiceImpl implements IMailService {
-    @Autowired
-    private JavaMailSender javaMailSender;
-    @Autowired
-    private ICustomerService customerService;
-    @Autowired
-    private IOtpService otpService;
+    private final JavaMailSender javaMailSender;
+    private final ICustomerService customerService;
+    private final IOtpService otpService;
 
 
     @Override

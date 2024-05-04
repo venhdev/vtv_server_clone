@@ -10,13 +10,12 @@ import hcmute.kltn.vtv.service.location.IProvinceService;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
 import hcmute.kltn.vtv.service.shipping.IShippingTimeEstimationService;
 import hcmute.kltn.vtv.service.shipping.ITransportProviderService;
-import hcmute.kltn.vtv.service.vtv.shippingstrategy.GiaoHangNhanhShippingStrategy;
-import hcmute.kltn.vtv.service.vtv.shippingstrategy.GiaoHangTietKiemShippingStrategy;
-import hcmute.kltn.vtv.service.vtv.shippingstrategy.IShippingStrategy;
-import hcmute.kltn.vtv.service.vtv.shippingstrategy.VtvExpressShippingStrategy;
+import hcmute.kltn.vtv.service.shipping.shippingstrategy.GiaoHangNhanhShippingStrategy;
+import hcmute.kltn.vtv.service.shipping.shippingstrategy.GiaoHangTietKiemShippingStrategy;
+import hcmute.kltn.vtv.service.shipping.shippingstrategy.IShippingStrategy;
+import hcmute.kltn.vtv.service.shipping.shippingstrategy.VtvExpressShippingStrategy;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

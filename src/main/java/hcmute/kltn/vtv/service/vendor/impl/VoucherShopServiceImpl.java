@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.vendor.impl;
 
+import hcmute.kltn.vtv.service.vendor.IShopService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.VoucherShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListVoucherShopResponse;
@@ -12,6 +13,7 @@ import hcmute.kltn.vtv.model.extra.VoucherType;
 import hcmute.kltn.vtv.repository.vtv.ShopRepository;
 import hcmute.kltn.vtv.repository.vtv.VoucherRepository;
 import hcmute.kltn.vtv.service.vendor.IVoucherShopService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,15 +23,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class VoucherShopServiceImpl implements IVoucherShopService {
 
-    @Autowired
-    private VoucherRepository voucherRepository;
-
-    @Autowired
-    private ShopServiceImpl shopService;
-    @Autowired
-    private ShopRepository shopRepository;
+    private final VoucherRepository voucherRepository;
+    private final IShopService shopService;
+    private final ShopRepository shopRepository;
 
     @Override
     @Transactional
@@ -41,7 +40,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         try {
             voucherRepository.save(voucher);
 
-            return voucherShopResponse(voucher, "Thêm mới mã giảm giá thành công.", "success");
+            return VoucherShopResponse.voucherShopResponse(voucher, "Thêm mới mã giảm giá thành công.", "success");
         } catch (Exception e) {
             throw new BadRequestException("Thêm mới mã giảm giá thất bại!");
         }
@@ -52,7 +51,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
     public VoucherShopResponse getVoucherByVoucherId(Long voucherId, String username) {
         Voucher voucher = getVoucherByVoucherIdAndUsername(voucherId, username);
 
-        return voucherShopResponse(voucher, "Lấy mã giảm giá thành công.", "ok");
+        return VoucherShopResponse.voucherShopResponse(voucher, "Lấy mã giảm giá thành công.", "ok");
     }
 
     @Override
@@ -62,7 +61,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         List<Voucher> vouchers = voucherRepository.findAllByShopAndStatusNot(shop, Status.DELETED)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
-        return listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", shop.getShopId(),
+        return ListVoucherShopResponse.listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá thành công.", shop.getShopId(),
                 shop.getName());
     }
 
@@ -73,7 +72,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         List<Voucher> vouchers = voucherRepository.findAllByShopAndStatus(shop, status)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
-        return listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá theo trạng thái thành công.",
+        return ListVoucherShopResponse.listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá theo trạng thái thành công.",
                 shop.getShopId(), shop.getName());
     }
 
@@ -84,7 +83,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         List<Voucher> vouchers = voucherRepository.findAllByShopAndStatusNotAndType(shop, Status.DELETED, type)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy mã giảm giá!"));
 
-        return listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá theo loại thành công.", shop.getShopId(),
+        return ListVoucherShopResponse.listVoucherShopResponse(vouchers, "Lấy danh sách mã giảm giá theo loại thành công.", shop.getShopId(),
                 shop.getName());
     }
 
@@ -105,7 +104,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         try {
             voucherRepository.save(voucher);
 
-            return voucherShopResponse(voucher, "Cập nhật mã giảm giá thành công.", "success");
+            return VoucherShopResponse.voucherShopResponse(voucher, "Cập nhật mã giảm giá thành công.", "success");
         } catch (Exception e) {
             throw new BadRequestException("Cập nhật mã giảm giá thất bại!");
         }
@@ -129,7 +128,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         try {
             voucherRepository.save(voucher);
 
-            return voucherShopResponse(voucher, "Cập nhật trạng thái mã giảm giá thành công.", "success");
+            return VoucherShopResponse.voucherShopResponse(voucher, "Cập nhật trạng thái mã giảm giá thành công.", "success");
         } catch (Exception e) {
             throw new BadRequestException("Cập nhật trạng thái mã giảm giá thất bại!");
         }
@@ -216,30 +215,8 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         return voucher;
     }
 
-    private VoucherShopResponse voucherShopResponse(Voucher voucher, String message, String status) {
-        VoucherShopResponse response = new VoucherShopResponse();
-        response.setVoucherDTO(VoucherDTO.convertEntityToDTO(voucher));
-        response.setCode(200);
-        response.setMessage(message);
-        response.setStatus(status);
-        response.setShopName(voucher.getShop().getName());
-        response.setShopId(voucher.getShop().getShopId());
 
-        return response;
-    }
 
-    private ListVoucherShopResponse listVoucherShopResponse(List<Voucher> vouchers, String message, Long shopId,
-            String shopName) {
-        ListVoucherShopResponse response = new ListVoucherShopResponse();
-        response.setVoucherDTOs(VoucherDTO.convertEntitiesToDTOs(vouchers));
-        response.setCode(200);
-        response.setMessage(message);
-        response.setStatus("ok");
-        response.setCount(vouchers.size());
-        response.setShopId(shopId);
-        response.setShopName(shopName);
 
-        return response;
-    }
 
 }

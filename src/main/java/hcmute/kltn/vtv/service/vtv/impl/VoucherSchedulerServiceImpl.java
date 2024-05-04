@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class VoucherSchedulerServiceImpl implements IVoucherSchedulerService {
 
-    @Autowired
     private final VoucherRepository voucherRepository;
 
     //findAllByShopNullAndStatusAndStartDateBeforeAndEndDateAfter
