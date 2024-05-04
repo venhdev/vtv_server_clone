@@ -21,13 +21,10 @@ public class ProductSuggestionCustomerServiceImpl implements IProductSuggestionC
 
     @Override
     public ListProductPageResponse getProductSuggestionBySearchHistory(String username, int page, int size) {
-
         String searchHistoriesToString = searchHistoryService.toStringSearchHistoryByUsername(username, 15, 1);
-
         Page<Product> productPage = productRepository.suggestBySearchHistoryAndRandomly(
                         searchHistoriesToString, Status.ACTIVE.toString(), PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm phù hợp"));
-
 
         return ListProductPageResponse.listProductPageResponse(productPage,  "Lấy danh sách sản phẩm theo lịch sử tìm kiếm thành công!");
     }
@@ -35,7 +32,6 @@ public class ProductSuggestionCustomerServiceImpl implements IProductSuggestionC
 
     @Override
     public ListProductPageResponse suggestByRandomly(int page, int size) {
-
         Page<Product> productPage = productRepository.suggestByRandomly(Status.ACTIVE.toString(), PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm phù hợp"));
 

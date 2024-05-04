@@ -74,10 +74,11 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
         }
     }
 
-    @Override
-    public String toStringSearchHistoryByUsername(String username, int size, int page) {
 
-        Page<SearchHistory> searchHistories = searchHistoryPage(username, size, page);
+    @Override
+    public String toStringSearchHistoryByUsername(String username, int page, int size) {
+
+        Page<SearchHistory> searchHistories = searchHistoryPage(username, page, size);
 
         StringBuilder searchHistoriesToString = new StringBuilder();
         for (SearchHistory searchHistory : searchHistories.getContent()) {
@@ -85,8 +86,6 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
         }
 
         return searchHistoriesToString.toString();
-
-
     }
 
 

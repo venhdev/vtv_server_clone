@@ -11,10 +11,11 @@ import hcmute.kltn.vtv.repository.user.FollowedShopRepository;
 import hcmute.kltn.vtv.repository.vtv.ShopRepository;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.service.user.IFollowedShopService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
+import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,66 +24,44 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowedShopServiceImpl implements IFollowedShopService {
 
-    @Autowired
-    private ICustomerService customerService;
-    @Autowired
-    private ShopRepository shopRepository;
-    @Autowired
-    private FollowedShopRepository followedShopRepository;
-    @Autowired
-    ModelMapper modelMapper;
+    private final ICustomerService customerService;
+    private final ShopRepository shopRepository;
+    private final FollowedShopRepository followedShopRepository;
 
     @Override
+    @Transactional
     public FollowedShopResponse addNewFollowedShop(Long shopId, String username) {
-
-        boolean isExist = followedShopRepository.existsByCustomerUsernameAndShopShopId(username, shopId);
-        if (isExist) {
+        if (followedShopRepository.existsByCustomerUsernameAndShopShopId(username, shopId)) {
             throw new BadRequestException("Bạn đã theo dõi cửa hàng này!");
         }
-
-        Customer customer = customerService.getCustomerByUsername(username);
-        Shop shop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new BadRequestException("Cửa hàng không tồn tại!"));
-
-        FollowedShop followedShop = new FollowedShop();
-        followedShop.setCustomer(customer);
-        followedShop.setShop(shop);
-        followedShop.setCreateAt(LocalDateTime.now());
+        FollowedShop followedShop = createFollowedShopByShopIdAndUsername(shopId, username);
 
         try {
             followedShopRepository.save(followedShop);
 
-            FollowedShopResponse response = new FollowedShopResponse();
-            response.setFollowedShopDTO(modelMapper.map(followedShop, FollowedShopDTO.class));
-            response.setMessage("Theo dõi cửa hàng thành công!");
-            response.setStatus("success");
-            response.setCode(200);
-
-            return response;
+            return FollowedShopResponse.followedShopResponse(followedShop, "Theo dõi cửa hàng thành công!", "Success");
         } catch (Exception e) {
-            throw new BadRequestException("Lỗi theo dõi cửa hàng!");
+            throw new InternalServerErrorException("Lỗi theo dõi cửa hàng!");
         }
     }
+
+
 
     @Override
     public ListFollowedShopResponse getListFollowedShopByUsername(String username) {
         List<FollowedShop> followedShops = followedShopRepository.findAllByCustomerUsername(username)
-                .orElseThrow(() -> new BadRequestException("Không có cửa hàng nào được theo dõi!"));
+                .orElseThrow(() -> new NotFoundException("Không có cửa hàng nào được theo dõi!"));
 
-        ListFollowedShopResponse response = new ListFollowedShopResponse();
-        response.setFollowedShopDTOs(FollowedShopDTO.convertToListDTO(followedShops));
-        response.setCount(followedShops.size());
-        response.setMessage("Lấy danh sách cửa hàng theo dõi thành công.");
-        response.setStatus("ok");
-        response.setCode(200);
-        return response;
+        return ListFollowedShopResponse.listFollowedShopResponse(followedShops,
+                "Lấy danh sách cửa hàng theo dõi thành công!", "OK");
     }
 
+
     @Override
+    @Transactional
     public FollowedShopResponse deleteFollowedShop(Long followedShopId, String username) {
         FollowedShop followedShop = followedShopRepository.findById(followedShopId)
-                .orElseThrow(() -> new BadRequestException("Theo dõi cửa hàng không tồn tại!"));
-
+                .orElseThrow(() -> new NotFoundException("Theo dõi cửa hàng không tồn tại!"));
         if (!followedShop.getCustomer().getUsername().equals(username)) {
             throw new BadRequestException("Bạn không có quyền xóa theo dõi cửa hàng này!");
         }
@@ -90,14 +69,21 @@ public class FollowedShopServiceImpl implements IFollowedShopService {
         try {
             followedShopRepository.delete(followedShop);
 
-            FollowedShopResponse response = new FollowedShopResponse();
-            response.setMessage("Xóa theo dõi cửa hàng thành công!");
-            response.setStatus("success");
-            response.setCode(200);
-            return response;
+            return FollowedShopResponse.followedShopResponse(followedShop, "Xóa theo dõi cửa hàng thành công!", "Success");
         } catch (Exception e) {
-            throw new BadRequestException("Lỗi xóa theo dõi cửa hàng!");
+            throw new InternalServerErrorException("Lỗi xóa theo dõi cửa hàng!");
         }
+    }
+
+
+    private FollowedShop createFollowedShopByShopIdAndUsername(Long shopId, String username) {
+        FollowedShop followedShop = new FollowedShop();
+        followedShop.setCustomer(customerService.getCustomerByUsername(username));
+        followedShop.setShop(shopRepository.findById(shopId)
+                .orElseThrow(() -> new NotFoundException("Cửa hàng không tồn tại!")));
+        followedShop.setCreateAt(LocalDateTime.now());
+
+        return followedShop;
     }
 
 }

@@ -19,10 +19,8 @@ import java.util.List;
 public class ProductVariantServiceImpl implements IProductVariantService {
 
 
-    @Autowired
-    private ProductVariantRepository productVariantRepository;
-    @Autowired
-    private IProductService productService;
+    private final ProductVariantRepository productVariantRepository;
+    private final IProductService productService;
 
 
     @Override

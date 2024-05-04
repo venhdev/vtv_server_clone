@@ -20,14 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerVoucherServiceImpl implements ICustomerVoucherService {
 
-    @Autowired
-    private VoucherRepository voucherRepository;
-    @Autowired
-    private CustomerVoucherRepository customerVoucherRepository;
-    @Autowired
-    private IVoucherService voucherService;
-    @Autowired
-    private ICustomerService customerService;
+    private final VoucherRepository voucherRepository;
+    private final CustomerVoucherRepository customerVoucherRepository;
+    private final IVoucherService voucherService;
+    private final ICustomerService customerService;
 
     @Override
     public CustomerVoucherResponse saveVoucher(Long voucherId, String username) {

@@ -43,7 +43,6 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
 
         Review review = createReviewByRequest(request, username);
         try {
-
             reviewRepository.save(review);
             loyaltyPointService.updatePointInLoyaltyPointByUsername(username, 200L, "REVIEW");
 
@@ -68,6 +67,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     public ReviewResponse getReviewByOrderItemId(UUID orderItemId) {
         Review review = reviewRepository.findByOrderItemOrderItemId(orderItemId)
                 .orElseThrow(() -> new NotFoundException("Đánh giá không tồn tại!"));
+
         return ReviewResponse.reviewResponse(review, "Lấy thông tin đánh giá thành công!", "OK");
     }
 
@@ -99,7 +99,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
         }
 
         return reviewRepository.findByReviewIdAndStatus(reviewId, Status.ACTIVE)
-                .orElseThrow(() -> new BadRequestException("Đánh giá không tồn tại"));
+                .orElseThrow(() -> new NotFoundException("Đánh giá không tồn tại"));
     }
 
 

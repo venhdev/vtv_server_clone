@@ -17,13 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SearchProductController {
 
-    @Autowired
-    private ISearchProductService searchProductService;
-
-    @Autowired
-    private ISearchHistoryService searchHistoryService;
-
-    @Autowired
+    private final ISearchProductService searchProductService;
+    private final ISearchHistoryService searchHistoryService;
     private final IPageService pageService;
 
 
@@ -36,14 +31,12 @@ public class SearchProductController {
             @RequestParam String sort,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-
         pageService.checkRequestProductPageParams(page, size);
         pageService.checkRequestSortParams(sort);
 
         if (search == null) {
             throw new NotFoundException("Từ khóa tìm kiếm không được để trống!");
         }
-
         if (userDetails != null) {
             String username = userDetails.getUsername();
             searchHistoryService.addNewSearchHistory(username, search);

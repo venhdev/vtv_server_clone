@@ -27,13 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ShippingServiceImpl implements IShippingService {
 
-    @Autowired
     private final IDistanceLocationService distanceLocationService;
-    @Autowired
     private final IShippingTimeEstimationService deliveryTimeEstimationService;
-    @Autowired
     private final ITransportProviderService transportProviderService;
-    @Autowired
     private final IProvinceService provinceService;
 
 

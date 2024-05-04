@@ -21,18 +21,25 @@ public class FollowedShopDTO {
 
     private String avatar;
 
-    public static List<FollowedShopDTO> convertToListDTO(List<FollowedShop> followedShops) {
+
+    public static  FollowedShopDTO convertEntityToDTO(FollowedShop followedShop) {
+        FollowedShopDTO followedShopDTO = new FollowedShopDTO();
+            followedShopDTO.setFollowedShopId(followedShop.getFollowedShopId());
+            followedShopDTO.setShopId(followedShop.getShop().getShopId());
+            followedShopDTO.setShopName(followedShop.getShop().getName());
+            followedShopDTO.setAvatar(followedShop.getShop().getAvatar());
+
+        return followedShopDTO;
+    }
+
+
+    public static List<FollowedShopDTO> convertEntitiesToDTOs(List<FollowedShop> followedShops) {
         List<FollowedShopDTO> followedShopDTOs = new ArrayList<>();
-        if (followedShops != null && !followedShops.isEmpty()) {
-            for (FollowedShop followedShop : followedShops) {
-                FollowedShopDTO followedShopDTO = new FollowedShopDTO();
-                followedShopDTO.setFollowedShopId(followedShop.getFollowedShopId());
-                followedShopDTO.setShopId(followedShop.getShop().getShopId());
-                followedShopDTO.setShopName(followedShop.getShop().getName());
-                followedShopDTO.setAvatar(followedShop.getShop().getAvatar());
-                followedShopDTOs.add(followedShopDTO);
-            }
+        followedShops.sort((o1, o2) -> o2.getCreateAt().compareTo(o1.getCreateAt()));
+        for (FollowedShop followedShop : followedShops) {
+            followedShopDTOs.add(convertEntityToDTO(followedShop));
         }
+
         return followedShopDTOs;
     }
 

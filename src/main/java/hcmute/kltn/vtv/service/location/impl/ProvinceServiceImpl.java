@@ -36,13 +36,7 @@ public class ProvinceServiceImpl implements IProvinceService {
             provinceDTOs = ProvinceDTO.convertEntitiesToDTOs(provinces);
         }
 
-        ListProvinceResponse response = new ListProvinceResponse();
-        response.setProvinceDTOs(provinceDTOs);
-        response.setCount(response.getProvinceDTOs().size());
-        response.setCode(200);
-        response.setMessage("Lấy danh sách tỉnh thành phố thành công.");
-        response.setStatus("OK");
-        return response;
+        return ListProvinceResponse.listProvinceResponse(provinceDTOs);
     }
 
 

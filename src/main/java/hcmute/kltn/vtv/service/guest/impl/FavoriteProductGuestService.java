@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FavoriteProductGuestService implements IFavoriteProductGuestService {
 
-    @Autowired
-    final private FavoriteProductRepository favoriteProductRepository;
+    private final FavoriteProductRepository favoriteProductRepository;
 
     @Override
     public int countFavoriteProduct(Long productId) {

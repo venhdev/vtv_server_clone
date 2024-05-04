@@ -18,9 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandServiceImpl implements IBrandService {
 
-    @Autowired
     private final BrandRepository brandRepository;
-    @Autowired
     private final ICategoryService categoryService;
 
 

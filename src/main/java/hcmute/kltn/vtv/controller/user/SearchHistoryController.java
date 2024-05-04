@@ -35,7 +35,7 @@ public class SearchHistoryController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<SearchHistoryResponse> addNewSearchHistory(@Param("search") String search,
+    public ResponseEntity<SearchHistoryResponse> addNewSearchHistory(@RequestBody String search,
                                                                      HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 

@@ -30,13 +30,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderItemServiceImpl implements IOrderItemService {
 
-    @Autowired
     private final OrderItemRepository orderItemRepository;
-    @Autowired
     private final ICartService cartService;
-    @Autowired
     private final IProductVariantService productVariantService;
-    @Autowired
     private final CartRepository cartRepository;
 
 

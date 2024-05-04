@@ -2,11 +2,15 @@ package hcmute.kltn.vtv.service.user;
 
 import hcmute.kltn.vtv.model.data.user.response.FollowedShopResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListFollowedShopResponse;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface IFollowedShopService {
-   FollowedShopResponse addNewFollowedShop(Long shopId, String username);
 
-   ListFollowedShopResponse getListFollowedShopByUsername(String username);
+    @Transactional
+    FollowedShopResponse addNewFollowedShop(Long shopId, String username);
 
-   FollowedShopResponse deleteFollowedShop(Long followedShopId, String username);
+    ListFollowedShopResponse getListFollowedShopByUsername(String username);
+
+    @Transactional
+    FollowedShopResponse deleteFollowedShop(Long followedShopId, String username);
 }

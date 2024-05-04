@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements ICategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
 
 

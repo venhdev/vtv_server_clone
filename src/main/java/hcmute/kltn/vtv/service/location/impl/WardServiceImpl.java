@@ -43,13 +43,13 @@ public class WardServiceImpl implements IWardService {
                 .orElseThrow(() -> new NotFoundException(
                         "Không tìm thấy phường xã nào có mã là: " + wardCode));
         if (!ward.getDistrict().getName().equals(districtName)) {
-            throw new NotFoundException("Mã phường xã " + wardCode + " không thuộc quận huyện " + districtName);
+            throw new BadRequestException("Mã phường xã " + wardCode + " không thuộc quận huyện " + districtName);
         }
         if (!ward.getDistrict().getProvince().getName().equals(provinceName)) {
-            throw new NotFoundException("Mã phường xã " + wardCode + " không thuộc tỉnh thành " + provinceName);
+            throw new BadRequestException("Mã phường xã " + wardCode + " không thuộc tỉnh thành " + provinceName);
         }
         if (!ward.getName().equals(wardName)) {
-            throw new NotFoundException("Mã phường xã " + wardCode + " không trùng với tên phường xã " + wardName);
+            throw new BadRequestException("Mã phường xã " + wardCode + " không trùng với tên phường xã " + wardName);
         }
         return ward;
     }
@@ -57,7 +57,7 @@ public class WardServiceImpl implements IWardService {
     @Override
     public ListWardResponse getAllWardByDistrictCode(String districtCode) {
         List<Ward> wards = wardRepository.findAllByDistrict_DistrictCode(districtCode)
-                .orElseThrow(() -> new BadRequestException(
+                .orElseThrow(() -> new NotFoundException(
                         "Không tìm thấy phường xã nào có mã quận huyện là " + districtCode));
         List<WardDTO> wardDTOs = new ArrayList<>();
         if (!wards.isEmpty()) {
@@ -75,7 +75,7 @@ public class WardServiceImpl implements IWardService {
                     .orElseThrow(() -> new NotFoundException(
                             "Không tìm thấy phường xã nào có mã là: " + wardCode));
             if (!ward.getDistrict().getDistrictCode().equals(districtCode)) {
-                throw new NotFoundException("Mã phường xã " + wardCode + " không thuộc quận huyện " + districtCode);
+                throw new BadRequestException("Mã phường xã " + wardCode + " không thuộc quận huyện " + districtCode);
             }
             wards.add(ward);
         }
@@ -101,7 +101,7 @@ public class WardServiceImpl implements IWardService {
             return;
         }
 
-        throw new NotFoundException("Không tìm thấy phường xã nào có mã là: " + wardCode);
+        throw new BadRequestException("Không tìm thấy phường xã nào có mã là: " + wardCode);
     }
 
 }

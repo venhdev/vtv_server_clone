@@ -28,11 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressServiceImpl implements IAddressService {
 
-    @Autowired
     private final AddressRepository addressRepository;
-    @Autowired
     private final ICustomerService customerService;
-    @Autowired
     private final IWardService wardService;
 
 

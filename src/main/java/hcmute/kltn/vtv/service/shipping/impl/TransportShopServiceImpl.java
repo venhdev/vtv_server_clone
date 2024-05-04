@@ -22,8 +22,8 @@ public class TransportShopServiceImpl implements ITransportShopService {
     @Override
     public List<Shop> getShopsByWardCode(String wardCode) {
 
-            return shopRepository.findAllByWardWardCodeAndStatus(wardCode, Status.ACTIVE)
-                    .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng nào tại phường: " + wardCode));
+        return shopRepository.findAllByWardWardCodeAndStatus(wardCode, Status.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng nào tại phường: " + wardCode));
     }
 
     @Override

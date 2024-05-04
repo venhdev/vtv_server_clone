@@ -29,12 +29,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements ICustomerService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private IOtpService otpService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final CustomerRepository customerRepository;
+    private final IOtpService otpService;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override

@@ -26,11 +26,8 @@ import java.util.UUID;
 public class CommentCustomerServiceImpl implements ICommentCustomerService {
 
 
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private ICustomerService customerService;
-    @Autowired
+    private final CommentRepository commentRepository;
+    private final ICustomerService customerService;
     private final IReviewCustomerService reviewCustomerService;
 
     @Override

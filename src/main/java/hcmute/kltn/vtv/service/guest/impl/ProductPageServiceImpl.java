@@ -21,10 +21,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductPageServiceImpl implements IProductPageService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ListProductPageResponse getListProductPage(int page, int size) {
