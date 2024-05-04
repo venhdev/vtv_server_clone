@@ -335,6 +335,19 @@ public class MailServiceImpl implements IMailService {
         }
     }
 
+
+    @Async
+    @Transactional
+    @Override
+    public void activateAccountSendOtpToEmailAsync(String username) {
+        try {
+            activateAccountSendOtpToEmail(username);
+        } catch (InternalServerErrorException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     @Transactional
     public SendEmailResponse activateAccountSendOtpToEmail(String username) {

@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             customerRepository.save(customer);
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
             walletService.addNewWalletAfterRegister(customer.getUsername());
-            mailService.activateAccountSendOtpToEmail(customer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
 
             String message = "Đăng ký tài khoản khách hàng thành công, " +
                     "vui lòng kiểm tra email để kích hoạt tài khoản." +
