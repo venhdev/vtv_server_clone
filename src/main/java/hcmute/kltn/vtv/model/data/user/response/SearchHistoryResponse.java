@@ -15,7 +15,6 @@ public class SearchHistoryResponse extends ResponseAbstract {
     private SearchHistoryDTO searchHistoryDTO;
 
 
-
     public static SearchHistoryResponse searchHistoryResponse(SearchHistory searchHistory, String message, String status) {
         SearchHistoryResponse response = new SearchHistoryResponse();
         response.setCode(200);

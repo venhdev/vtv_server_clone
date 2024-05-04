@@ -17,6 +17,8 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, UU
 
     Optional<Page<SearchHistory>> findByUsernameOrderByCreateAtDesc(String username, PageRequest pageRequest);
 
+    boolean existsByUsernameAndSearchHistoryId(String username, UUID searchHistoryId);
+
     void deleteByUsernameAndSearchHistoryId(String username, UUID searchHistoryId);
 
     Optional<SearchHistory> findByUsernameAndSearchHistoryId(String username, UUID searchHistoryId);

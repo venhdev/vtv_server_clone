@@ -62,9 +62,11 @@ public class SearchHistoryServiceImpl implements ISearchHistoryService {
     @Override
     @Transactional
     public ResponseClass deleteSearchHistory(String username, UUID searchHistoryId) {
+        if (!searchHistoryRepository.existsByUsernameAndSearchHistoryId(username, searchHistoryId)) {
+            throw new NotFoundException("Không tìm thấy lịch sử tìm kiếm để xóa có id: " + searchHistoryId);
+        }
         try {
             searchHistoryRepository.deleteByUsernameAndSearchHistoryId(username, searchHistoryId);
-            Page<SearchHistory> searchHistories = searchHistoryPage(username, 10, 1);
 
             return ResponseClass.responseClass("Xóa lịch sử tìm kiếm thành công!", "Success");
         } catch (Exception e) {
