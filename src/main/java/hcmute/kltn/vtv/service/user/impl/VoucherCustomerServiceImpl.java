@@ -18,7 +18,6 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class VoucherCustomerServiceImpl implements IVoucherCustomerService {
-    @Autowired
     private final VoucherRepository voucherRepository;
 
 

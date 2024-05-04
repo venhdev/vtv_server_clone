@@ -21,15 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class VoucherOrderServiceImpl implements IVoucherOrderService {
 
-    @Autowired
     private final VoucherOrderRepository voucherOrderRepository;
-    @Autowired
     private final VoucherRepository voucherRepository;
-    @Autowired
     private final VoucherShopServiceImpl voucherShopService;
-    @Autowired
     private final VoucherAdminServiceImpl voucherSystemService;
-    @Autowired
     private final IVoucherCustomerService voucherCustomerService;
 
     @Transactional
@@ -42,12 +37,10 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
         } else {
             voucher = voucherSystemService.checkVoucherSystem(voucherId);
         }
-        VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setType(!isShop);
-        voucherOrder.setVoucher(voucher);
-        voucherOrder.setOrder(order);
+
+        VoucherOrder voucherOrder = createVoucherOrder(voucher, order, isShop);
+
         try {
-            voucher.setQuantityUsed(voucher.getQuantityUsed() + 1);
             voucherRepository.save(voucher);
             return voucherOrderRepository.save(voucherOrder);
         } catch (Exception e) {
@@ -66,13 +59,11 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
         } else {
             voucher = voucherCustomerService.getVoucherBySystemVoucherCode(code);
         }
-        VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setType(shopId != null);
-        voucherOrder.setVoucher(voucher);
-        voucherOrder.setOrder(order);
+
+        VoucherOrder voucherOrder = createVoucherOrder(voucher, order, shopId);
         try {
-            voucher.setQuantityUsed(voucher.getQuantityUsed() + 1);
             voucherRepository.save(voucher);
+
             return voucherOrderRepository.save(voucherOrder);
         } catch (Exception e) {
             throw new InternalServerErrorException("Thêm mới mã giảm giá thất bại!");
@@ -131,6 +122,29 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
         VoucherOrder voucherOrder = new VoucherOrder();
         voucherOrder.setType(shopId != null);
         voucherOrder.setVoucher(voucher);
+        return voucherOrder;
+    }
+
+
+
+    private VoucherOrder createVoucherOrder(Voucher voucher, Order order, boolean isShop) {
+        VoucherOrder voucherOrder = new VoucherOrder();
+        voucherOrder.setType(!isShop);
+        voucherOrder.setVoucher(voucher);
+        voucherOrder.setOrder(order);
+        voucher.setQuantityUsed(voucher.getQuantityUsed() + 1);
+
+        return voucherOrder;
+    }
+
+
+    private VoucherOrder createVoucherOrder(Voucher voucher, Order order, Long shopId) {
+        VoucherOrder voucherOrder = new VoucherOrder();
+        voucherOrder.setType(shopId != null);
+        voucherOrder.setVoucher(voucher);
+        voucherOrder.setOrder(order);
+        voucher.setQuantityUsed(voucher.getQuantityUsed() + 1);
+
         return voucherOrder;
     }
 
