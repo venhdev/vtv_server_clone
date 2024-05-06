@@ -4,6 +4,8 @@ package hcmute.kltn.vtv.vnpay;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,13 +20,28 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class VNPayConfig {
 
+    public static InetAddress ip;
+
+    static {
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String return_url = "http://" + VNPayConfig.ip.getHostAddress() + ":8585/api/vnpay/return";
+
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8585/api/vnpay/return";
+    public static String vnp_ReturnUrl = return_url;
     public static String vnp_TmnCode = "U1PBPIW9";
     public static String secretKey = "RTQMAKUQUMXLALTESAQWTTIGSCHPBBMK";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+
+    public VNPayConfig() throws UnknownHostException {
+    }
 
     public static String Sha256(String message) {
         String digest = null;
