@@ -43,8 +43,8 @@ public class SearchHistoryController {
     }
 
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<ResponseClass> deleteSearchHistoryById(@Param("searchHistoryId") UUID searchHistoryId,
+    @DeleteMapping("/delete/{searchHistoryId}")
+    public ResponseEntity<ResponseClass> deleteSearchHistoryById(@PathVariable("searchHistoryId") UUID searchHistoryId,
                                                                  HttpServletRequest request) {
         String username = (String) request.getAttribute("username");
 
