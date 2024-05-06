@@ -100,13 +100,7 @@ public class MultipleOrderResponse extends ResponseAbstract {
 
 
     private Long calculateTotalLoyaltyPoint(List<OrderResponse> orderResponses) {
-        Long totalLoyaltyPoint = 0L;
-        for (OrderResponse orderResponse : orderResponses) {
-            if (orderResponse.getOrderDTO().getLoyaltyPointHistoryDTO() != null) {
-                totalLoyaltyPoint += orderResponse.getOrderDTO().getLoyaltyPointHistoryDTO().getPoint();
-            }
-        }
-        return totalLoyaltyPoint;
+        return orderResponses.get(0).getTotalPoint();
     }
 
 
