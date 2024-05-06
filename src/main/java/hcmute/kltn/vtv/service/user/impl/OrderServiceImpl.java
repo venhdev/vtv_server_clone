@@ -438,11 +438,11 @@ public class OrderServiceImpl implements IOrderService {
     private Order createAddNewOrderWithCart(OrderRequestWithCart request, String username) {
         Address address = addressService.checkAddress(request.getAddressId(), username);
         Order order = createBaseOrder(username, address);
+        order.setPaymentMethod(request.getPaymentMethod());
         if (request.getPaymentMethod().equals("VNPay")){
             order.setStatus(OrderStatus.UNPAID);
         }else {
             order.setStatus(OrderStatus.PENDING);
-            order.setPaymentMethod(request.getPaymentMethod());
             if (request.getPaymentMethod().equals("wallet")) {
                 walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
             }
