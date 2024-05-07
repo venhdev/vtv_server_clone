@@ -65,7 +65,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
             customerRepository.save(customer);
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
             walletService.addNewWalletAfterRegister(customer.getUsername());
-            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername(), customer.getCustomerId());
 
             String message = "Đăng ký tài khoản khách hàng thành công, " +
                     "vui lòng kiểm tra email để kích hoạt tài khoản." +
@@ -89,7 +89,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         Customer customer = createCustomer(customerRequest);
         try {
             customerRepository.save(customer);
-            mailService.activateAccountSendOtpToEmail(customer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername(), customer.getCustomerId());
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
             walletService.addNewWalletAfterRegister(customer.getUsername());
 
