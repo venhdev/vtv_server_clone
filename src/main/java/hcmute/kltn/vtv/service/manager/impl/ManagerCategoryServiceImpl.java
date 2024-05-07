@@ -25,13 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerCategoryServiceImpl implements IManagerCategoryService {
 
-    @Autowired
     private final CategoryRepository categoryRepository;
-    @Autowired
     private final IManagerProductService managerProductService;
-    @Autowired
     private final BrandRepository brandRepository;
-    @Autowired
     private final IImageService imageService;
 
 

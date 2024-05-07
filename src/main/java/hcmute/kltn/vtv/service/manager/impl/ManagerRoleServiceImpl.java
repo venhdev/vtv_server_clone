@@ -28,12 +28,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ManagerRoleServiceImpl implements IManagerRoleService {
 
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private CustomerServiceImpl customerService;
-    @Autowired
-    private ManagerRepository managerRepository;
+    private final CustomerRepository customerRepository;
+    private final CustomerServiceImpl customerService;
+    private final ManagerRepository managerRepository;
 
     @Override
     @Transactional

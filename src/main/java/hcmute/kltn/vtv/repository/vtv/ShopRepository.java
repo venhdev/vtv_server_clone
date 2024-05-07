@@ -43,7 +43,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
     int countAllByStatus(Status status);
 
-    Optional<Page<Shop>> findAllByStatus(Status status, Pageable pageable);
+    Optional<Page<Shop>> findAllByStatusOrderByName(Status status, Pageable pageable);
 
     int countByNameContainsAndStatus(String name, Status status);
 

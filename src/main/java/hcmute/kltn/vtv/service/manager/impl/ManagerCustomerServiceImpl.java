@@ -27,9 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerCustomerServiceImpl implements IManagerCustomerService {
 
-    @Autowired
     private ICustomerService customerService;
-    @Autowired
     private CustomerRepository customerRepository;
     private ManagerShopRepository managerShopRepository;
 

@@ -23,13 +23,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ManagerBrandServiceImpl implements IManagerBrandService {
 
-    @Autowired
     private final BrandRepository brandRepository;
-    @Autowired
     private final IImageService imageService;
-    @Autowired
     private final IManagerCategoryService categoryService;
-    @Autowired
     private final ProductRepository productRepository;
 
 

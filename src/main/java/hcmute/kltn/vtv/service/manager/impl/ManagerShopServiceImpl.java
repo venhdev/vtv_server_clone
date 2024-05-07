@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
+import hcmute.kltn.vtv.model.data.manager.response.ShopsResponse;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListShopManagerResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerShopResponse;
@@ -14,7 +15,6 @@ import hcmute.kltn.vtv.service.manager.IManagerShopService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,29 +25,41 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerShopServiceImpl implements IManagerShopService {
 
-    @Autowired
-    private ShopRepository shopRepository;
-    @Autowired
-    private ICustomerService customerService;
-    @Autowired
-    private ManagerShopRepository managerShopRepository;
-    @Autowired
-    private IManagerProductService managerProductService;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final ShopRepository shopRepository;
+    private final ICustomerService customerService;
+    private final ManagerShopRepository managerShopRepository;
+    private final IManagerProductService managerProductService;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public ManagerShopResponse getShopById(Long id) {
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
 
-        ManagerShopResponse response = new ManagerShopResponse();
-        response.setShopDTO(ShopDTO.convertEntityToDTO(shop));
-        response.setMessage("Lấy thông tin cửa hàng thành công!");
-        response.setCode(200);
-        response.setStatus("OK");
-        return response;
+        return ManagerShopResponse.managerShopResponse(shop, "Lấy thông tin quản lý cửa hàng thành công!", "OK");
     }
+
+
+    @Override
+    public ShopsResponse getShopsByStatus(int page, int size, Status status){
+        Page<Shop> shops = shopRepository.findAllByStatusOrderByName(status, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
+        String message = "Lấy danh sách cửa hàng theo trạng thái " + messageByStatus(status) + " thành công!";
+
+        return ShopsResponse.shopsResponse(shops, message, page, size);
+    }
+
+
+    @Override
+    public ShopsResponse getShopsByNameAndStatus(int page, int size, String name, Status status){
+        Page<Shop> shops = shopRepository.findAllByNameContainsAndStatusOrderByName(name, status, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
+        String message = "Lấy danh sách cửa hàng theo tên và trạng thái " + messageByStatus(status) + " thành công!";
+
+        return ShopsResponse.shopsResponse(shops, message, page, size);
+    }
+
+
+
 
     public ManagerShopResponse lockShopById(Long shopId, String username, String note) {
         // Customer customer = customerService.getCustomerByUsername(username);
@@ -100,7 +112,7 @@ public class ManagerShopServiceImpl implements IManagerShopService {
         int totalShop = shopRepository.countAllByStatus(status);
         int totalPage = (int) Math.ceil((double) totalShop / size);
 
-        Page<Shop> shops = shopRepository.findAllByStatus(status, PageRequest.of(page - 1, size))
+        Page<Shop> shops = shopRepository.findAllByStatusOrderByName(status, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách cửa hàng"));
 
         return listShopManagerResponse(shops.getContent(),
@@ -135,17 +147,19 @@ public class ManagerShopServiceImpl implements IManagerShopService {
         return response;
     }
 
-    @Override
-    public void checkRequestPageParams(int page, int size) {
-        if (page < 0) {
-            throw new NotFoundException("Trang không được nhỏ hơn 0!");
-        }
-        if (size < 0) {
-            throw new NotFoundException("Kích thước trang không được nhỏ hơn 0!");
-        }
-        if (size > 500) {
-            throw new NotFoundException("Kích thước trang không được lớn hơn 200!");
+
+    private String messageByStatus(Status status) {
+        if (status.equals(Status.ACTIVE)) {
+            return "hoạt động";
+        } else if (status.equals(Status.INACTIVE)) {
+            return "ngưng hoạt động";
+        } else if (status.equals(Status.LOCKED)) {
+            return "bị khóa";
+        } else {
+            return "đã xóa";
         }
     }
+
+
 
 }

@@ -28,12 +28,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerServiceImpl implements IManagerService {
 
-    @Autowired
     private final IManagerRoleService managerRoleService;
-    @Autowired
     private final ManagerRepository managerRepository;
-
-    @Autowired
     private final ICustomerService customerService;
 
 
