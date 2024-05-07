@@ -18,7 +18,7 @@ public interface IMailService {
 
     @Async
     @Transactional
-    void activateAccountSendOtpToEmailAsync(String username, Long customerId);
+    void activateAccountSendOtpToEmailAsync(String username);
 
     @Transactional
     SendEmailResponse activateAccountSendOtpToEmail(String username);

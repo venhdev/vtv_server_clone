@@ -63,9 +63,14 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
         try {
             customerRepository.save(customer);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
+        }
+
+        try {
             loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
             walletService.addNewWalletAfterRegister(customer.getUsername());
-            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername(), customer.getCustomerId());
+            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
 
             String message = "Đăng ký tài khoản khách hàng thành công, " +
                     "vui lòng kiểm tra email để kích hoạt tài khoản." +
@@ -76,7 +81,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
             return RegisterResponse.registerResponse(customer.getUsername(), customer.getEmail(), message);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
+            throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại! Tạo ví, điểm thưởng và gửi email kích hoạt thất bại.");
         }
 
     }
@@ -89,13 +94,21 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         Customer customer = createCustomer(customerRequest);
         try {
             customerRepository.save(customer);
-            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername(), customer.getCustomerId());
-            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
-            walletService.addNewWalletAfterRegister(customer.getUsername());
 
-            return customer;
         } catch (Exception e) {
             throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại!" + e.getMessage());
+        }
+
+
+        try {
+            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
+            walletService.addNewWalletAfterRegister(customer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
+
+            return customer;
+
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại! Tạo ví, điểm thưởng và gửi email kích hoạt thất bại." + e.getMessage());
         }
     }
 
