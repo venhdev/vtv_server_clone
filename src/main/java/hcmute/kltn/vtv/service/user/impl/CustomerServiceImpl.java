@@ -171,7 +171,9 @@ public class CustomerServiceImpl implements ICustomerService {
     private Customer editProfileCustomerByProfileCustomerRequest(ProfileCustomerRequest request) {
         Customer customer = getCustomerByUsername(request.getUsername());
         customer.setBirthday(request.getBirthday());
-        customer.setEmail(request.getEmail());
+        if (!customer.getEmail().equals(request.getEmail())) {
+            throw new BadRequestException("Không thể thay đổi email.");
+        }
         customer.setFullName(request.getFullName());
         customer.setGender(request.isGender());
         customer.setUpdateAt(LocalDateTime.now());
