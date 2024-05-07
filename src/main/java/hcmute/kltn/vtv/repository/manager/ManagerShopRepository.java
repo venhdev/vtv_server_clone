@@ -21,6 +21,8 @@ public interface ManagerShopRepository extends JpaRepository<ManagerShop, Long> 
 
     Optional<Page<ManagerShop>> findAllByLockAndShopNameContains(boolean lock, String shopName, Pageable pageable);
 
-    boolean existsByShop_ShopId(Long shopId);
+    boolean existsByShopShopId(Long shopId);
+
+    boolean existsByShopShopIdAndLock(Long shopId, boolean lock);
 
 }

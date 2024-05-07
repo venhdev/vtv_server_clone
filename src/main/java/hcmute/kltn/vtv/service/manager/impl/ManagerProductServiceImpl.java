@@ -18,6 +18,7 @@ import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,6 +112,58 @@ public class ManagerProductServiceImpl implements IManagerProductService {
         String message = "Lấy danh sách sản phẩm đã khóa thành công";
 
         return ListManagerProductResponse.listManagerProductResponse(managerProducts, message, "OK");
+    }
+
+
+    @Async
+    @Override
+    @Transactional
+    public void lockProductsByShopId(Long shopId, String username, String note) {
+        List<Product> products = productRepository.findByShopShopIdAndStatus(shopId, Status.ACTIVE)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm của cửa hàng có mã: " + shopId));
+        Customer manager = customerService.getCustomerByUsername(username);
+
+        for (Product product : products) {
+            ManagerProduct managerProduct;
+            if (managerProductRepository.existsByProductProductIdAndLock(product.getProductId(), true)) {
+                throw new BadRequestException("Sản phẩm đã bị khóa bởi bạn");
+            } else if (managerProductRepository.existsByProduct_ProductId(product.getProductId())) {
+                managerProduct = updateManagerProduct(product.getProductId(), manager, note, true, false);
+            } else {
+                managerProduct = createManagerProduct(product, manager, note);
+            }
+            try {
+                updateStatusProductByStatusAndStatusEqual(product, Status.LOCKED, Status.ACTIVE);
+                managerProductRepository.save(managerProduct);
+            } catch (Exception e) {
+                throw new InternalServerErrorException("Khóa sản phẩm: " + product.getName() + " thất bại! " + e.getMessage());
+            }
+        }
+    }
+
+
+    @Async
+    @Override
+    @Transactional
+    public void unlockProductsByShopId(Long shopId, String username, String note) {
+        List<Product> products = productRepository.findByShopShopIdAndStatus(shopId, Status.LOCKED)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm của cửa hàng có mã: " + shopId));
+        Customer manager = customerService.getCustomerByUsername(username);
+
+        for (Product product : products) {
+            ManagerProduct managerProduct;
+            if (!managerProductRepository.existsByProduct_ProductId(product.getProductId()) && !managerProductRepository.existsByProductProductIdAndLock(product.getProductId(), true)) {
+                throw new BadRequestException("Sản phẩm chưa bị khóa");
+            }
+            managerProduct = updateManagerProduct(product.getProductId(), manager, note, false, true);
+
+            try {
+                updateStatusProductByStatusAndStatusEqual(product, Status.ACTIVE, Status.LOCKED);
+                managerProductRepository.save(managerProduct);
+            } catch (Exception e) {
+                throw new InternalServerErrorException("Mở khóa sản phẩm: " + product.getName() + " thất bại! " + e.getMessage());
+            }
+        }
     }
 
 

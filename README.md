@@ -399,6 +399,23 @@
   - Xem chi tiết danh mục.
   - Xem danh sách sản phẩm theo danh mục.
 
+
+
+- Quản lý sản phẩm của cửa hàng từ quyền manager:
+  - Khóa sản phẩm.
+  - Mở khóa sản phẩm.
+  - Xem danh sách sản phẩm bị khóa.
+  - Tìm kiếm sản phẩm bị khóa theo tên sản phẩm.
+
+
+- Quản lý cửa hàng từ quyền manager:
+  - Xem danh sách cửa hàng theo trạng thái.
+  - Xem danh sách cửa hàng theo tên và trạng thái.
+  - Khóa cửa hàng.
+  - Mở khóa cửa hàng.
+  - Xem danh sách quản lý cửa hàng theo trạng thái.
+  - Xem danh sách quản lý cửa hàng theo tên và trạng thái.
+
 [//]: # (  - Xem danh sách sản phẩm bán chạy theo danh mục.)
 
 [//]: # (  - Xem danh sách sản phẩm mới nhất theo danh mục.)

@@ -1,10 +1,12 @@
 package hcmute.kltn.vtv.service.manager.impl;
 
 import hcmute.kltn.vtv.model.data.manager.response.ShopsResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ShopResponse;
+import hcmute.kltn.vtv.model.entity.manager.ManagerShop;
+import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.ListShopManagerResponse;
 import hcmute.kltn.vtv.model.data.manager.response.ManagerShopResponse;
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.vtv.CategoryRepository;
@@ -13,13 +15,13 @@ import hcmute.kltn.vtv.repository.manager.ManagerShopRepository;
 import hcmute.kltn.vtv.service.manager.IManagerProductService;
 import hcmute.kltn.vtv.service.manager.IManagerShopService;
 import hcmute.kltn.vtv.service.user.ICustomerService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +34,15 @@ public class ManagerShopServiceImpl implements IManagerShopService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public ManagerShopResponse getShopById(Long id) {
+    public ShopResponse getShopById(Long id) {
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
 
-        return ManagerShopResponse.managerShopResponse(shop, "Lấy thông tin quản lý cửa hàng thành công!", "OK");
+        return ShopResponse.shopResponse(shop, "Lấy thông tin quản lý cửa hàng thành công!", "OK");
     }
 
 
     @Override
-    public ShopsResponse getShopsByStatus(int page, int size, Status status){
+    public ShopsResponse getShopsByStatus(int page, int size, Status status) {
         Page<Shop> shops = shopRepository.findAllByStatusOrderByName(status, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
         String message = "Lấy danh sách cửa hàng theo trạng thái " + messageByStatus(status) + " thành công!";
@@ -50,7 +52,7 @@ public class ManagerShopServiceImpl implements IManagerShopService {
 
 
     @Override
-    public ShopsResponse getShopsByNameAndStatus(int page, int size, String name, Status status){
+    public ShopsResponse getShopsByNameAndStatus(int page, int size, String name, Status status) {
         Page<Shop> shops = shopRepository.findAllByNameContainsAndStatusOrderByName(name, status, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
         String message = "Lấy danh sách cửa hàng theo tên và trạng thái " + messageByStatus(status) + " thành công!";
@@ -59,38 +61,94 @@ public class ManagerShopServiceImpl implements IManagerShopService {
     }
 
 
-
-
+    @Override
+    @Transactional
     public ManagerShopResponse lockShopById(Long shopId, String username, String note) {
-        // Customer customer = customerService.getCustomerByUsername(username);
-        // Shop shop = checkShopLock(shopId);
-        // ManagerShop managerShop = new ManagerShop();
-        // if(managerShopRepository.existsByShop_ShopId(shopId)){
-        // managerShop = managerShopRepository.findByShop_ShopId(shopId).
-        // orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
-        // if (managerShop.isLock()) {
-        // throw new NotFoundException("Cửa hàng đã bị khóa!");
-        // }
-        // }else {
-        // managerShop.setShop(shop);
-        // managerShop.setManager(customer);
-        // }
-        // managerShop.setLock(true);
-        // managerShop.setDelete(false);
-        // managerShop.setNote(note);
-        //
-        //
-        //
-        //
-        // try {
-        // ///managerShopRepository.save(managerShop);
-        // }
-        // catch (Exception e){
-        // throw new NotFoundException("Khóa cửa hàng thất bại!");
-        // }
+        Customer customer = customerService.getCustomerByUsername(username);
+        Shop shop = checkShopLock(shopId);
 
-        return null;
+        ManagerShop managerShop;
+        if (managerShopRepository.existsByShopShopIdAndLock(shopId, true)) {
+            throw new BadRequestException("Cửa hàng đã bị khóa!");
+        } else if (managerShopRepository.existsByShopShopId(shopId)) {
+            managerShop = updateManagerShop(shopId, customer, note, true, false);
+        } else {
+            managerShop = createManagerShop(shop, customer, note);
+        }
+
+        try {
+            managerShopRepository.save(managerShop);
+            managerProductService.lockProductsByShopId(shopId, username, note);
+
+            return ManagerShopResponse.managerShopResponse(shop, managerShop, "Khóa cửa hàng thành công!", "OK");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Khóa cửa hàng thất bại! " + e.getMessage());
+        }
     }
+
+
+    @Override
+    @Transactional
+    public ManagerShopResponse unlockShopById(Long shopId, String username, String note) {
+        Customer customer = customerService.getCustomerByUsername(username);
+        Shop shop = checkShopLock(shopId);
+        checkExistManagerShopByShopId(shopId);
+        ManagerShop managerShop = updateManagerShop(shopId, customer, note, false, false);
+
+        try {
+            managerShopRepository.save(managerShop);
+            managerProductService.unlockProductsByShopId(shopId, username, note);
+
+            return ManagerShopResponse.managerShopResponse(shop, managerShop, "Mở khóa cửa hàng thành công!", "OK");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Mở khóa cửa hàng thất bại! " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public ListShopManagerResponse getListManagerShopByLock(int size, int page, boolean lock) {
+
+        Page<ManagerShop> managerShops = managerShopRepository.findAllByLock(lock, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách quản lý cửa hàng theo trạng thái " + (lock ? "khóa" : "mở")));
+
+
+        return ListShopManagerResponse.listShopManagerResponse(managerShops, "Lấy danh sách cửa hàng theo trạng thái thành công!");
+    }
+
+    @Override
+    public ListShopManagerResponse getListManagerShopByNameAndLock(int size, int page, String name, boolean lock) {
+
+        Page<ManagerShop> managerShops = managerShopRepository.findAllByLockAndShopNameContains(lock, name, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách quản lý cửa hàng theo tên và trạng thái " + (lock ? "khóa" : "mở")));
+
+        return ListShopManagerResponse.listShopManagerResponse(managerShops, "Lấy danh sách cửa hàng theo tên thành công!");
+    }
+
+
+    private ManagerShop createManagerShop(Shop shop, Customer customer, String note) {
+        ManagerShop managerShop = new ManagerShop();
+        managerShop.setShop(shop);
+        managerShop.setManager(customer);
+        managerShop.setLock(true);
+        managerShop.setDelete(false);
+        managerShop.setNote(note);
+
+        return managerShop;
+    }
+
+
+    private ManagerShop updateManagerShop(Long shopId, Customer customer, String note, boolean lock, boolean delete) {
+        ManagerShop managerShop = managerShopRepository.findByShop_ShopId(shopId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy cửa hàng!"));
+        managerShop.setManager(customer);
+        managerShop.setLock(lock);
+        managerShop.setDelete(delete);
+        managerShop.setNote(note);
+
+        return managerShop;
+    }
+
 
     private Shop checkShopLock(Long shopId) {
         Shop shop = shopRepository.findById(shopId)
@@ -100,51 +158,6 @@ public class ManagerShopServiceImpl implements IManagerShopService {
         }
 
         return shop;
-    }
-
-    public ManagerShopResponse unLockShopById(Long shopId, String username) {
-
-        return null;
-    }
-
-    @Override
-    public ListShopManagerResponse getListShop(int size, int page, Status status) {
-        int totalShop = shopRepository.countAllByStatus(status);
-        int totalPage = (int) Math.ceil((double) totalShop / size);
-
-        Page<Shop> shops = shopRepository.findAllByStatusOrderByName(status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách cửa hàng"));
-
-        return listShopManagerResponse(shops.getContent(),
-                size, page, totalPage, "Lấy danh sách cửa hàng theo trạng thái thành công!");
-    }
-
-    @Override
-    public ListShopManagerResponse getListShopByName(int size, int page, String name, Status status) {
-        int totalShop = shopRepository.countByNameContainsAndStatus(name, status);
-        int totalPage = (int) Math.ceil((double) totalShop / size);
-
-        Page<Shop> shops = shopRepository
-                .findAllByNameContainsAndStatusOrderByName(name, status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách cửa hàng"));
-
-        return listShopManagerResponse(shops.getContent(),
-                size, page, totalPage, "Lấy danh sách cửa hàng theo tên thành công!");
-    }
-
-    public ListShopManagerResponse listShopManagerResponse(List<Shop> shops, int size, int page, int totalPage,
-            String message) {
-        ListShopManagerResponse response = new ListShopManagerResponse();
-        response.setShopDTOs(ShopDTO.convertEntitiesToDTOs(shops));
-        response.setSize(size);
-        response.setPage(page);
-        response.setTotalPage(totalPage);
-        response.setCount(shops.size());
-        response.setMessage(message);
-        response.setCode(200);
-        response.setStatus("OK");
-
-        return response;
     }
 
 
@@ -160,6 +173,15 @@ public class ManagerShopServiceImpl implements IManagerShopService {
         }
     }
 
+    private void checkExistManagerShopByShopId(Long shopId) {
+        if (!managerShopRepository.existsByShopShopId(shopId)) {
+            throw new BadRequestException("Cửa hàng chưa được quản lý!");
+        }
+
+        if (managerShopRepository.existsByShopShopIdAndLock(shopId, false)) {
+            throw new BadRequestException("Cửa hàng chưa bị khóa!");
+        }
+    }
 
 
 }
