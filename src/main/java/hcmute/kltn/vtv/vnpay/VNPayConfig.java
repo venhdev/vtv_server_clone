@@ -20,17 +20,17 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class VNPayConfig {
 
-    public static InetAddress ip;
+//    public static InetAddress ip;
+//
+//    static {
+//        try {
+//            ip = InetAddress.getLocalHost();
+//        } catch (UnknownHostException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    static {
-        try {
-            ip = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String return_url = "http://" + VNPayConfig.ip.getHostAddress() + ":8585/api/vnpay/return";
+    public static String return_url = "http://" + "localhost"+ ":8585/api/vnpay/return";
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = return_url;
