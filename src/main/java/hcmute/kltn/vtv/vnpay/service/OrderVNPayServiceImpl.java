@@ -59,7 +59,7 @@ public class OrderVNPayServiceImpl implements IOrderVNPayService {
     private void handleOrderAfterPayment(Order order) {
         handleNotificationAfterPayment(order);
         handleMailAfterPayment(order);
-        transactionService.addNewTransaction(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "PAYMENT_VNPAY");
+        transactionService.addNewTransaction(order.getCustomer().getUsername(), order.getOrderId(), -order.getTotalPrice(), "PAYMENT_VNPAY");
     }
 
 
