@@ -141,10 +141,10 @@ public class OrderServiceImpl implements IOrderService {
             if (request.isUseLoyaltyPoint()) {
                 addLoyaltyPointHistoryToOrder(order);
             }
+            updateShippingInCreateOrder(order, request.getShippingMethod());
             if (request.getPaymentMethod().equals("Wallet")) {
                 walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
             }
-            updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
             transportService.addNewTransport(order.getOrderId());
 
@@ -173,10 +173,10 @@ public class OrderServiceImpl implements IOrderService {
             if (request.isUseLoyaltyPoint()) {
                 addLoyaltyPointHistoryToOrder(order);
             }
+            updateShippingInCreateOrder(order, request.getShippingMethod());
             if (request.getPaymentMethod().equals("Wallet")) {
                 walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
             }
-            updateShippingInCreateOrder(order, request.getShippingMethod());
             orderRepository.save(order);
             transportService.addNewTransport(order.getOrderId());
 
