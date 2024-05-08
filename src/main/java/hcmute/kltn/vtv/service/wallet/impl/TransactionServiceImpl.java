@@ -31,7 +31,6 @@ public class TransactionServiceImpl implements ITransactionService {
     public Transaction addNewTransaction(Wallet wallet, UUID orderId, Long money, String type) {
         checkExistWalletById(wallet.getWalletId());
         checkExistOrderByOrderId(orderId);
-        System.out.println("wallet2: " + wallet + " orderId: " + orderId + " money: " + money + " type: " + type);
         try {
             return transactionRepository.save(createTransaction(wallet, orderId, money, type));
         } catch (Exception e) {

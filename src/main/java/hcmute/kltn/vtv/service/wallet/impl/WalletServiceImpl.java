@@ -8,6 +8,7 @@ import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.wallet.WalletRepository;
 import hcmute.kltn.vtv.service.wallet.ITransactionService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
+import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -62,10 +63,9 @@ public class WalletServiceImpl implements IWalletService {
         try {
 
             walletRepository.save(wallet);
-            System.out.println("wallet: " + wallet);
             transactionService.addNewTransaction(wallet, orderId, money, type);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Cập nhật ví tiền thất bại! " + e.getMessage());
+            throw new InternalServerErrorException("Cập nhật ví tiền thất bại! " + e.getMessage());
         }
     }
 
