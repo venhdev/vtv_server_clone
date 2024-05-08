@@ -143,7 +143,7 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             if (request.getPaymentMethod().equals("Wallet")) {
-                walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
+                walletService.updateWalletByUsername(username, order.getOrderId(), -order.getPaymentTotal(), "PAYMENT_WALLET");
             }
             orderRepository.save(order);
             transportService.addNewTransport(order.getOrderId());
@@ -175,7 +175,7 @@ public class OrderServiceImpl implements IOrderService {
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
             if (request.getPaymentMethod().equals("Wallet")) {
-                walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
+                walletService.updateWalletByUsername(username, order.getOrderId(), -order.getPaymentTotal(), "PAYMENT_WALLET");
             }
             orderRepository.save(order);
             transportService.addNewTransport(order.getOrderId());

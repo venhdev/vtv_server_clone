@@ -105,7 +105,7 @@ public class WalletServiceImpl implements IWalletService {
 
 
     private void updateBalance(Wallet wallet, Long money) {
-        if (wallet.getBalance() < money) {
+        if (wallet.getBalance() < -money) {
             throw new IllegalArgumentException("Số dư trong ví không đủ để thực hiện giao dịch này!");
         }
         wallet.setBalance(wallet.getBalance() + money);
