@@ -141,7 +141,7 @@ public class OrderServiceImpl implements IOrderService {
             if (request.isUseLoyaltyPoint()) {
                 addLoyaltyPointHistoryToOrder(order);
             }
-            if (request.getPaymentMethod().equals("wallet")) {
+            if (request.getPaymentMethod().equals("Wallet")) {
                 walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
@@ -173,7 +173,7 @@ public class OrderServiceImpl implements IOrderService {
             if (request.isUseLoyaltyPoint()) {
                 addLoyaltyPointHistoryToOrder(order);
             }
-            if (request.getPaymentMethod().equals("wallet")) {
+            if (request.getPaymentMethod().equals("Wallet")) {
                 walletService.updateWalletByUsername(username, order.getOrderId(), order.getPaymentTotal(), "PAYMENT_WALLET");
             }
             updateShippingInCreateOrder(order, request.getShippingMethod());
@@ -345,7 +345,7 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional
     public OrderResponse cancelOrder(Order order) {
 
-        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
+        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("Wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
             walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "REFUND");
         }
 

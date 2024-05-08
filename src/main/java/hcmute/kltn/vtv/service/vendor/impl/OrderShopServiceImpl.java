@@ -201,7 +201,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
     @Transactional
     public OrderResponse cancelOrderByShop(Order order) {
 
-        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
+        if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("Wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
             walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "REFUND");
         }
 
