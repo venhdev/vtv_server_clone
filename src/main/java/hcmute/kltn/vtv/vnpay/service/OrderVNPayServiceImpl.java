@@ -8,6 +8,7 @@ import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
 import hcmute.kltn.vtv.service.vtv.IMailService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
+import hcmute.kltn.vtv.service.wallet.ITransactionService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
@@ -30,6 +31,7 @@ public class OrderVNPayServiceImpl implements IOrderVNPayService {
     private final IMailService mailService;
     private final IShippingService shippingService;
     private final IWalletService walletService;
+    private final ITransactionService transactionService;
 
 
     @Async
@@ -57,7 +59,7 @@ public class OrderVNPayServiceImpl implements IOrderVNPayService {
     private void handleOrderAfterPayment(Order order) {
         handleNotificationAfterPayment(order);
         handleMailAfterPayment(order);
-        walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "PAYMENT_VNPAY");
+        transactionService.addNewTransaction(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "PAYMENT_VNPAY");
     }
 
 

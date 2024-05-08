@@ -46,7 +46,7 @@ public class VNPayController {
                                                   HttpServletRequest req) throws Exception {
         String ipAddress = VNPayConfig.getIpAddress(req);
         VNPayDTO vnPayDTO = vnPayService.checkPaymentByVNPay(vnp_TxnRef, ipAddress, req);
-        if (!vnPayDTO.getResponseCode().equals("00")) {
+        if (!vnPayDTO.getTransactionStatus().equals("00") || !vnp_ResponseCode.equals("00")) {
             throw new BadRequestException("Đơn hàng chưa được thanh toán hoặc đã xử lý trước đó!");
         }
 

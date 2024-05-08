@@ -9,6 +9,7 @@ import hcmute.kltn.vtv.repository.wallet.WalletRepository;
 import hcmute.kltn.vtv.service.wallet.ITransactionService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,21 @@ public class TransactionServiceImpl implements ITransactionService {
         System.out.println("wallet2: " + wallet + " orderId: " + orderId + " money: " + money + " type: " + type);
         try {
             return transactionRepository.save(createTransaction(wallet, orderId, money, type));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Thêm mới giao dịch thất bại! " + e.getMessage());
+        }
+    }
+
+
+    @Async
+    @Override
+    @Transactional
+    public void addNewTransaction(String username, UUID orderId, Long money, String type) {
+        Wallet wallet = walletRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy ví theo username: " + username));
+        checkExistOrderByOrderId(orderId);
+        try {
+             transactionRepository.save(createTransaction(wallet, orderId, money, type));
         } catch (Exception e) {
             throw new IllegalArgumentException("Thêm mới giao dịch thất bại! " + e.getMessage());
         }
