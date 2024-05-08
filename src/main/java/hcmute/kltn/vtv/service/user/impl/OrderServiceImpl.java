@@ -346,7 +346,7 @@ public class OrderServiceImpl implements IOrderService {
     public OrderResponse cancelOrder(Order order) {
 
         if ((order.getPaymentMethod().equals("VNPay") || order.getPaymentMethod().equals("Wallet")) && !order.getStatus().equals(OrderStatus.UNPAID)) {
-            walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getTotalPrice(), "REFUND");
+            walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getPaymentTotal(), "REFUND");
         }
 
         order.setStatus(OrderStatus.CANCEL);
