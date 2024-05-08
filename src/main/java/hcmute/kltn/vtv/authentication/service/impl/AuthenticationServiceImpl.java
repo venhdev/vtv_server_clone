@@ -62,27 +62,27 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         Customer customer = createCustomer(customerRequest);
 
         try {
-            customerRepository.save(customer);
+            Customer savedCustomer = customerRepository.save(customer);
+
+
+            loyaltyPointService.addNewLoyaltyPointAfterRegister(savedCustomer.getUsername());
+            walletService.addNewWalletAfterRegister(savedCustomer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(savedCustomer.getUsername());
+
+            String message = "Đăng ký tài khoản khách hàng thành công, " +
+                    "vui lòng kiểm tra email để kích hoạt tài khoản." +
+                    "Mã kích hoạt của tài khoản: " + savedCustomer.getUsername() +
+                    " đã được gửi đến email: " + savedCustomer.getEmail()
+                    + "Nếu không nhận được email, vui lòng kiểm tra hòm thư rác. " +
+                    "Mã kích hoạt có hiệu lực trong 5 phút. ";
+
+            return RegisterResponse.registerResponse(savedCustomer.getUsername(), savedCustomer.getEmail(), message);
+
         } catch (Exception e) {
             throw new InternalServerErrorException("Đăng ký tài khoản khách hàng thất bại");
         }
 
-        try {
-            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
-            walletService.addNewWalletAfterRegister(customer.getUsername());
-            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
 
-            String message = "Đăng ký tài khoản khách hàng thành công, " +
-                    "vui lòng kiểm tra email để kích hoạt tài khoản." +
-                    "Mã kích hoạt của tài khoản: " + customer.getUsername() +
-                    " đã được gửi đến email: " + customer.getEmail()
-                    + "Nếu không nhận được email, vui lòng kiểm tra hòm thư rác. " +
-                    "Mã kích hoạt có hiệu lực trong 5 phút. ";
-
-            return RegisterResponse.registerResponse(customer.getUsername(), customer.getEmail(), message);
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại! Tạo ví, điểm thưởng và gửi email kích hoạt thất bại.");
-        }
 
     }
 
@@ -93,22 +93,15 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         existingCustomer(customerRequest);
         Customer customer = createCustomer(customerRequest);
         try {
-            customerRepository.save(customer);
+            Customer savedCustomer = customerRepository.save(customer);
 
+            loyaltyPointService.addNewLoyaltyPointAfterRegister(savedCustomer.getUsername());
+            walletService.addNewWalletAfterRegister(savedCustomer.getUsername());
+            mailService.activateAccountSendOtpToEmailAsync(savedCustomer.getUsername());
+
+            return savedCustomer;
         } catch (Exception e) {
             throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại!" + e.getMessage());
-        }
-
-
-        try {
-            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
-            walletService.addNewWalletAfterRegister(customer.getUsername());
-            mailService.activateAccountSendOtpToEmailAsync(customer.getUsername());
-
-            return customer;
-
-        } catch (Exception e) {
-            throw new InternalServerErrorException("Thêm tài khoản khách hàng thất bại! Tạo ví, điểm thưởng và gửi email kích hoạt thất bại." + e.getMessage());
         }
     }
 
