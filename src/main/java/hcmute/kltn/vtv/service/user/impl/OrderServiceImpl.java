@@ -107,7 +107,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = createOrderByOrderRequestWithProductVariant(request, username, address);
 
-      return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
+        return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm và số lượng.");
     }
 
@@ -124,8 +124,6 @@ public class OrderServiceImpl implements IOrderService {
         return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.");
     }
-
-
 
 
     @Override
@@ -153,7 +151,7 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, order.getStatus().equals(OrderStatus.UNPAID) ? TransportStatus.UNPAID : TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm trong giỏ hàng! " + e.getMessage());
         }
@@ -185,7 +183,7 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, order.getStatus().equals(OrderStatus.UNPAID) ? TransportStatus.UNPAID : TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm! " + e.getMessage());
         }
@@ -407,7 +405,7 @@ public class OrderServiceImpl implements IOrderService {
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
         }
-        if (request.getPaymentMethod().equals("wallet")) {
+        if (request.getPaymentMethod().equals("Wallet")) {
             walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
         }
         updateCreateOrderByVoucherOrder(order, request.getShopVoucherCode(), request.getSystemVoucherCode());
@@ -428,7 +426,7 @@ public class OrderServiceImpl implements IOrderService {
         if (!request.getNote().isEmpty()) {
             order.setNote(request.getNote());
         }
-        if (request.getPaymentMethod().equals("wallet")) {
+        if (request.getPaymentMethod().equals("Wallet")) {
             walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
         }
         updateCreateOrderByVoucherOrder(order, request.getShopVoucherCode(), request.getSystemVoucherCode());
@@ -442,11 +440,11 @@ public class OrderServiceImpl implements IOrderService {
         Address address = addressService.checkAddress(request.getAddressId(), username);
         Order order = createBaseOrder(username, address);
         order.setPaymentMethod(request.getPaymentMethod());
-        if (request.getPaymentMethod().equals("VNPay")){
+        if (request.getPaymentMethod().equals("VNPay")) {
             order.setStatus(OrderStatus.UNPAID);
-        }else {
+        } else {
             order.setStatus(OrderStatus.PENDING);
-            if (request.getPaymentMethod().equals("wallet")) {
+            if (request.getPaymentMethod().equals("Wallet")) {
                 walletService.checkBalanceByUsernameAndMoney(username, order.getPaymentTotal());
             }
         }
