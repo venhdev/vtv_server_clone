@@ -151,7 +151,7 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, order.getStatus().equals(OrderStatus.UNPAID) ? TransportStatus.UNPAID : TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm trong giỏ hàng! " + e.getMessage());
         }
@@ -183,7 +183,7 @@ public class OrderServiceImpl implements IOrderService {
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, order.getStatus().equals(OrderStatus.UNPAID) ? TransportStatus.UNPAID : TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm! " + e.getMessage());
         }

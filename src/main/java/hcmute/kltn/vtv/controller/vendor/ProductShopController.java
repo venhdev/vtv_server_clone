@@ -3,6 +3,7 @@ package hcmute.kltn.vtv.controller.vendor;
 import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.request.ProductRequest;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
+import hcmute.kltn.vtv.model.data.vendor.request.ProductVariantRequest;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.service.vtv.IPageService;
 
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/vendor/product")
 @RequiredArgsConstructor
@@ -24,13 +27,26 @@ public class ProductShopController {
 
 
 
+
+
+//    @PostMapping("/add/test")
+//    public ResponseEntity<?> addNewProductTest(@ModelAttribute ProductVariantRequestWrapper wrapper) {
+//        System.out.println("ProductShopController.addNewProduct" + wrapper);
+//        return ResponseEntity.ok("ok");
+//    }
+
+
     @PostMapping("/add")
     public ResponseEntity<ProductResponse> addNewProduct(@ModelAttribute ProductRequest request,
                                                          HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
         request.validate();
 
-        return ResponseEntity.ok(productShopService.addNewProduct(request, username));
+        System.out.println("ProductShopController.addNewProduct" + request.toString());
+
+
+
+    return ResponseEntity.ok(productShopService.addNewProduct(request, username));
     }
 
 

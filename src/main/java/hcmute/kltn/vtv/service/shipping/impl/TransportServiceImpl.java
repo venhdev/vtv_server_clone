@@ -161,7 +161,7 @@ public class TransportServiceImpl implements ITransportService {
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ vận chuyển nào!"));
 
             String message = "Lấy danh sách đơn vận chuyển theo mã phường: " + wardCode + " với trạng thái: "
-                    + convertTransportStatusToString( TransportStatus.PICKUP_PENDING);
+                    + convertTransportStatusToString(TransportStatus.PICKUP_PENDING);
 
             return ShopAndTransportResponse.shopAndTransportResponse(shops, deliver.getWardsWork(), transports, message);
         } catch (Exception e) {

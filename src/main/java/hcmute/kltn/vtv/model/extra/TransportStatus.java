@@ -8,7 +8,6 @@ public enum TransportStatus {
     PENDING,
     PROCESSING,
     WAITING,
-    UNPAID,
     PICKUP_PENDING,
     PICKED_UP,
     IN_TRANSIT,
@@ -17,5 +16,6 @@ public enum TransportStatus {
     DELIVERED,
     COMPLETED,
     RETURNED,
-    CANCEL;
+    CANCEL,
+    UNPAID;
 }
