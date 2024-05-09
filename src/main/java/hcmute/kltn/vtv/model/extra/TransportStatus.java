@@ -8,6 +8,7 @@ public enum TransportStatus {
     PENDING,
     PROCESSING,
     WAITING,
+    UNPAID,
     PICKUP_PENDING,
     PICKED_UP,
     IN_TRANSIT,
