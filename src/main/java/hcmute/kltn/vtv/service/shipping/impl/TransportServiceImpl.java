@@ -232,6 +232,7 @@ public class TransportServiceImpl implements ITransportService {
             case PROCESSING -> "Đang xử lý";
             case PICKUP_PENDING -> "Chờ lấy hàng";
             case PICKED_UP -> "Đã lấy hàng";
+            case UNPAID -> "Chưa thanh toán";
             case SHIPPING -> "Đang giao hàng";
             case IN_TRANSIT -> "Đang vận chuyển";
             case WAREHOUSE -> "Đã về kho";
