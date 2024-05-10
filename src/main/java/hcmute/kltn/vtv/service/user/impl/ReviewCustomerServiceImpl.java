@@ -1,5 +1,7 @@
 package hcmute.kltn.vtv.service.user.impl;
 
+import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.vtv.IImageService;
 import hcmute.kltn.vtv.service.vtv.INotificationService;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
@@ -31,6 +33,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     private final IOrderItemService orderItemService;
     private final ILoyaltyPointService loyaltyPointService;
     private final INotificationService notificationService;
+    private final OrderRepository orderRepository;
 
 
     @Override
@@ -40,6 +43,7 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
         orderItemService.checkOrderCompletedBeforeReview(request.getOrderItemId());
         checkOrderItem(request.getOrderItemId());
         orderItemService.checkExistOrderItemByIdAndUsername(request.getOrderItemId(), username);
+        checkTimeReview(request.getOrderItemId());
 
         Review review = createReviewByRequest(request, username);
         try {
@@ -142,6 +146,14 @@ public class ReviewCustomerServiceImpl implements IReviewCustomerService {
     private void checkOrderItem(UUID orderItemId) {
         if (reviewRepository.existsByOrderItemOrderItemId(orderItemId)) {
             throw new BadRequestException("Đã đánh giá sản phẩm này!");
+        }
+    }
+
+    private void checkTimeReview(UUID orderItemId) {
+        UUID orderId = orderItemService.getOrderItemById(orderItemId).getOrder().getOrderId();
+
+        if (!orderRepository.existsByOrderIdAndUpdateAtAfterAndStatus(orderId, LocalDateTime.now().minusDays(7), OrderStatus.COMPLETED)) {
+            throw new BadRequestException("Đã hết thời gian đánh giá sản phẩm này! Thời gian đánh giá chỉ trong vòng 7 ngày sau khi đơn hàng hoàn thành.");
         }
     }
 
