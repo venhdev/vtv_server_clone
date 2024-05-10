@@ -4,6 +4,8 @@ import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +17,8 @@ public interface LoyaltyPointRepository extends JpaRepository<LoyaltyPoint, Long
 
 
     Optional<LoyaltyPoint> findByUsername(String username);
+
+    //find all loyalty point wiht updateAt after date
+    Optional<List<LoyaltyPoint>> findAllByUpdateAtAfter(LocalDateTime date);
+
 }
