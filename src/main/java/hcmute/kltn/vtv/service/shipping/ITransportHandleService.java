@@ -12,6 +12,7 @@ public interface ITransportHandleService {
     @Transactional
     void addNewTransportHandle(TransportHandleRequest transportHandleRequest);
 
+    @Transactional
     void addNewTransportHandleByOrderId(UUID orderId, String wardCode, String username, boolean handled, TransportStatus transportStatus);
 
     List<TransportHandle> getAllTransportHandleByTransportId(UUID transportId);

@@ -39,6 +39,7 @@ public class TransportHandleServiceImpl implements ITransportHandleService {
 
 
     @Override
+    @Transactional
     public void addNewTransportHandleByOrderId(UUID orderId, String wardCode, String username, boolean handled, TransportStatus transportStatus) {
         Transport transport = getTransportByOrderId(orderId);
         transport.setStatus(transportStatus);
@@ -50,7 +51,7 @@ public class TransportHandleServiceImpl implements ITransportHandleService {
 
             transportRepository.save(transport);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn vận chuyển!");
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn vận chuyển! " + e.getMessage());
         }
     }
 

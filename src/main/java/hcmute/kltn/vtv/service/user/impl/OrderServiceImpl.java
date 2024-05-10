@@ -150,8 +150,9 @@ public class OrderServiceImpl implements IOrderService {
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm trong giỏ hàng.";
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
+            TransportStatus transportStatus = order.getPaymentMethod().equals("VNPay") ? TransportStatus.UNPAID : TransportStatus.PENDING;
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, transportStatus);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm trong giỏ hàng! " + e.getMessage());
         }
@@ -182,8 +183,9 @@ public class OrderServiceImpl implements IOrderService {
             String messageResponse = "Đặt hàng thành công từ danh sách sản phẩm.";
             String titleNotification = "Có đơn hàng mới";
             String bodyNotification = "Bạn có đơn hàng mới từ tài khoản " + order.getCustomer().getUsername() + " với mã đơn hàng #" + order.getOrderId();
+            TransportStatus transportStatus = order.getPaymentMethod().equals("VNPay") ? TransportStatus.UNPAID : TransportStatus.PENDING;
 
-            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.PENDING);
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, transportStatus);
         } catch (Exception e) {
             throw new InternalServerErrorException("Đặt hàng thất bại từ danh sách sản phẩm! " + e.getMessage());
         }
@@ -227,7 +229,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-    //
     @Override
     @Transactional
     public OrderResponse completeOrderById(String username, UUID orderId) {
@@ -324,8 +325,11 @@ public class OrderServiceImpl implements IOrderService {
 
             ShippingDTO shippingDTO = shippingService.getCalculateShippingByWardAndTransportProvider(order.getAddress().getWard().getWardCode(),
                     order.getShop().getWard().getWardCode(), order.getShippingMethod()).getShippingDTO();
+
             Transport transport = transportService.getTransportByOrderId(order.getOrderId());
+
             mailService.sendOrderConfirmationEmail(order, shippingDTO, messageEmail);
+
             notificationService.addNewNotification(
                     titleNotification,
                     bodyNotification,
