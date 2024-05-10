@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 
 public interface ILoyaltyPointSchedulerService {
     @Transactional
-    void resetLoyaltyPointAfterDate(LocalDateTime dateTime);
+    void resetLoyaltyPointBeforeDate(LocalDateTime dateTime);
 }

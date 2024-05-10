@@ -24,9 +24,11 @@ public class LoyaltyPointSchedulerServiceImpl implements ILoyaltyPointSchedulerS
 
     @Override
     @Transactional
-    public void resetLoyaltyPointAfterDate(LocalDateTime dateTime) {
-        List<LoyaltyPoint> loyaltyPoints = loyaltyPointRepository.findAllByUpdateAtAfter(dateTime)
+    public void resetLoyaltyPointBeforeDate(LocalDateTime dateTime) {
+        List<LoyaltyPoint> loyaltyPoints = loyaltyPointRepository.findAllByUpdateAtBefore(dateTime)
                 .orElse(Collections.emptyList());
+
+
 
         if (!loyaltyPoints.isEmpty()) {
             for (LoyaltyPoint loyaltyPoint : loyaltyPoints) {

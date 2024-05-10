@@ -19,6 +19,6 @@ public interface LoyaltyPointRepository extends JpaRepository<LoyaltyPoint, Long
     Optional<LoyaltyPoint> findByUsername(String username);
 
     //find all loyalty point wiht updateAt after date
-    Optional<List<LoyaltyPoint>> findAllByUpdateAtAfter(LocalDateTime date);
+    Optional<List<LoyaltyPoint>> findAllByUpdateAtBefore(LocalDateTime date);
 
 }

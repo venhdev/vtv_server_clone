@@ -1,21 +1,15 @@
 package hcmute.kltn.vtv.controller.vtv;
 
-import hcmute.kltn.vtv.model.entity.user.Customer;
-import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.service.vtv.ILoyaltyPointSchedulerService;
 import hcmute.kltn.vtv.service.vtv.IOrderSchedulerService;
 import hcmute.kltn.vtv.service.vtv.ITokenSchedulerService;
 import hcmute.kltn.vtv.service.vtv.IVoucherSchedulerService;
-import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
-import hcmute.kltn.vtv.service.wallet.IWalletService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +32,7 @@ public class DailyUpdateScheduler {
         tokenSchedulerService.checkExpirationToken();
         tokenSchedulerService.deleteTokenExpiredAndRevoked();
         orderSchedulerService.autoCompleteOrderAfterFiveDayDelivered();
-        loyaltyPointSchedulerService.resetLoyaltyPointAfterDate(LocalDate.now().atStartOfDay().plusDays(7));
+        loyaltyPointSchedulerService.resetLoyaltyPointBeforeDate(LocalDate.now().atStartOfDay().minusDays(7));
 //        List<Customer> customers = customerRepository.findAll();
 //        for (Customer customer : customers) {
 //            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());
@@ -61,7 +55,7 @@ public class DailyUpdateScheduler {
         tokenSchedulerService.checkExpirationToken();
         tokenSchedulerService.deleteTokenExpiredAndRevoked();
         orderSchedulerService.autoCompleteOrderAfterFiveDayDelivered();
-        loyaltyPointSchedulerService.resetLoyaltyPointAfterDate(LocalDate.now().atStartOfDay().minusDays(7));
+        loyaltyPointSchedulerService.resetLoyaltyPointBeforeDate(LocalDate.now().atStartOfDay().minusDays(7));
 
     }
 }
