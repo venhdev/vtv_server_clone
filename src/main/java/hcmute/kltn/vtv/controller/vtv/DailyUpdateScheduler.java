@@ -1,5 +1,10 @@
 package hcmute.kltn.vtv.controller.vtv;
 
+import hcmute.kltn.vtv.model.entity.shipping.CashOrder;
+import hcmute.kltn.vtv.model.entity.shipping.Transport;
+import hcmute.kltn.vtv.repository.shipping.CashOrderRepository;
+import hcmute.kltn.vtv.repository.shipping.TransportRepository;
+import hcmute.kltn.vtv.service.shipping.ICashOrderService;
 import hcmute.kltn.vtv.service.vtv.ILoyaltyPointSchedulerService;
 import hcmute.kltn.vtv.service.vtv.IOrderSchedulerService;
 import hcmute.kltn.vtv.service.vtv.ITokenSchedulerService;
@@ -10,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,6 +25,8 @@ public class DailyUpdateScheduler {
     private final ITokenSchedulerService tokenSchedulerService;
     private final IOrderSchedulerService orderSchedulerService;
     private final ILoyaltyPointSchedulerService loyaltyPointSchedulerService;
+    private final TransportRepository transportRepository;
+//    private final ICashOrderService cashOrderService;
 //    private final IWalletService walletService;
 
     //    private final ILoyaltyPointService loyaltyPointService;
@@ -33,6 +41,12 @@ public class DailyUpdateScheduler {
         tokenSchedulerService.deleteTokenExpiredAndRevoked();
         orderSchedulerService.autoCompleteOrderAfterFiveDayDelivered();
         loyaltyPointSchedulerService.resetLoyaltyPointBeforeDate(LocalDate.now().atStartOfDay().minusDays(7));
+
+//        List<Transport> transports = transportRepository.findAll();
+//        for (Transport transport : transports) {
+//            cashOrderService.addNewCashOrder(transport.getTransportId(), "evtv1", true);
+//        }
+
 //        List<Customer> customers = customerRepository.findAll();
 //        for (Customer customer : customers) {
 //            loyaltyPointService.addNewLoyaltyPointAfterRegister(customer.getUsername());

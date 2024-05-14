@@ -39,11 +39,12 @@ public class CashOrdersByDateDTO {
     public static List<CashOrdersByDateDTO> cashOrdersByDateDTOs(List<CashOrder> cashOrderDTOs) {
 
         Map<LocalDateTime, List<CashOrder>> map = convertEntityToMapWithDate(cashOrderDTOs);
-        List<CashOrdersByDateDTO> cashOrdersByDateDTOS = new ArrayList<>();
+        List<CashOrdersByDateDTO> cashOrdersByDateDTOs = new ArrayList<>();
         for (Map.Entry<LocalDateTime, List<CashOrder>> entry : map.entrySet()) {
-            cashOrdersByDateDTOS.add(CashOrdersByDateDTO.convertEntitiesToDTO(entry.getValue(), entry.getKey()));
+            cashOrdersByDateDTOs.add(CashOrdersByDateDTO.convertEntitiesToDTO(entry.getValue(), entry.getKey()));
         }
-        return cashOrdersByDateDTOS;
+        cashOrdersByDateDTOs.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+        return cashOrdersByDateDTOs;
     }
 
 

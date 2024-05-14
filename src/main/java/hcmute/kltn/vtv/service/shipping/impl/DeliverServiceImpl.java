@@ -21,14 +21,14 @@ public class DeliverServiceImpl implements IDeliverService {
 
     @Override
     public DeliverResponse getDeliverResponseByUsername(String username) {
-        Deliver deliver = getDeliverByUername(username);
+        Deliver deliver = getDeliverByUsername(username);
         return DeliverResponse.deliverResponse(deliver, "Lấy thông tin nhân viên giao hàng thành công!", "OK");
     }
 
 
     @Override
     public Deliver checkTypeWorkDeliverWithTransportStatus(String username, TransportStatus transportStatus) {
-        Deliver deliver = getDeliverByUername(username);
+        Deliver deliver = getDeliverByUsername(username);
         if (!checkTypeWorkDeliverWithTransportStatus(deliver.getTypeWork(), transportStatus)) {
             throw new BadRequestException("Người giao hàng không thể thực hiện hành động này!");
         }
@@ -38,10 +38,33 @@ public class DeliverServiceImpl implements IDeliverService {
 
 
     @Override
-    public Deliver getDeliverByUername(String username) {
+    public Deliver getDeliverByUsername(String username) {
         checkExistByUsername(username);
         return deliverRepository.findByCustomerUsername(username)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy người giao hàng có tên đăng nhập: " + username));
+    }
+
+
+    @Override
+    public void checkExistByTypeWorkShipperByUsername(String username) {
+
+        Deliver deliver = getDeliverByUsername(username);
+        if (!deliver.getTypeWork().equals(TypeWork.SHIPPER) && !deliver.getTypeWork().equals(TypeWork.MANAGER) &&
+                !deliver.getTypeWork().equals(TypeWork.WAREHOUSE) && !deliver.getTypeWork().equals(TypeWork.PROVIDER)) {
+            throw new BadRequestException("Bạn không phải có quyền thực hiện hành động của nhân viên giao hàng!");
+        }
+
+    }
+
+    @Override
+    public void checkExistByTypeWorkWarehouseByUsername(String username) {
+
+        Deliver deliver = getDeliverByUsername(username);
+        if (!deliver.getTypeWork().equals(TypeWork.MANAGER) &&
+                !deliver.getTypeWork().equals(TypeWork.WAREHOUSE) && !deliver.getTypeWork().equals(TypeWork.PROVIDER)) {
+            throw new BadRequestException("Bạn không phải có quyền thực hiện hành động của nhân kho!");
+        }
+
     }
 
 

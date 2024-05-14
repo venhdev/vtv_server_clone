@@ -9,5 +9,9 @@ public interface IDeliverService {
 
     Deliver checkTypeWorkDeliverWithTransportStatus(String username, TransportStatus transportStatus);
 
-    Deliver getDeliverByUername(String username);
+    Deliver getDeliverByUsername(String username);
+
+    void checkExistByTypeWorkShipperByUsername(String username);
+
+    void checkExistByTypeWorkWarehouseByUsername(String username);
 }

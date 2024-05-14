@@ -7,14 +7,12 @@ import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.repository.shipping.TransportRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.location.IWardService;
-import hcmute.kltn.vtv.service.shipping.IDeliverService;
-import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
-import hcmute.kltn.vtv.service.shipping.ITransportService;
-import hcmute.kltn.vtv.service.shipping.ITransportShopService;
+import hcmute.kltn.vtv.service.shipping.*;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
@@ -37,6 +35,8 @@ public class TransportServiceImpl implements ITransportService {
     private final IWardService wardService;
     private final OrderRepository orderRepository;
     private final ITransportShopService transportShopService;
+    private final ICashOrderService cashOrderService;
+
 
     @Transactional
     @Override
@@ -77,7 +77,7 @@ public class TransportServiceImpl implements ITransportService {
     public Transport updateStatusTransportByTransportId(UUID transportId, String wardCode, String username,
                                                         boolean handled, TransportStatus transportStatus) {
         Transport transport = getTransportById(transportId);
-        if (transport.getStatus().equals(TransportStatus.COMPLETED)){
+        if (transport.getStatus().equals(TransportStatus.COMPLETED)) {
             throw new BadRequestException("Dịch vụ vận chuyển đã hoàn thành không thể cập nhật trạng thái!");
         }
         updateStatusTransport(transport, wardCode, username, handled, transportStatus);
@@ -138,11 +138,11 @@ public class TransportServiceImpl implements ITransportService {
         try {
             Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, TransportStatus.PICKED_UP);
             List<Shop> shops = transportShopService.getShopsByWards(deliver.getWardsWork());
-            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(),  TransportStatus.PICKUP_PENDING)
+            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(), TransportStatus.PICKUP_PENDING)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ vận chuyển nào!"));
 
             String message = "Lấy danh sách đơn vận chuyển theo phường làm việc của nhân viên vận chuyển thành công theo trạng thái: "
-                    + convertTransportStatusToString( TransportStatus.PICKUP_PENDING);
+                    + convertTransportStatusToString(TransportStatus.PICKUP_PENDING);
 
             return ShopAndTransportResponse.shopAndTransportResponse(shops, deliver.getWardsWork(), transports, message);
         } catch (Exception e) {
@@ -152,12 +152,12 @@ public class TransportServiceImpl implements ITransportService {
 
 
     @Override
-    public ShopAndTransportResponse  getTransportsByWard(String wardCode, String username) {
+    public ShopAndTransportResponse getTransportsByWard(String wardCode, String username) {
         try {
             wardService.checkExistWardCode(wardCode);
             Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, TransportStatus.PICKED_UP);
             List<Shop> shops = transportShopService.getShopsByWardCode(wardCode);
-            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(),  TransportStatus.PICKUP_PENDING)
+            List<Transport> transports = transportRepository.findAllByShopIdInAndStatus(shops.stream().map(Shop::getShopId).toList(), TransportStatus.PICKUP_PENDING)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy dịch vụ vận chuyển nào!"));
 
             String message = "Lấy danh sách đơn vận chuyển theo mã phường: " + wardCode + " với trạng thái: "
@@ -170,8 +170,6 @@ public class TransportServiceImpl implements ITransportService {
     }
 
 
-
-
     private void checkDeliverCanUpdateStatus(UUID transportId, Deliver deliver) {
         Transport transport = getTransportById(transportId);
         if (!deliver.getTransportProvider().getShortName().equals(transport.getShippingMethod())) {
@@ -181,6 +179,20 @@ public class TransportServiceImpl implements ITransportService {
                 transport.getStatus().equals(TransportStatus.PENDING) ||
                 transport.getStatus().equals(TransportStatus.WAITING)) {
             throw new BadRequestException("Nhân viên vận không thể cập nhật trạng thái do đơn hàng đã được xử lý hoặc đã hủy!");
+        }
+    }
+
+
+    public void checkTransportStatusAndAddCashOrderByTransportId(UUID transportId, String username, TransportStatus transportStatus, String paymentMethod) {
+        if (!transportStatus.equals(TransportStatus.SHIPPING) && !transportStatus.equals(TransportStatus.DELIVERED)) {
+            return;
+        }
+        try {
+            Status status = paymentMethod.equals("COD") ? Status.ACTIVE : Status.INACTIVE;
+            boolean isDelivered = transportStatus.equals(TransportStatus.DELIVERED);
+            cashOrderService.addNewCashOrder(transportId, username, isDelivered, status);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi tạo đơn thu tiền theo mã vận chuyển: " + transportId + "! " + e.getMessage());
         }
     }
 

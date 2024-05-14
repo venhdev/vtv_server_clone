@@ -2,9 +2,11 @@ package hcmute.kltn.vtv.service.wallet.impl;
 
 
 import hcmute.kltn.vtv.model.data.wallet.response.WalletResponse;
+import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.entity.wallet.Transaction;
 import hcmute.kltn.vtv.model.entity.wallet.Wallet;
 import hcmute.kltn.vtv.model.extra.Status;
+import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.repository.wallet.WalletRepository;
 import hcmute.kltn.vtv.service.wallet.ITransactionService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
@@ -24,6 +26,7 @@ public class WalletServiceImpl implements IWalletService {
 
     private final WalletRepository walletRepository;
     private final ITransactionService transactionService;
+    private final OrderRepository orderRepository;
 
 
     @Async
@@ -64,6 +67,21 @@ public class WalletServiceImpl implements IWalletService {
 
             walletRepository.save(wallet);
             transactionService.addNewTransaction(wallet, orderId, money, type);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Cập nhật ví tiền thất bại! " + e.getMessage());
+        }
+    }
+
+
+    @Async
+    @Override
+    @Transactional
+    public void updateWalletByOrderId(UUID orderId,  String type) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng " + orderId));
+
+        try {
+            updateWalletByUsername(order.getCustomer().getUsername(), orderId, order.getTotalPrice(), type);
         } catch (Exception e) {
             throw new InternalServerErrorException("Cập nhật ví tiền thất bại! " + e.getMessage());
         }

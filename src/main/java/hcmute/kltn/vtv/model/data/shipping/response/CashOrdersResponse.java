@@ -20,13 +20,13 @@ public class CashOrdersResponse extends ResponseAbstract {
 
 
 
-    public static CashOrdersResponse cashOrdersResponse(List<CashOrder> cashOrders, String message) {
+    public static CashOrdersResponse cashOrdersResponse(List<CashOrder> cashOrders, String message, String status) {
         CashOrdersResponse response = new CashOrdersResponse();
         response.setCount(cashOrders.size());
         response.setCashOrderDTOs(CashOrderDTO.convertEntitiesToDTOs(cashOrders));
         response.setMessage(message);
         response.setCode(200);
-        response.setStatus("OK");
+        response.setStatus(status);
 
         return response;
     }

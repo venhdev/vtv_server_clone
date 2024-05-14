@@ -20,6 +20,10 @@ public interface IWalletService {
     @Transactional
     void updateWalletByUsername(String username, UUID orderId, Long money, String type);
 
+    @Async
+    @Transactional
+    void updateWalletByOrderId(UUID orderId, String type);
+
     WalletResponse getWalletResponseByUsername(String username);
 
     Long getBalanceByUsername(String username);

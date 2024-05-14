@@ -8,9 +8,11 @@ import hcmute.kltn.vtv.model.entity.user.*;
 import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPoint;
 import hcmute.kltn.vtv.model.entity.wallet.LoyaltyPointHistory;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
+import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
 import hcmute.kltn.vtv.service.guest.IProductVariantService;
 import hcmute.kltn.vtv.service.location.IDistanceLocationService;
+import hcmute.kltn.vtv.service.shipping.ICashOrderService;
 import hcmute.kltn.vtv.service.shipping.IShippingService;
 import hcmute.kltn.vtv.service.shipping.ITransportHandleService;
 import hcmute.kltn.vtv.service.shipping.ITransportService;
@@ -56,7 +58,7 @@ public class OrderServiceImpl implements IOrderService {
     private final ITransportService transportService;
     private final ITransportHandleService transportHandleService;
     private final IWalletService walletService;
-
+    private final ICashOrderService  cashOrderService;
 
     @Override
     @Transactional
@@ -75,6 +77,7 @@ public class OrderServiceImpl implements IOrderService {
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách mã giỏ hàng.");
 
     }
+
 
 
     @Override
@@ -97,6 +100,8 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+
     @Override
     @Transactional
     public OrderResponse createOrderWithProductVariant(OrderRequestWithProductVariant request, String username) {
@@ -112,6 +117,8 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+
     @Override
     @Transactional
     public OrderResponse createOrderWithCart(OrderRequestWithCart request, String username) {
@@ -124,6 +131,9 @@ public class OrderServiceImpl implements IOrderService {
         return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.");
     }
+
+
+
 
 
     @Override
@@ -159,6 +169,9 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+
+
     @Override
     @Transactional
     public OrderResponse addNewOrderWithProductVariant(OrderRequestWithProductVariant request, String username) {
@@ -192,6 +205,9 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+
+
     @Override
     public ListOrderResponse getOrders(String username) {
         List<Order> orders = orderRepository.findAllByCustomerUsername(username)
@@ -199,6 +215,9 @@ public class OrderServiceImpl implements IOrderService {
         return ListOrderResponse.listOrderResponse(orders, "Lấy danh sách đơn hàng thành công.", "OK");
 
     }
+
+
+
 
 
     @Override
@@ -210,6 +229,9 @@ public class OrderServiceImpl implements IOrderService {
 
         return ListOrderResponse.listOrderResponse(orders, message, "OK");
     }
+
+
+
 
 
     @Override
@@ -229,6 +251,9 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
+
+
+
     @Override
     @Transactional
     public OrderResponse completeOrderById(String username, UUID orderId) {
@@ -242,11 +267,12 @@ public class OrderServiceImpl implements IOrderService {
                 transportHandleService.addNewTransportHandleByOrderId(
                         orderId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.COMPLETED);
 
-                walletService.updateWalletByUsername(
-                        order.getShop().getCustomer().getUsername(),
-                        order.getOrderId(),
-                        order.getTotalPrice() * 96 / 100 - order.getDiscountShop(),
-                        "COMPLETED_ORDER");
+                if (!order.getPaymentMethod().equals("COD")) {
+                    handlePayment(order, orderId, "COMPLETED_ORDER");
+                } else if (cashOrderService.checkCashOrderByOrderIdWithHandlePaymentAndStatus(orderId, false, true, false, Status.ACTIVE)) {
+                    handlePayment(order, orderId, "COMPLETED_ORDER_COD");
+                }
+
 
                 orderRepository.save(order);
 
@@ -644,6 +670,17 @@ public class OrderServiceImpl implements IOrderService {
     private Long getShopIdOfProductVariantId(Long productVariantId) {
         return productVariantService.getProductVariantById(productVariantId).getProduct().getShop().getShopId();
     }
+
+
+    private void handlePayment(Order order, UUID orderId, String paymentType) {
+        cashOrderService.updateCashOrderByOrderIdWithHandlePayment(orderId);
+        walletService.updateWalletByUsername(
+                order.getShop().getCustomer().getUsername(),
+                order.getOrderId(),
+                order.getTotalPrice() * 96 / 100 - order.getDiscountShop(),
+                paymentType);
+    }
+
 
 
 }
