@@ -106,8 +106,8 @@ public class TransportServiceImpl implements ITransportService {
 
     @Override
     @Transactional
-    public TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
-                                                                           TransportStatus transportStatus, String wardCode) {
+    public TransportResponse updateTransportStatusByDeliver(UUID transportId, String username, boolean handled,
+                                                            TransportStatus transportStatus, String wardCode) {
         try {
             checkStatusTransportBeforeUpdateStatusTransportByTransportId(transportId);
             wardService.checkExistWardCode(wardCode);
@@ -126,8 +126,8 @@ public class TransportServiceImpl implements ITransportService {
 
     @Override
     @Transactional
-    public TransportResponse updateStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
-                                                                  TransportStatus transportStatus, String wardCode) {
+    public TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
+                                                                           TransportStatus transportStatus, String wardCode) {
         try {
             checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(transportId);
             wardService.checkExistWardCode(wardCode);

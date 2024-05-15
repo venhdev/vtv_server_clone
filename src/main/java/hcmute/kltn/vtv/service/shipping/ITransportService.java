@@ -29,11 +29,11 @@ public interface ITransportService {
     Transport getTransportByOrderId(UUID orderId);
 
     @Transactional
-    TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled, TransportStatus transportStatus, String wardCode);
+    TransportResponse updateTransportStatusByDeliver(UUID transportId, String username, boolean handled, TransportStatus transportStatus, String wardCode);
 
     @Transactional
-    TransportResponse updateStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
-                                                           TransportStatus transportStatus, String wardCode);
+    TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
+                                                                    TransportStatus transportStatus, String wardCode);
 
     TransportResponse getTransportResponseByTransportId(UUID transportId);
 

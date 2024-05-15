@@ -39,7 +39,7 @@ public class TransportController {
         }
         String username = (String) servletRequest.getAttribute("username");
 
-        return ResponseEntity.ok(transportService.updateTransportStatusWithReturnOrderByDeliver(transportId, username, handled, status, wardCode));
+        return ResponseEntity.ok(transportService.updateTransportStatusByDeliver(transportId, username, handled, status, wardCode));
     }
 
 
