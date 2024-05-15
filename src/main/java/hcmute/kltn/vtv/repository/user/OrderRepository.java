@@ -54,12 +54,5 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             PageRequest pageRequest);
 
 
-
-
-
-
-
-
-
-
+    boolean existsByOrderIdAndCustomerUsername(UUID orderId, String username);
 }

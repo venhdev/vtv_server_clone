@@ -29,7 +29,6 @@ public class OrderController {
     private final IOrderService orderService;
 
 
-
     @PostMapping("/create/by-cartIds")
     public ResponseEntity<OrderResponse> createOrderByCartIds(@RequestBody List<UUID> cartIds,
                                                               HttpServletRequest request) {
@@ -42,7 +41,7 @@ public class OrderController {
     }
 
     @PostMapping("/create-update/with-cart")
-        public ResponseEntity<OrderResponse> createOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
+    public ResponseEntity<OrderResponse> createOrderWithCart(@RequestBody OrderRequestWithCart orderRequestWithCart,
                                                              HttpServletRequest request) {
         OrderRequestWithCart.validate(orderRequestWithCart);
 
@@ -92,8 +91,6 @@ public class OrderController {
     }
 
 
-
-
     @PostMapping("/add/with-product-variant")
     public ResponseEntity<OrderResponse> addNewOrderWithProductVariant(@RequestBody OrderRequestWithProductVariant orderRequestWithProductVariant,
                                                                        HttpServletRequest request) {
@@ -118,7 +115,7 @@ public class OrderController {
 
     @PostMapping("/create/multiple/by-request")
     public ResponseEntity<MultipleOrderResponse> createMultipleOrderByRequestRequest(@RequestBody MultipleOrderRequestWithCart request,
-                                                                                    HttpServletRequest requestHttp) {
+                                                                                     HttpServletRequest requestHttp) {
         MultipleOrderRequestWithCart.validate(request);
         String username = (String) requestHttp.getAttribute("username");
         return ResponseEntity.ok(multipleOrderService.createMultipleOrderByRequest(request, username));
@@ -127,12 +124,11 @@ public class OrderController {
 
     @PostMapping("/add/multiple/by-request")
     public ResponseEntity<MultipleOrderResponse> addNewMultipleOrderByRequest(@RequestBody MultipleOrderRequestWithCart request,
-                                                                                     HttpServletRequest requestHttp) {
+                                                                              HttpServletRequest requestHttp) {
         MultipleOrderRequestWithCart.validate(request);
         String username = (String) requestHttp.getAttribute("username");
         return ResponseEntity.ok(multipleOrderService.addNewMultipleOrderByRequest(request, username));
     }
-
 
 
     @GetMapping("/list")
@@ -160,9 +156,17 @@ public class OrderController {
 
     @PatchMapping("/cancel/{orderId}")
     public ResponseEntity<OrderResponse> cancelOrderById(@PathVariable UUID orderId,
-                                                                  HttpServletRequest requestHttp) {
+                                                         HttpServletRequest requestHttp) {
         String username = (String) requestHttp.getAttribute("username");
         return ResponseEntity.ok(orderService.cancelOrderById(username, orderId));
+    }
+
+
+    @PatchMapping("/return/{orderId}")
+    public ResponseEntity<OrderResponse> returnOrderById(@PathVariable UUID orderId,
+                                                         HttpServletRequest requestHttp) {
+        String username = (String) requestHttp.getAttribute("username");
+        return ResponseEntity.ok(orderService.returnOrderById(username, orderId));
     }
 
 
@@ -172,11 +176,6 @@ public class OrderController {
         String username = (String) requestHttp.getAttribute("username");
         return ResponseEntity.ok(orderService.completeOrderById(username, orderId));
     }
-
-
-
-
-
 
 
 }

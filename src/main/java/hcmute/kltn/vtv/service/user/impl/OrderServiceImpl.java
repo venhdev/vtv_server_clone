@@ -58,7 +58,7 @@ public class OrderServiceImpl implements IOrderService {
     private final ITransportService transportService;
     private final ITransportHandleService transportHandleService;
     private final IWalletService walletService;
-    private final ICashOrderService  cashOrderService;
+    private final ICashOrderService cashOrderService;
 
     @Override
     @Transactional
@@ -77,7 +77,6 @@ public class OrderServiceImpl implements IOrderService {
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách mã giỏ hàng.");
 
     }
-
 
 
     @Override
@@ -100,8 +99,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
-
     @Override
     @Transactional
     public OrderResponse createOrderWithProductVariant(OrderRequestWithProductVariant request, String username) {
@@ -117,8 +114,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
-
     @Override
     @Transactional
     public OrderResponse createOrderWithCart(OrderRequestWithCart request, String username) {
@@ -131,9 +126,6 @@ public class OrderServiceImpl implements IOrderService {
         return handleAfterCreateOrder(order, request.getShippingMethod(), address.getWard().getWardCode(),
                 order.getShop().getWard().getWardCode(), "Tạo đơn hàng mới thành công từ danh sách sản phẩm trong giỏ hàng.");
     }
-
-
-
 
 
     @Override
@@ -169,9 +161,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
-
-
     @Override
     @Transactional
     public OrderResponse addNewOrderWithProductVariant(OrderRequestWithProductVariant request, String username) {
@@ -205,9 +194,6 @@ public class OrderServiceImpl implements IOrderService {
     }
 
 
-
-
-
     @Override
     public ListOrderResponse getOrders(String username) {
         List<Order> orders = orderRepository.findAllByCustomerUsername(username)
@@ -215,9 +201,6 @@ public class OrderServiceImpl implements IOrderService {
         return ListOrderResponse.listOrderResponse(orders, "Lấy danh sách đơn hàng thành công.", "OK");
 
     }
-
-
-
 
 
     @Override
@@ -229,9 +212,6 @@ public class OrderServiceImpl implements IOrderService {
 
         return ListOrderResponse.listOrderResponse(orders, message, "OK");
     }
-
-
-
 
 
     @Override
@@ -249,9 +229,6 @@ public class OrderServiceImpl implements IOrderService {
         return OrderResponse.orderResponse(order, transport, shippingDTO, "Lấy chi tiết đơn hàng thành công.", "OK");
 
     }
-
-
-
 
 
     @Override
@@ -305,6 +282,33 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         throw new BadRequestException("Không thể hủy đơn hàng! Chỉ có thể hủy đơn hàng đang chờ xử lý hoặc yêu cầu hủy đơn hàng đang xử lý.");
+    }
+
+
+
+
+    @Override
+    @Transactional
+    public OrderResponse returnOrderById(String username, UUID orderId) {
+        Order order = getOrderByOrderIdAndUsername(orderId, username);
+        checkOrderStatusBeforeReturn(order);
+
+
+        order.setStatus(OrderStatus.RETURNED);
+        order.setUpdateAt(LocalDateTime.now());
+        try {
+            orderRepository.save(order);
+
+            String messageEmail = "Yêu cầu trả hàng thành công.";
+            String messageResponse = "Yêu cầu trả hàng thành công.";
+            String titleNotification = "Có yêu cầu trả hàng.";
+            String bodyNotification = "Bạn có yêu cầu trả hàng với mã đơn hàng #" + order.getOrderId();
+
+            return handleAfterSaveOrder(order, messageEmail, messageResponse, titleNotification, bodyNotification, TransportStatus.RETURNED);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Yêu cầu trả hàng thất bại!");
+        }
+
     }
 
 
@@ -681,6 +685,25 @@ public class OrderServiceImpl implements IOrderService {
                 paymentType);
     }
 
+
+    private Order getOrderByOrderIdAndUsername(UUID orderId, String username) {
+        checkExistOrderByOrderIdAndUsername(orderId, username);
+        return orderRepository.findByOrderIdAndCustomerUsername(orderId, username)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng theo mã đơn hàng của tài khoản!"));
+    }
+
+
+    private void checkExistOrderByOrderIdAndUsername(UUID orderId, String username) {
+        if (!orderRepository.existsByOrderIdAndCustomerUsername(orderId, username)) {
+            throw new BadRequestException("Mã đơn hàng không tồn tại hoặc không thuộc tài khoản của bạn!");
+        }
+    }
+
+    private void checkOrderStatusBeforeReturn(Order order) {
+        if (!order.getStatus().equals(OrderStatus.DELIVERED)) {
+            throw new BadRequestException("Không thể yêu cầu trả hàng! Chỉ có thể yêu cầu trả hàng đơn hàng đã giao hàng.");
+        }
+    }
 
 
 }
