@@ -22,6 +22,11 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     // check updateAt after date
     boolean existsByOrderIdAndUpdateAtAfterAndStatus(UUID orderId, LocalDateTime updateAt, OrderStatus status);
 
+    boolean existsByOrderIdAndCustomerUsername(UUID orderId, String username);
+
+    boolean existsByOrderIdAndStatus(UUID orderId,  OrderStatus status);
+
+
     Optional<Order> findByOrderId(UUID orderId);
 
     Optional<List<Order>> findAllByStatus(OrderStatus status);
@@ -54,5 +59,4 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             PageRequest pageRequest);
 
 
-    boolean existsByOrderIdAndCustomerUsername(UUID orderId, String username);
 }

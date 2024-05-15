@@ -106,29 +106,40 @@ public class TransportServiceImpl implements ITransportService {
 
     @Override
     @Transactional
-    public TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled,
-                                                   TransportStatus transportStatus, String wardCode) {
+    public TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
+                                                                           TransportStatus transportStatus, String wardCode) {
         try {
-            checkStatusOrderBeforeUpdateStatusTransportByTransportId(transportId);
+            checkStatusTransportBeforeUpdateStatusTransportByTransportId(transportId);
             wardService.checkExistWardCode(wardCode);
             Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
             checkDeliverCanUpdateStatus(transportId, deliver);
             Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
             updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
+            checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, getPaymentMethodByTransportId(transportId));
+
+            return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển cho đơn hàng trả hàng! " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public TransportResponse updateStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
+                                                                  TransportStatus transportStatus, String wardCode) {
+        try {
+            checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(transportId);
+            wardService.checkExistWardCode(wardCode);
+            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
+            checkDeliverCanUpdateStatus(transportId, deliver);
+            Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
+//            updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
+//            checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, "COD");
 
             return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
-        }
-    }
-
-    private void checkStatusOrderBeforeUpdateStatusTransportByTransportId(UUID transportId) {
-        Transport transport = getTransportById(transportId);
-        if (transport.getStatus().equals(TransportStatus.CANCEL) ||
-                transport.getStatus().equals(TransportStatus.COMPLETED) ||
-                transport.getStatus().equals(TransportStatus.DELIVERED) ||
-                transport.getStatus().equals(TransportStatus.RETURNED)) {
-            throw new BadRequestException("Dịch vụ vận chuyển đã hoàn thành hoặc đã hủy không thể cập nhật trạng thái!");
         }
     }
 
@@ -194,7 +205,8 @@ public class TransportServiceImpl implements ITransportService {
     }
 
 
-    public void checkTransportStatusAndAddCashOrderByTransportId(UUID transportId, String username, TransportStatus transportStatus, String paymentMethod) {
+    public void checkTransportStatusAndAddCashOrderByTransportId(UUID transportId, String username,
+                                                                 TransportStatus transportStatus, String paymentMethod) {
         if (!transportStatus.equals(TransportStatus.SHIPPING) && !transportStatus.equals(TransportStatus.DELIVERED)) {
             return;
         }
@@ -228,6 +240,7 @@ public class TransportServiceImpl implements ITransportService {
 
     private void updateStatusOrderByDeliver(UUID orderId, TransportStatus transportStatus) {
         try {
+
             Order order = orderRepository.findByOrderId(orderId)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
             order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
@@ -265,5 +278,34 @@ public class TransportServiceImpl implements ITransportService {
             case COMPLETED -> "Đã hoàn thành";
         };
     }
+
+
+    private void checkStatusTransportBeforeUpdateStatusTransportByTransportId(UUID transportId) {
+        Transport transport = getTransportById(transportId);
+        if (transport.getStatus().equals(TransportStatus.CANCEL) ||
+                transport.getStatus().equals(TransportStatus.COMPLETED) ||
+                transport.getStatus().equals(TransportStatus.DELIVERED) ||
+                transport.getStatus().equals(TransportStatus.RETURNED)) {
+            throw new BadRequestException("Dịch vụ vận chuyển đã hoàn thành hoặc đã hủy không thể cập nhật trạng thái!");
+        }
+    }
+
+
+    private void checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(UUID transportId) {
+        Transport transport = getTransportById(transportId);
+        if (!orderRepository.existsByOrderIdAndStatus(transport.getOrderId(), OrderStatus.RETURNED)) {
+            throw new BadRequestException("Đơn hàng này không phải là đơn hàng trả hàng!");
+        }
+    }
+
+
+    private String getPaymentMethodByTransportId(UUID transportId) {
+        Transport transport = getTransportById(transportId);
+        Order order = orderRepository.findByOrderId(transport.getOrderId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng để lấy phương thức thanh toán theo mã vận chuyển: " + transportId));
+
+        return order.getPaymentMethod();
+    }
+
 
 }
