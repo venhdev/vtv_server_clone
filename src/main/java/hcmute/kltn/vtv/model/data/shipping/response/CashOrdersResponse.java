@@ -16,6 +16,7 @@ import java.util.List;
 public class CashOrdersResponse extends ResponseAbstract {
 
     private int count;
+    private Long totalMoney;
     private List<CashOrderDTO> cashOrderDTOs;
 
 
@@ -24,6 +25,7 @@ public class CashOrdersResponse extends ResponseAbstract {
         CashOrdersResponse response = new CashOrdersResponse();
         response.setCount(cashOrders.size());
         response.setCashOrderDTOs(CashOrderDTO.convertEntitiesToDTOs(cashOrders));
+        response.setTotalMoney(response.getCashOrderDTOs().stream().mapToLong(CashOrderDTO::getMoney).sum());
         response.setMessage(message);
         response.setCode(200);
         response.setStatus(status);

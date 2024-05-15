@@ -59,10 +59,13 @@ public class CashOrderServiceImpl implements ICashOrderService {
                                                  boolean waveHouseHold) {
         CashOrder cashOrder = getCashOrderByTransportId(transportId);
         cashOrder.setShipperHold(shipperHold);
-        if (!cashOrder.getWaveHouseUsername().isEmpty() && !cashOrder.getWaveHouseUsername().equals(waveHouseUsername)) {
+       if (cashOrderRepository.existsByTransportIdAndWaveHouseUsernameNotNull(transportId) &&
+               !cashOrder.getWaveHouseUsername().equals(waveHouseUsername)) {
             throw new BadRequestException("Tài khoản kho không trùng khớp với tài khoản kho đã chọn!");
         }
+
         cashOrder.setWaveHouseUsername(waveHouseUsername);
+
         cashOrder.setWaveHouseHold(waveHouseHold);
         cashOrder.setUpdateAt(LocalDateTime.now());
         try {
@@ -76,7 +79,7 @@ public class CashOrderServiceImpl implements ICashOrderService {
 
             cashOrderRepository.save(cashOrder);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi cập nhật đơn thu tiền theo kho!");
+            throw new InternalServerErrorException("Lỗi khi cập nhật đơn thu tiền theo kho! " + e.getMessage());
         }
     }
 
@@ -118,7 +121,7 @@ public class CashOrderServiceImpl implements ICashOrderService {
             String message = generateMessage(shipperHold, waveHouseHold);
             return CashOrdersResponse.cashOrdersResponse(cashOrders, message, "Success");
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi cập nhật đơn thu tiền theo kho!");
+            throw new InternalServerErrorException("Lỗi khi cập nhật đơn thu tiền theo kho! " + e.getMessage());
         }
     }
 
@@ -266,7 +269,7 @@ public class CashOrderServiceImpl implements ICashOrderService {
             return cashOrderRepository.findAllByShipperUsernameAndShipperHoldAndWaveHouseUsernameNull(shipperUsername, false)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách đơn thu tiền theo tài khoản shipper chưa giao!"));
         } else {
-            return cashOrderRepository.findAllByShipperUsernameAndShipperHoldAndWaveHouseUsernameNotNull(shipperUsername, true)
+            return cashOrderRepository.findAllByShipperUsernameAndShipperHoldAndWaveHouseUsernameNull(shipperUsername, true)
                     .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách đơn thu tiền theo tài khoản shipper đang giữ tiền!"));
         }
     }

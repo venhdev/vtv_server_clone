@@ -12,6 +12,8 @@ public interface CashOrderRepository extends JpaRepository<CashOrder, UUID> {
 
     boolean existsByTransportId(UUID transportId);
 
+    boolean existsByTransportIdAndWaveHouseUsernameNotNull(UUID transportId);
+
     boolean existsAllByCashOrderIdInAndShipperUsernameAndStatus(List<UUID> transportIds, String shipperUsername, Status status);
 
     boolean existsAllByCashOrderIdInAndWaveHouseUsernameAndStatus(List<UUID> transportIds, String waveHouseUsername, Status status);
