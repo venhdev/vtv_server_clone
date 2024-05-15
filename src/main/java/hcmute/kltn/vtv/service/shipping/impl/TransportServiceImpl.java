@@ -109,6 +109,7 @@ public class TransportServiceImpl implements ITransportService {
     public TransportResponse updateStatusByDeliver(UUID transportId, String username, boolean handled,
                                                    TransportStatus transportStatus, String wardCode) {
         try {
+            checkStatusOrderBeforeUpdateStatusTransportByTransportId(transportId);
             wardService.checkExistWardCode(wardCode);
             Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
             checkDeliverCanUpdateStatus(transportId, deliver);
@@ -118,6 +119,16 @@ public class TransportServiceImpl implements ITransportService {
             return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
+        }
+    }
+
+    private void checkStatusOrderBeforeUpdateStatusTransportByTransportId(UUID transportId) {
+        Transport transport = getTransportById(transportId);
+        if (transport.getStatus().equals(TransportStatus.CANCEL) ||
+                transport.getStatus().equals(TransportStatus.COMPLETED) ||
+                transport.getStatus().equals(TransportStatus.DELIVERED) ||
+                transport.getStatus().equals(TransportStatus.RETURNED)) {
+            throw new BadRequestException("Dịch vụ vận chuyển đã hoàn thành hoặc đã hủy không thể cập nhật trạng thái!");
         }
     }
 
