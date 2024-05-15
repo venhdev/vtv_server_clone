@@ -166,15 +166,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
 //                .cors(Customizer.withDefaults())
-//                .cors(cors -> cors.configurationSource(request -> {
-//                    var corsConfiguration = new CorsConfiguration();
-//                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:3000", "http://localhost:5173"));
-//                    corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
-//                    corsConfiguration.setAllowCredentials(true);
-//                    return corsConfiguration;
-//                }))
-                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:3000", "http://localhost:5173"));
+                    corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }))
+//                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(STATELESS)
                         .sessionFixation().migrateSession() // Change session ID on authentication
