@@ -137,6 +137,8 @@ public class TransportServiceImpl implements ITransportService {
 //            updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
 //            checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, "COD");
 
+//            hoàn tiền cho đơn hàng trả hàng
+
             return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());

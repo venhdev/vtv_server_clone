@@ -43,7 +43,7 @@ public class TransportController {
     }
 
 
-    @PatchMapping("/update-status/{transportId}")
+    @PatchMapping("/return/update-status/{transportId}")
     public ResponseEntity<TransportResponse> updateTransportStatusWithReturnOrderByDeliver(@PathVariable("transportId") UUID transportId,
                                                                                            @RequestParam("status") TransportStatus status,
                                                                                            @RequestParam("handled") boolean handled,
