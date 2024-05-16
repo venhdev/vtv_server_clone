@@ -97,9 +97,9 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
             voucher = voucherSystemService.checkVoucherSystem(voucherId);
         }
 
-        if (voucher.getType().equals(VoucherType.SHIPPING)) {
-            return voucher.getDiscount();
-        }
+//        if (voucher.getType().equals(VoucherType.SHIPPING)) {
+//            return voucher.getDiscount();
+//        }
 
         if (voucher.getType().equals(VoucherType.PERCENTAGE_SHOP)
                 || voucher.getType().equals(VoucherType.PERCENTAGE_SYSTEM)) {
