@@ -5,6 +5,7 @@ import hcmute.kltn.vtv.model.data.shipping.response.TransportResponse;
 import hcmute.kltn.vtv.model.entity.shipping.Deliver;
 import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.user.Order;
+import hcmute.kltn.vtv.model.entity.user.VoucherOrder;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.model.extra.Status;
@@ -14,6 +15,8 @@ import hcmute.kltn.vtv.repository.shipping.TransportRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.location.IWardService;
 import hcmute.kltn.vtv.service.shipping.*;
+import hcmute.kltn.vtv.service.user.IVoucherOrderService;
+import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
@@ -39,6 +42,8 @@ public class TransportServiceImpl implements ITransportService {
     private final ITransportShopService transportShopService;
     private final ICashOrderService cashOrderService;
     private final IWalletService walletService;
+    private final IVoucherOrderService voucherOrderService;
+    private final ILoyaltyPointService loyaltyPointService;
 
 
     @Transactional
@@ -181,6 +186,16 @@ public class TransportServiceImpl implements ITransportService {
                 cashOrderService.updateCashOrderByOrderIdAndShipperUsernameWithSuccessReturnOrder(order.getOrderId(), username);
             } else {
                 walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getPaymentTotal(), "REFUND");
+            }
+
+            if (order.getVoucherOrders() != null) {
+                for (VoucherOrder voucherOrder : order.getVoucherOrders()) {
+                    voucherOrderService.cancelVoucherOrder(voucherOrder.getVoucherOrderId());
+                }
+            }
+            if (order.getLoyaltyPointHistory() != null) {
+                Long point = -order.getLoyaltyPointHistory().getPoint();
+                loyaltyPointService.updatePointInLoyaltyPointByUsername(order.getCustomer().getUsername(), point, "REFUND");
             }
 
             Transport transport = updateStatusTransportByTransportId(transportId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.PICKED_UP);
@@ -403,7 +418,7 @@ public class TransportServiceImpl implements ITransportService {
 
     private void checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(UUID transportId) {
         Transport transport = getTransportById(transportId);
-        if (!orderRepository.existsByOrderIdAndStatus(transport.getOrderId(), OrderStatus.RETURNED)) {
+        if (!orderRepository.existsByOrderIdAndStatus(transport.getOrderId(), OrderStatus.REFUNDED)) {
             throw new BadRequestException("Đơn hàng này không phải là đơn hàng trả hàng!");
         }
     }
