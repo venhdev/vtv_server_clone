@@ -46,6 +46,9 @@ public class AddressController {
         String username = (String) request.getAttribute("username");
         addressRequest.setUsername(username);
         addressRequest.validate();
+        if (addressRequest.getAddressId() == null) {
+            throw new BadRequestException("Id địa chỉ không được để trống.");
+        }
 
         return ResponseEntity.ok(addressService.updateAddress(addressRequest));
     }
