@@ -289,11 +289,11 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     @Transactional
-    public OrderResponse returnOrderById(String username, UUID orderId) {
+    public OrderResponse returnOrderById(String username, UUID orderId, String reason) {
         Order order = getOrderByOrderIdAndUsername(orderId, username);
         checkOrderStatusBeforeReturn(order);
 
-
+        order.setNote(order.getNote() + " - #Lý do trả hàng: " + reason);
         order.setStatus(OrderStatus.RETURNED);
         order.setUpdateAt(LocalDateTime.now());
         try {

@@ -164,9 +164,13 @@ public class OrderController {
 
     @PatchMapping("/return/{orderId}")
     public ResponseEntity<OrderResponse> returnOrderById(@PathVariable UUID orderId,
+                                                         @RequestBody String reason,
                                                          HttpServletRequest requestHttp) {
+        if (reason == null || reason.isEmpty()) {
+            throw new BadRequestException("Lý do trả hàng không được để trống!");
+        }
         String username = (String) requestHttp.getAttribute("username");
-        return ResponseEntity.ok(orderService.returnOrderById(username, orderId));
+        return ResponseEntity.ok(orderService.returnOrderById(username, orderId, reason));
     }
 
 

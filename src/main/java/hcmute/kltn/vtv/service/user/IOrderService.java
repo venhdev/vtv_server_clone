@@ -45,7 +45,7 @@ public interface IOrderService {
     OrderResponse cancelOrderById(String username, UUID orderId);
 
     @Transactional
-    OrderResponse returnOrderById(String username, UUID orderId);
+    OrderResponse returnOrderById(String username, UUID orderId, String reason);
 
     String messageByOrderStatus(OrderStatus status);
 
