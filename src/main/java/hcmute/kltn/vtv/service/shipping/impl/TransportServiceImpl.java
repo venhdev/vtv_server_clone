@@ -142,6 +142,7 @@ public class TransportServiceImpl implements ITransportService {
     @Transactional
     public TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
                                                                            TransportStatus transportStatus, String wardCode) {
+        checkExistTransportByTransportIdAndStatus(transportId, TransportStatus.DELIVERED);
         checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(transportId);
         wardService.checkExistWardCode(wardCode);
         Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
@@ -156,6 +157,12 @@ public class TransportServiceImpl implements ITransportService {
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
         }
+    }
+
+    private void checkExistTransportByTransportIdAndStatus(UUID transportId, TransportStatus transportStatus) {
+         if (transportRepository.existsByTransportIdAndStatus(transportId, transportStatus)){
+             throw new BadRequestException("Đơn vận chuyển đã tồn tại với trạng thái: " + convertTransportStatusToString(transportStatus));
+         }
     }
 
 
@@ -256,6 +263,8 @@ public class TransportServiceImpl implements ITransportService {
             throw new InternalServerErrorException("Lỗi khi lấy danh sách đơn vận chuyển theo mã phường: " + wardCode + "! " + e.getMessage());
         }
     }
+
+
 
 
     private void hasPickupOrShipperRole(String username) {

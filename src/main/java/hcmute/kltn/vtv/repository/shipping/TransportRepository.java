@@ -15,4 +15,6 @@ public interface TransportRepository extends JpaRepository<Transport, UUID> {
     Optional<Transport> findByOrderId(UUID orderId);
 
     Optional<List<Transport>> findAllByShopIdInAndStatus(List<Long> shopIds, TransportStatus status);
+
+    boolean existsByTransportIdAndStatus(UUID transportId, TransportStatus transportStatus);
 }
