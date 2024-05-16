@@ -123,7 +123,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
             return LoginResponse.loginResponse(customer, jwtToken, refreshToken);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Đăng nhập thất bại");
+            throw new InternalServerErrorException("Đăng nhập thất bại! " + e.getMessage());
         }
     }
 
