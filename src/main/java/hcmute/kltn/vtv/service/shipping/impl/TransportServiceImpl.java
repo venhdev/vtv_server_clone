@@ -15,7 +15,9 @@ import hcmute.kltn.vtv.repository.shipping.TransportRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.location.IWardService;
 import hcmute.kltn.vtv.service.shipping.*;
+import hcmute.kltn.vtv.service.user.IOrderItemService;
 import hcmute.kltn.vtv.service.user.IVoucherOrderService;
+import hcmute.kltn.vtv.service.user.impl.OrderItemServiceImpl;
 import hcmute.kltn.vtv.service.wallet.ILoyaltyPointService;
 import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
@@ -44,6 +46,7 @@ public class TransportServiceImpl implements ITransportService {
     private final IWalletService walletService;
     private final IVoucherOrderService voucherOrderService;
     private final ILoyaltyPointService loyaltyPointService;
+    private final IOrderItemService orderItemService;
 
 
     @Transactional
@@ -139,16 +142,15 @@ public class TransportServiceImpl implements ITransportService {
     @Transactional
     public TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
                                                                            TransportStatus transportStatus, String wardCode) {
+        checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(transportId);
+        wardService.checkExistWardCode(wardCode);
+        Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
+        checkDeliverCanUpdateStatus(transportId, deliver);
         try {
-            checkStatusOrderBeforeUpdateStatusWithReturnOrderByTransportId(transportId);
-            wardService.checkExistWardCode(wardCode);
-            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
-            checkDeliverCanUpdateStatus(transportId, deliver);
             Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
-//            updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
-//            checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, "COD");
-
-//            hoàn tiền cho đơn hàng trả hàng
+            if (transportStatus.equals(TransportStatus.DELIVERED)) {
+                orderItemService.cancelOrderItem(getOrderByTransportId(transportId));
+            }
 
             return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
         } catch (Exception e) {
