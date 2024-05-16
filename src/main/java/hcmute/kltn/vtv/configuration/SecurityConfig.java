@@ -170,7 +170,7 @@ public class SecurityConfig {
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())
 //                .cors(cors -> cors.configurationSource(request -> {
 //                    var corsConfiguration = new CorsConfiguration();
 //                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:3000", "http://localhost:5173"));
@@ -179,13 +179,11 @@ public class SecurityConfig {
 //                    corsConfiguration.setAllowCredentials(true);
 //                    return corsConfiguration;
 //                }))
-//                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
 
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(STATELESS)
-                        .sessionFixation().migrateSession() // Change session ID on authentication
-                )
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(STATELESS)
+//                        .sessionFixation().migrateSession() // Change session ID on authentication
+//                )
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(NO_AUTH)
                         .permitAll()
@@ -245,17 +243,6 @@ public class SecurityConfig {
 
 
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins or you can specify like Arrays.asList("http://localhost:3000", "http://localhost:8585")
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
 
     private AccessDeniedHandler accessDeniedHandler() {
