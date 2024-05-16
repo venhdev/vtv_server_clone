@@ -73,7 +73,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
                     "vui lòng kiểm tra email để kích hoạt tài khoản." +
                     "Mã kích hoạt của tài khoản: " + savedCustomer.getUsername() +
                     " đã được gửi đến email: " + savedCustomer.getEmail()
-                    + "Nếu không nhận được email, vui lòng kiểm tra hòm thư rác. " +
+                    + " Nếu không nhận được email, vui lòng kiểm tra hòm thư rác. " +
                     "Mã kích hoạt có hiệu lực trong 5 phút. ";
 
             return RegisterResponse.registerResponse(savedCustomer.getUsername(), savedCustomer.getEmail(), message);

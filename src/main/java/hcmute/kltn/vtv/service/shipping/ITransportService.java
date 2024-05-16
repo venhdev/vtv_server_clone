@@ -35,6 +35,12 @@ public interface ITransportService {
     TransportResponse updateTransportStatusWithReturnOrderByDeliver(UUID transportId, String username, boolean handled,
                                                                     TransportStatus transportStatus, String wardCode);
 
+    @Transactional
+    TransportResponse updateTransportStatusWithCancelReturnOrderByDeliver(UUID transportId, String username, String reason);
+
+    @Transactional
+    TransportResponse updateTransportStatusWithSuccessReturnOrderByDeliver(UUID transportId, String username, String reason);
+
     TransportResponse getTransportResponseByTransportId(UUID transportId);
 
     ShopAndTransportResponse getTransportsByWardWorksDeliver(String username);

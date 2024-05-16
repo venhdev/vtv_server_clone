@@ -59,8 +59,8 @@ public class CashOrderServiceImpl implements ICashOrderService {
                                                  boolean waveHouseHold) {
         CashOrder cashOrder = getCashOrderByTransportId(transportId);
         cashOrder.setShipperHold(shipperHold);
-       if (cashOrderRepository.existsByTransportIdAndWaveHouseUsernameNotNull(transportId) &&
-               !cashOrder.getWaveHouseUsername().equals(waveHouseUsername)) {
+        if (cashOrderRepository.existsByTransportIdAndWaveHouseUsernameNotNull(transportId) &&
+                !cashOrder.getWaveHouseUsername().equals(waveHouseUsername)) {
             throw new BadRequestException("Tài khoản kho không trùng khớp với tài khoản kho đã chọn!");
         }
 
@@ -129,7 +129,6 @@ public class CashOrderServiceImpl implements ICashOrderService {
     @Override
     public CashOrdersResponse getListCashOrdersByShipperUsername(String shipperUsername) {
         deliverService.checkExistByTypeWorkShipperByUsername(shipperUsername);
-        System.out.println("shipperUsername: " + shipperUsername);
         List<CashOrder> cashOrders = cashOrderRepository.findAllByShipperUsername(shipperUsername)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách đơn thu tiền theo tài khoản shipper!"));
         return CashOrdersResponse.cashOrdersResponse(cashOrders, "Lấy danh sách đơn thu tiền theo tài khoản shipper thành công!", "OK");
@@ -192,6 +191,44 @@ public class CashOrderServiceImpl implements ICashOrderService {
         return cashOrderRepository
                 .existsByTransportIdAndShipperHoldAndWaveHouseHoldAndHandlePayment(orderId, shipperHold, waveHouseHold, handlePayment);
     }
+
+
+    @Override
+    public void checkExistCashOrderByOrderIdAndShipperUsernameAndStatus(UUID orderId, String shipperUsername, Status status) {
+        if (cashOrderRepository.existsByOrderIdAndShipperUsernameAndStatus(orderId, shipperUsername, status)) {
+            throw new BadRequestException("Danh sách đơn thu tiền chưa tồn tại theo tài khoản shipper!");
+        }
+    }
+
+
+    @Override
+    public boolean checkExistCashOrderByOrderIdAndShipperUsernameWithShipperHold(UUID orderId, String shipperUsername, Status status) {
+        if (cashOrderRepository.existsByOrderIdAndShipperUsernameAndStatus(orderId, shipperUsername, status)) {
+            return false;
+        }
+        return cashOrderRepository.existsByOrderIdAndShipperUsernameAndShipperHoldAndStatus(orderId, shipperUsername, true, status);
+    }
+
+
+
+    @Override
+    public void updateCashOrderByOrderIdAndShipperUsernameWithSuccessReturnOrder(UUID orderId, String shipperUsername){
+        if (!checkExistCashOrderByOrderIdAndShipperUsernameWithShipperHold(orderId, shipperUsername, Status.ACTIVE)) {
+            throw new BadRequestException("Danh sách đơn thu tiền chưa tồn tại theo tài khoản shipper!");
+        }
+        CashOrder cashOrder = cashOrderRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn thu tiền theo mã đơn hàng!"));
+        cashOrder.setWaveHouseHold(false);
+        cashOrder.setHandlePayment(false);
+        cashOrder.setShipperHold(false);
+        cashOrder.setUpdateAt(LocalDateTime.now());
+        try {
+            cashOrderRepository.save(cashOrder);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật đơn thu tiền theo kho sau khi trả hàng! " + e.getMessage());
+        }
+    }
+
 
 
     private String generateMessage(boolean shipperHold, boolean waveHouseHold) {

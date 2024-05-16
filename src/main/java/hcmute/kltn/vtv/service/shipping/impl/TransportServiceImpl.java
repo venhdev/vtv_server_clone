@@ -9,10 +9,12 @@ import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.TransportStatus;
+import hcmute.kltn.vtv.model.extra.TypeWork;
 import hcmute.kltn.vtv.repository.shipping.TransportRepository;
 import hcmute.kltn.vtv.repository.user.OrderRepository;
 import hcmute.kltn.vtv.service.location.IWardService;
 import hcmute.kltn.vtv.service.shipping.*;
+import hcmute.kltn.vtv.service.wallet.IWalletService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
@@ -36,6 +38,7 @@ public class TransportServiceImpl implements ITransportService {
     private final OrderRepository orderRepository;
     private final ITransportShopService transportShopService;
     private final ICashOrderService cashOrderService;
+    private final IWalletService walletService;
 
 
     @Transactional
@@ -110,9 +113,12 @@ public class TransportServiceImpl implements ITransportService {
                                                             TransportStatus transportStatus, String wardCode) {
         try {
             checkStatusTransportBeforeUpdateStatusTransportByTransportId(transportId);
+            checkStatusOrderBeforeUpdateTransportStatusByDeliver(transportId);
             wardService.checkExistWardCode(wardCode);
+
             Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
             checkDeliverCanUpdateStatus(transportId, deliver);
+
             Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
             updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
             checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, getPaymentMethodByTransportId(transportId));
@@ -142,6 +148,47 @@ public class TransportServiceImpl implements ITransportService {
             return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã được cập nhật trạng thái thành công!", "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái vận chuyển bởi nhân viên vận chuyển! " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public TransportResponse updateTransportStatusWithCancelReturnOrderByDeliver(UUID transportId, String username, String reason) {
+        Order order = getOrderByTransportId(transportId);
+        checkExistOrderByOrderIdAndOrderStatus(order.getOrderId(), OrderStatus.RETURNED);
+        hasPickupOrShipperRole(username);
+        try {
+            Transport transport = updateStatusTransportByTransportId(transportId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.COMPLETED);
+            updateCancelReturnOrderByDeliver(order, reason);
+
+            return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển không thể hoàn thành đơn hàng trả hàng!", "Success");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi dịch vụ vận chuyển xác nhận hủy đơn hàng trả hàng! " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    @Transactional
+    public TransportResponse updateTransportStatusWithSuccessReturnOrderByDeliver(UUID transportId, String username, String reason) {
+        Order order = getOrderByTransportId(transportId);
+        checkExistOrderByOrderIdAndOrderStatus(order.getOrderId(), OrderStatus.REFUNDED);
+        hasPickupOrShipperRole(username);
+
+        try {
+            if (cashOrderService.checkExistCashOrderByOrderIdAndShipperUsernameWithShipperHold(order.getOrderId(), username, Status.ACTIVE)) {
+                cashOrderService.updateCashOrderByOrderIdAndShipperUsernameWithSuccessReturnOrder(order.getOrderId(), username);
+            } else {
+                walletService.updateWalletByUsername(order.getCustomer().getUsername(), order.getOrderId(), order.getPaymentTotal(), "REFUND");
+            }
+
+            Transport transport = updateStatusTransportByTransportId(transportId, order.getAddress().getWard().getWardCode(), username, true, TransportStatus.PICKED_UP);
+            updateSuccessReturnOrderByDeliver(order, reason);
+
+            return TransportResponse.transportResponse(transport, "Dịch vụ vận chuyển đã lấy hàng trả hàng thành công!", "Success");
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi dịch vụ vận chuyển lấy hàng trả hàng thất bại! " + e.getMessage());
         }
     }
 
@@ -194,6 +241,14 @@ public class TransportServiceImpl implements ITransportService {
     }
 
 
+    private void hasPickupOrShipperRole(String username) {
+        if (!deliverService.checkBooleanDeliverUseRole(username, TypeWork.PICKUP) &&
+                !deliverService.checkBooleanDeliverUseRole(username, TypeWork.SHIPPER)) {
+            throw new BadRequestException("Bạn không có quyền thực hiện hành động này!");
+        }
+    }
+
+
     private void checkDeliverCanUpdateStatus(UUID transportId, Deliver deliver) {
         Transport transport = getTransportById(transportId);
         if (!deliver.getTransportProvider().getShortName().equals(transport.getShippingMethod())) {
@@ -241,15 +296,68 @@ public class TransportServiceImpl implements ITransportService {
 
 
     private void updateStatusOrderByDeliver(UUID orderId, TransportStatus transportStatus) {
-        try {
+        Order order = getOrderByOrderId(orderId);
+        order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
+        order.setUpdateAt(LocalDateTime.now());
 
-            Order order = orderRepository.findByOrderId(orderId)
-                    .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
-            order.setStatus(convertTransportStatusToOrderStatus(transportStatus));
+        try {
             orderRepository.save(order);
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng theo trạng thái vận chuyển của nhân viên vận chuyển!");
         }
+    }
+
+
+    private void checkStatusOrderBeforeUpdateTransportStatusByDeliver(UUID transportId) {
+        Order order = getOrderByOrderId(getTransportById(transportId).getOrderId());
+        if (!order.getStatus().equals(OrderStatus.PICKUP_PENDING) && !order.getStatus().equals(OrderStatus.SHIPPING)) {
+            throw new BadRequestException("Trạng thái đơn hàng không hợp lệ để cập nhật trạng thái vận chuyển!");
+        }
+    }
+
+
+    private void updateCancelReturnOrderByDeliver(Order order, String reason) {
+        order.setStatus(OrderStatus.COMPLETED);
+        order.setUpdateAt(LocalDateTime.now());
+        order.setNote(order.getNote() + " - #Lý do trả hàng thất bại: " + reason);
+
+        try {
+            processPaymentIfCancelReturnOrder(order);
+
+            orderRepository.save(order);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng khi hủy đơn hàng trả hàng!");
+        }
+    }
+
+
+    private void processPaymentIfCancelReturnOrder(Order order) {
+        if (!order.getPaymentMethod().equals("COD")) {
+            handlePayment(order, "COMPLETED_ORDER");
+        } else if (cashOrderService.checkCashOrderByOrderIdWithHandlePaymentAndStatus(
+                order.getOrderId(), false, true, false, Status.ACTIVE)) {
+            handlePayment(order, "COMPLETED_ORDER_COD");
+        }
+    }
+
+
+    private void updateSuccessReturnOrderByDeliver(Order order, String reason) {
+        order.setStatus(OrderStatus.REFUNDED);
+        order.setUpdateAt(LocalDateTime.now());
+        order.setNote(order.getNote() + " - #Lý do trả hàng thành công: " + reason);
+
+        try {
+
+            orderRepository.save(order);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi khi cập nhật trạng thái đơn hàng khi hoàn thành đơn hàng trả hàng!");
+        }
+    }
+
+
+    private Order getOrderByOrderId(UUID orderId) {
+        return orderRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng với mã: " + orderId));
     }
 
 
@@ -302,11 +410,33 @@ public class TransportServiceImpl implements ITransportService {
 
 
     private String getPaymentMethodByTransportId(UUID transportId) {
-        Transport transport = getTransportById(transportId);
-        Order order = orderRepository.findByOrderId(transport.getOrderId())
-                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng để lấy phương thức thanh toán theo mã vận chuyển: " + transportId));
+        Order order = getOrderByTransportId(transportId);
 
         return order.getPaymentMethod();
+    }
+
+
+    private Order getOrderByTransportId(UUID transportId) {
+        Transport transport = getTransportById(transportId);
+        return orderRepository.findByOrderId(transport.getOrderId())
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy đơn hàng theo mã vận chuyển: " + transportId));
+    }
+
+
+    private void checkExistOrderByOrderIdAndOrderStatus(UUID orderId, OrderStatus orderStatus) {
+        if (!orderRepository.existsByOrderIdAndStatus(orderId, orderStatus)) {
+            throw new NotFoundException("Không tìm thấy đơn hàng theo mã: " + orderId + " và trạng thái: " + orderStatus);
+        }
+    }
+
+
+    private void handlePayment(Order order, String paymentType) {
+        cashOrderService.updateCashOrderByOrderIdWithHandlePayment(order.getOrderId());
+        walletService.updateWalletByUsername(
+                order.getShop().getCustomer().getUsername(),
+                order.getOrderId(),
+                order.getTotalPrice() * 96 / 100 - order.getDiscountShop(),
+                paymentType);
     }
 
 

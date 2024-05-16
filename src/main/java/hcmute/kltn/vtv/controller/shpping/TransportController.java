@@ -65,6 +65,32 @@ public class TransportController {
     }
 
 
+    @PatchMapping("/cancel-return/{transportId}")
+    public ResponseEntity<TransportResponse> updateTransportStatusWithCancelReturnOrderByDeliver(@PathVariable("transportId") UUID transportId,
+                                                                                                 @RequestBody String reason,
+                                                                                                 HttpServletRequest servletRequest) {
+        if (reason == null || reason.isEmpty()) {
+            throw new BadRequestException("Lý do trả hàng thất bại không được để trống!");
+        }
+        String username = (String) servletRequest.getAttribute("username");
+
+        return ResponseEntity.ok(transportService.updateTransportStatusWithCancelReturnOrderByDeliver(transportId, username, reason));
+    }
+
+
+    @PatchMapping("/success-return/{transportId}")
+    public ResponseEntity<TransportResponse> updateTransportStatusWithSuccessReturnOrderByDeliver(@PathVariable("transportId") UUID transportId,
+                                                                                                  @RequestBody String reason,
+                                                                                                  HttpServletRequest servletRequest) {
+        if (reason == null || reason.isEmpty()) {
+            throw new BadRequestException("Lý do trả hàng thành công không được để trống!");
+        }
+        String username = (String) servletRequest.getAttribute("username");
+
+        return ResponseEntity.ok(transportService.updateTransportStatusWithSuccessReturnOrderByDeliver(transportId, username, reason));
+    }
+
+
 
     @GetMapping("/get-by-ward-work")
     public ResponseEntity<ShopAndTransportResponse> getTransportsByWardWorksDeliver(HttpServletRequest servletRequest) {

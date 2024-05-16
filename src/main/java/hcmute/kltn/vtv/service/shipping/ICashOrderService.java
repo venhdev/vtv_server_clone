@@ -45,4 +45,10 @@ public interface ICashOrderService {
     boolean checkCashOrderByOrderIdWithHandlePaymentAndStatus(UUID orderId, boolean shipperHold, boolean waveHouseHold, boolean handlePayment, Status status);
 
     boolean checkCashOrderByOrderIdWithHandlePayment(UUID orderId, boolean shipperHold, boolean waveHouseHold, boolean handlePayment);
+
+    void checkExistCashOrderByOrderIdAndShipperUsernameAndStatus(UUID orderId, String shipperUsername, Status status);
+
+    boolean checkExistCashOrderByOrderIdAndShipperUsernameWithShipperHold(UUID orderId, String shipperUsername, Status status);
+
+    void updateCashOrderByOrderIdAndShipperUsernameWithSuccessReturnOrder(UUID orderId, String shipperUsername);
 }
