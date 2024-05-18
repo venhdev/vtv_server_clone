@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.controller.guest;
 
-import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
 import hcmute.kltn.vtv.service.guest.IFavoriteProductGuestService;
@@ -8,7 +8,6 @@ import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.service.guest.IProductService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

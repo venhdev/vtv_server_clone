@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.service.user.impl;
 
 
-import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.vendor.ProductRepository;

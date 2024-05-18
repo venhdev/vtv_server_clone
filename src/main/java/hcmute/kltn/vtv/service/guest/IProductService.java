@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.guest;
 
-import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductPageResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.ListProductResponse;
 import hcmute.kltn.vtv.model.data.guest.ProductResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Product;

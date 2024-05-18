@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.user;
 
-import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductPageResponse;
 
 public interface IProductSuggestionCustomerService {
     ListProductPageResponse getProductSuggestionBySearchHistory(String username, int page, int size);

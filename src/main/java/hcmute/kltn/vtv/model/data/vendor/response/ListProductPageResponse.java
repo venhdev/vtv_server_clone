@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.data.paging.response;
+package hcmute.kltn.vtv.model.data.vendor.response;
 
 import hcmute.kltn.vtv.model.dto.vendor.ProductDTO;
 import hcmute.kltn.vtv.model.entity.vendor.Product;

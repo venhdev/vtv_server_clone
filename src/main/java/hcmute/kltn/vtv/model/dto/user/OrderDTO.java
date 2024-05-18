@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.model.dto.user;
 
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
+import hcmute.kltn.vtv.model.dto.vendor.ShopDTO;
 import hcmute.kltn.vtv.model.dto.wallet.LoyaltyPointHistoryDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
 import hcmute.kltn.vtv.model.extra.OrderStatus;

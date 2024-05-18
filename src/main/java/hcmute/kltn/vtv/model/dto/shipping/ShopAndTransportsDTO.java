@@ -1,7 +1,7 @@
 package hcmute.kltn.vtv.model.dto.shipping;
 
 
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
+import hcmute.kltn.vtv.model.dto.vendor.ShopDTO;
 import hcmute.kltn.vtv.model.entity.shipping.Transport;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import lombok.*;

@@ -4,7 +4,7 @@ import hcmute.kltn.vtv.model.extra.OrderStatus;
 import hcmute.kltn.vtv.service.vtv.IDateService;
 import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
-import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.service.vendor.IOrderShopService;

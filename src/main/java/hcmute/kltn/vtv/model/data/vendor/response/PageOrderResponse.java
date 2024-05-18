@@ -1,9 +1,7 @@
-package hcmute.kltn.vtv.model.data.paging.response;
+package hcmute.kltn.vtv.model.data.vendor.response;
 
 import hcmute.kltn.vtv.model.dto.user.OrderDTO;
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
 import hcmute.kltn.vtv.model.entity.user.Order;
-import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.dto.vtv;
+package hcmute.kltn.vtv.model.dto.vendor;
 
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.Status;

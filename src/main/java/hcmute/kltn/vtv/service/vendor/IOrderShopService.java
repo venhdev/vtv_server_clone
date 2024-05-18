@@ -1,10 +1,9 @@
 package hcmute.kltn.vtv.service.vendor;
 
-import hcmute.kltn.vtv.model.data.paging.response.PageOrderResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.PageOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.ListOrderResponse;
 import hcmute.kltn.vtv.model.data.user.response.OrderResponse;
 import hcmute.kltn.vtv.model.extra.OrderStatus;
-import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;

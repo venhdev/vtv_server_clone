@@ -1,14 +1,9 @@
 package hcmute.kltn.vtv.model.data.guest;
 
-import hcmute.kltn.vtv.model.dto.vtv.CategoryDTO;
-import hcmute.kltn.vtv.model.dto.vendor.ProductDTO;
-import hcmute.kltn.vtv.model.dto.vtv.ShopDTO;
-import hcmute.kltn.vtv.model.entity.vendor.Product;
+import hcmute.kltn.vtv.model.dto.vendor.ShopDTO;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

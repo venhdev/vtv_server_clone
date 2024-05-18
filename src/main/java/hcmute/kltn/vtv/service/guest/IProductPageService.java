@@ -1,6 +1,6 @@
 package hcmute.kltn.vtv.service.guest;
 
-import hcmute.kltn.vtv.model.data.paging.response.ListProductPageResponse;
+import hcmute.kltn.vtv.model.data.vendor.response.ListProductPageResponse;
 
 public interface IProductPageService {
 

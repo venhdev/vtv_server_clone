@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.data.paging.request;
+package hcmute.kltn.vtv.model.data.vendor.request;
 
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
