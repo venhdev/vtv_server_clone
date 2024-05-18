@@ -31,10 +31,7 @@ public class CategoryRequest {
         if (this.description == null || this.description.isEmpty()) {
             throw new BadRequestException("Mô tả danh mục không được để trống!");
         }
-
-        if (this.image == null || this.image.isEmpty()) {
-            throw new BadRequestException("Hình ảnh danh mục không được để trống!");
-        }
+       
 
         if (this.child && this.parentId == null) {
             throw new BadRequestException("Danh mục cha không được để trống!");

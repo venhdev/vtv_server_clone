@@ -4,6 +4,7 @@ import hcmute.kltn.vtv.model.data.guest.CategoryResponse;
 import hcmute.kltn.vtv.model.data.guest.ResponseClass;
 import hcmute.kltn.vtv.model.data.vtv.request.CategoryRequest;
 import hcmute.kltn.vtv.service.manager.IManagerCategoryService;
+import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class ManagerCategoryController {
             @ModelAttribute CategoryRequest request, HttpServletRequest servletRequest) {
 
         String username = (String) servletRequest.getAttribute("username");
+        if (request.getImage() == null || request.getImage().isEmpty()) {
+            throw new BadRequestException("Hình ảnh danh mục mới không được để trống!");
+        }
         request.validate();
 
         return ResponseEntity.ok(managerCategoryService.addNewCategoryByManager(request, username));
