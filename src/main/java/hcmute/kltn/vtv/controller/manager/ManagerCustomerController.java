@@ -1,5 +1,6 @@
 package hcmute.kltn.vtv.controller.manager;
 
+import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.service.vtv.IPageService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.PageCustomerResponse;
@@ -19,7 +20,7 @@ public class ManagerCustomerController {
     private final IManagerCustomerService managerCustomerService;
     private final IPageService pageService;
 
-    @GetMapping("/list/by-status/{status}")
+    @GetMapping("/page/status/{status}")
     public ResponseEntity<PageCustomerResponse> getPageCustomerByStatus(@RequestParam int page,
                                                                         @RequestParam int size,
                                                                         @PathVariable Status status) {
@@ -29,41 +30,49 @@ public class ManagerCustomerController {
     }
 
 
-
-    @GetMapping("/list/by-status/{status}/sort")
-    public ResponseEntity<PageCustomerResponse> getListCustomerByStatusSort(@RequestParam int page,
-                                                                            @RequestParam int size,
-                                                                            @PathVariable Status status,
-                                                                            @RequestParam String sort) {
+    @GetMapping("/page/status/{status}/sort/{sort}")
+    public ResponseEntity<PageCustomerResponse> getPageCustomerByStatusAndSort(@RequestParam int page,
+                                                                               @RequestParam int size,
+                                                                               @PathVariable Status status,
+                                                                               @PathVariable String sort) {
         pageService.validatePageNumberAndSize(page, size);
-
         pageService.checkRequestSortCustomerParams(sort);
-
-
-        return ResponseEntity.ok(managerCustomerService.getListCustomerByStatusSort(size, page, status, sort));
-    }
-
-    @GetMapping("/search/status/{status}")
-    public ResponseEntity<PageCustomerResponse> searchCustomerByStatus(@RequestParam int page,
-                                                                       @RequestParam int size,
-                                                                       @PathVariable Status status,
-                                                                       @RequestParam String search) {
-        pageService.validatePageNumberAndSize(page, size);
-
-        if (search == null) {
-            throw new BadRequestException("Từ khóa tìm kiếm không được để trống!");
+        if (!sort.equals("name-asc") && !sort.equals("name-desc") && !sort.equals("at-asc") && !sort.equals("at-desc")) {
+            throw new BadRequestException("Sắp xếp không hợp lệ! Sắp xếp theo tên tăng dần: name-asc, tên giảm dần: name-desc, ngày tạo tăng dần: at-asc, ngày tạo giảm dần: at-desc");
         }
 
-        return ResponseEntity.ok(managerCustomerService.searchCustomerByStatus(size, page, status, search));
+        return ResponseEntity.ok(managerCustomerService.getPageCustomerByStatusAndSort(size, page, status, sort));
     }
+
+
+    @GetMapping("/page/search/{search}/status/{status}")
+    public ResponseEntity<PageCustomerResponse> searchPageCustomerByFullNameAndStatus(@RequestParam int page,
+                                                                                      @RequestParam int size,
+                                                                                      @PathVariable Status status,
+                                                                                      @PathVariable String search) {
+        pageService.validatePageNumberAndSize(page, size);
+        if (search == null) {
+            throw new BadRequestException("Tên người dùng cần tìm kiếm không được để trống!");
+        }
+
+        return ResponseEntity.ok(managerCustomerService.searchPageCustomerByFullNameAndStatus(size, page, status, search));
+    }
+
 
     @GetMapping("/detail/{customerId}")
     public ResponseEntity<ProfileCustomerResponse> getCustomerDetailByCustomerId(@PathVariable Long customerId) {
-        if (customerId == null) {
-            throw new NotFoundException("Mã khách hàng không được để trống!");
-        }
 
         return ResponseEntity.ok(managerCustomerService.getCustomerDetailByCustomerId(customerId));
+    }
+
+
+    @PatchMapping("/update/{customerId}/role/{role}")
+    public ResponseEntity<ProfileCustomerResponse> updateCustomerRoleByCustomerId(@PathVariable Long customerId, @PathVariable Role role) {
+        if (!role.equals(Role.MANAGERCUSTOMER) && !role.equals(Role.MANAGERSHIPPING) && !role.equals(Role.MANAGERVENDOR)) {
+            throw new BadRequestException("Quyền không hợp lệ! Quyền quản lý khách hàng: MANAGERCUSTOMER, quản lý vận chuyển: MANAGERSHIPPING, quản lý nhà cung cấp: MANAGERVENDOR");
+        }
+
+        return ResponseEntity.ok(managerCustomerService.updateCustomerRoleByCustomerId(customerId, role));
     }
 
 }

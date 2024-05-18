@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IManagerCustomerService {
     PageCustomerResponse getPageCustomerByStatus(int size, int page, Status status);
 
-    PageCustomerResponse getListCustomerByStatusSort(int size, int page, Status status, String sort);
+    PageCustomerResponse getPageCustomerByStatusAndSort(int size, int page, Status status, String sort);
 
-    PageCustomerResponse searchCustomerByStatus(int size, int page, Status status, String search);
+    PageCustomerResponse searchPageCustomerByFullNameAndStatus(int size, int page, Status status, String search);
 
     ProfileCustomerResponse getCustomerDetailByCustomerId(Long customerId);
 
@@ -19,4 +19,7 @@ public interface IManagerCustomerService {
 
     @Transactional
     void updateRoleWithCustomer(Long customerId, Role role);
+
+    @Transactional
+    ProfileCustomerResponse updateCustomerRoleByCustomerId(Long customerId, Role role);
 }

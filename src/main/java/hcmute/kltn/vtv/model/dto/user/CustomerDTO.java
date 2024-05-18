@@ -7,6 +7,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.text.Collator;
 import java.util.*;
 
 @Getter
@@ -53,7 +54,8 @@ public class CustomerDTO {
         for (Customer customer : customers) {
             customerDTOs.add(convertEntityToDTO(customer));
         }
-        customerDTOs.sort(Comparator.comparing(CustomerDTO::getFullName).reversed());
+        Collator collator = Collator.getInstance(new Locale("vi", "VN"));
+        customerDTOs.sort((c1, c2) -> collator.compare(c1.getFullName(), c2.getFullName()));
         return customerDTOs;
     }
 

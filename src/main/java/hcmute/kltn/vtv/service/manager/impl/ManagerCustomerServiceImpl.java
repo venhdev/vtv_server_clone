@@ -4,13 +4,11 @@ import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.manager.response.PageCustomerResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
-import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.user.CustomerRepository;
 import hcmute.kltn.vtv.repository.manager.ManagerShopRepository;
 import hcmute.kltn.vtv.service.manager.IManagerCustomerService;
-import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +18,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ManagerCustomerServiceImpl implements IManagerCustomerService {
 
-    private final ICustomerService customerService;
     private final CustomerRepository customerRepository;
     private final ManagerShopRepository managerShopRepository;
 
     @Override
     public PageCustomerResponse getPageCustomerByStatus(int size, int page, Status status) {
-
         Page<Customer> customers = customerRepository.findAllByStatusOrderByUsername(status, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách khách hàng"));
 
@@ -40,7 +35,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
     }
 
     @Override
-    public PageCustomerResponse getListCustomerByStatusSort(int size, int page, Status status, String sort) {
+    public PageCustomerResponse getPageCustomerByStatusAndSort(int size, int page, Status status, String sort) {
 
         Page<Customer> customers;
         String message;
@@ -78,9 +73,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
     }
 
     @Override
-    public PageCustomerResponse searchCustomerByStatus(int size, int page, Status status, String search) {
-        int totalCustomer = customerRepository.countAllByFullNameContainingAndStatus(search, status);
-        int totalPage = (int) Math.ceil((double) totalCustomer / size);
+    public PageCustomerResponse searchPageCustomerByFullNameAndStatus(int size, int page, Status status, String search) {
 
         Page<Customer> customers = customerRepository.findAllByFullNameContainingAndStatus(search, status,
                         PageRequest.of(page - 1, size))
@@ -92,20 +85,10 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
 
     @Override
     public ProfileCustomerResponse getCustomerDetailByCustomerId(Long customerId) {
-        if (customerId == null) {
-            throw new NotFoundException("Mã khách hàng không được để trống!");
-        }
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại."));
-        CustomerDTO customerDTO = CustomerDTO.convertEntityToDTO(customer);
+                .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại với mã: " + customerId));
 
-        ProfileCustomerResponse response = new ProfileCustomerResponse();
-        response.setCustomerDTO(customerDTO);
-        response.setMessage("Lấy thông tin khách hàng thành công.");
-        response.setStatus("ok");
-        response.setCode(200);
-
-        return response;
+        return ProfileCustomerResponse.profileCustomerResponse(customer, "Lấy thông tin khách hàng thành công!", "ok");
     }
 
 
@@ -113,7 +96,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
     @Transactional
     public void updateRoleWithCustomer(Long customerId, Role role) {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new NotFoundException("Khách hàng không tồn tại."));
+                .orElseThrow(() -> new NotFoundException("Khách hàng cập nhật quyền không tồn tại!"));
         customer.addRole(role);
         customer.setUpdateAt(LocalDateTime.now());
         try {
@@ -121,6 +104,14 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
         } catch (Exception e) {
             throw new InternalServerErrorException("Cập nhật quyền cho tài khoản thất bại!");
         }
+    }
+
+
+    @Override
+    @Transactional
+    public ProfileCustomerResponse updateCustomerRoleByCustomerId(Long customerId, Role role) {
+        updateRoleWithCustomer(customerId, role);
+        return getCustomerDetailByCustomerId(customerId);
     }
 
 }
