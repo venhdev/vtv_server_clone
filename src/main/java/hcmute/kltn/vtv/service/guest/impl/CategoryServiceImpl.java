@@ -9,7 +9,6 @@ import hcmute.kltn.vtv.service.guest.ICategoryService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +34,12 @@ public class CategoryServiceImpl implements ICategoryService {
         List<Category> categories = categoryRepository.findAllByParentCategoryIdAndStatus(categoryId, Status.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh mục con nào trong danh mục cha này!"));
         return CategoriesResponse.categoriesResponse(categories, "Lấy danh mục con theo danh mục cha thành công!", "OK");
+    }
+
+
+    @Override
+    public CategoriesResponse getAllCategory(){
+        return CategoriesResponse.categoriesResponse(categoryRepository.findAll(), "Lấy tất cả danh mục thành công!", "OK");
     }
 
 

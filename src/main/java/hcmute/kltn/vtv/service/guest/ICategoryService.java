@@ -8,6 +8,8 @@ public interface ICategoryService {
 
     CategoriesResponse getAllCategoryByParentId(Long categoryId);
 
+    CategoriesResponse getAllCategory();
+
     void checkExistCategoryHasChild(Long categoryId);
 
     Category getCategoryById(Long categoryId);

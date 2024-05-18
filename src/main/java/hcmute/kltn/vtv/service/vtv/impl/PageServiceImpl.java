@@ -12,6 +12,20 @@ public class PageServiceImpl implements IPageService {
 
 
     @Override
+    public void checkRequestSortCustomerParams(String sort) {
+        if (sort == null) {
+            throw new NotFoundException("Tham số sắp xếp không được để trống!");
+        }
+        if (!sort.equals("name-asc") && !sort.equals("name-desc") && !sort.equals("at-asc")
+                && !sort.equals("at-desc")) {
+            throw new NotFoundException(
+                    "Tham số sắp xếp không hợp lệ! Tham số sắp xếp phải là name-asc, name-desc, at-asc, at-desc");
+        }
+    }
+
+
+
+    @Override
     public void validatePageNumberAndSize(int page, int size) {
         if (page < 0) {
             throw new NotFoundException("Số trang không được nhỏ hơn 0!");

@@ -2,7 +2,7 @@ package hcmute.kltn.vtv.service.manager.impl;
 
 import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
-import hcmute.kltn.vtv.model.data.manager.response.ListCustomerManagerResponse;
+import hcmute.kltn.vtv.model.data.manager.response.PageCustomerResponse;
 import hcmute.kltn.vtv.model.data.user.response.ProfileCustomerResponse;
 import hcmute.kltn.vtv.model.dto.user.CustomerDTO;
 import hcmute.kltn.vtv.model.entity.user.Customer;
@@ -14,7 +14,6 @@ import hcmute.kltn.vtv.service.user.ICustomerService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,26 +26,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerCustomerServiceImpl implements IManagerCustomerService {
 
-    private ICustomerService customerService;
-    private CustomerRepository customerRepository;
-    private ManagerShopRepository managerShopRepository;
+    private final ICustomerService customerService;
+    private final CustomerRepository customerRepository;
+    private final ManagerShopRepository managerShopRepository;
 
     @Override
-    public ListCustomerManagerResponse getListCustomerByStatus(int size, int page, Status status) {
-        int totalCustomer = customerRepository.countAllByStatus(status);
-        int totalPage = (int) Math.ceil((double) totalCustomer / size);
+    public PageCustomerResponse getPageCustomerByStatus(int size, int page, Status status) {
 
-        Page<Customer> customers = customerRepository.findAllByStatus(status, PageRequest.of(page - 1, size))
-                .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
+        Page<Customer> customers = customerRepository.findAllByStatusOrderByUsername(status, PageRequest.of(page - 1, size))
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy danh sách khách hàng"));
 
-        return listCustomerAdminResponse(customers.getContent(),
-                size, page, totalPage, "Lấy danh sách khách hàng theo trạng thái thành công!");
+        return PageCustomerResponse.pageCustomerResponse(customers, "Lấy danh sách khách hàng theo trạng thái thành công!");
     }
 
     @Override
-    public ListCustomerManagerResponse getListCustomerByStatusSort(int size, int page, Status status, String sort) {
-        int totalCustomer = customerRepository.countAllByStatus(status);
-        int totalPage = (int) Math.ceil((double) totalCustomer / size);
+    public PageCustomerResponse getListCustomerByStatusSort(int size, int page, Status status, String sort) {
+
         Page<Customer> customers;
         String message;
 
@@ -74,16 +69,16 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
                 message = "Lọc danh sách khách hàng theo ngày tạo giảm dần và trạng thái thành công!";
             }
             default -> {
-                return getListCustomerByStatus(size, page, status);
+                return getPageCustomerByStatus(size, page, status);
             }
         }
 
-        return listCustomerAdminResponse(customers.getContent(), size, page, totalPage, message);
+        return PageCustomerResponse.pageCustomerResponse(customers, message);
 
     }
 
     @Override
-    public ListCustomerManagerResponse searchCustomerByStatus(int size, int page, Status status, String search) {
+    public PageCustomerResponse searchCustomerByStatus(int size, int page, Status status, String search) {
         int totalCustomer = customerRepository.countAllByFullNameContainingAndStatus(search, status);
         int totalPage = (int) Math.ceil((double) totalCustomer / size);
 
@@ -92,7 +87,7 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy danh sách khách hàng"));
         String message = "Tìm kiếm danh sách khách hàng theo tên và trạng thái thành công!";
 
-        return listCustomerAdminResponse(customers.getContent(), size, page, totalPage, message);
+        return PageCustomerResponse.pageCustomerResponse(customers, message);
     }
 
     @Override
@@ -113,46 +108,6 @@ public class ManagerCustomerServiceImpl implements IManagerCustomerService {
         return response;
     }
 
-    public ListCustomerManagerResponse listCustomerAdminResponse(List<Customer> customers,
-                                                                 int size, int page,
-                                                                 int totalPage, String message) {
-        ListCustomerManagerResponse response = new ListCustomerManagerResponse();
-        response.setCount(customers.size());
-        response.setPage(page);
-        response.setSize(size);
-        response.setTotalPage(totalPage);
-        response.setCustomerDTOs(CustomerDTO.convertEntitiesToDTOs(customers));
-        response.setMessage(message);
-        response.setCode(200);
-        response.setStatus("OK");
-
-        return response;
-    }
-
-    @Override
-    public void checkRequestPageParams(int page, int size) {
-        if (page < 0) {
-            throw new NotFoundException("Trang không được nhỏ hơn 0!");
-        }
-        if (size < 0) {
-            throw new NotFoundException("Kích thước trang không được nhỏ hơn 0!");
-        }
-        if (size > 500) {
-            throw new NotFoundException("Kích thước trang không được lớn hơn 200!");
-        }
-    }
-
-    @Override
-    public void checkRequestSortParams(String sort) {
-        if (sort == null) {
-            throw new NotFoundException("Tham số sắp xếp không được để trống!");
-        }
-        if (!sort.equals("name-asc") && !sort.equals("name-desc") && !sort.equals("at-asc")
-                && !sort.equals("at-desc")) {
-            throw new NotFoundException(
-                    "Tham số sắp xếp không hợp lệ! Tham số sắp xếp phải là name-asc, name-desc, at-asc, at-desc");
-        }
-    }
 
     @Override
     @Transactional

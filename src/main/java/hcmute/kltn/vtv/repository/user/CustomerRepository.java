@@ -33,6 +33,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     Optional<Page<Customer>> findAllByStatus(Status status, Pageable pageable);
 
+    Optional<Page<Customer>> findAllByStatusOrderByUsername(Status status, Pageable pageable);
+
     Optional<Page<Customer>> findAllByStatusOrderByFullName(Status status, Pageable pageable);
 
     Optional<Page<Customer>> findAllByStatusOrderByFullNameDesc(Status status, Pageable pageable);
