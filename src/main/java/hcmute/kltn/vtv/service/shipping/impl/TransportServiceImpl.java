@@ -159,12 +159,6 @@ public class TransportServiceImpl implements ITransportService {
         }
     }
 
-    private void checkExistTransportByTransportIdAndStatus(UUID transportId, TransportStatus transportStatus) {
-         if (transportRepository.existsByTransportIdAndStatus(transportId, transportStatus)){
-             throw new BadRequestException("Đơn vận chuyển đã tồn tại với trạng thái: " + convertTransportStatusToString(transportStatus));
-         }
-    }
-
 
     @Override
     @Transactional
@@ -265,6 +259,11 @@ public class TransportServiceImpl implements ITransportService {
     }
 
 
+    private void checkExistTransportByTransportIdAndStatus(UUID transportId, TransportStatus transportStatus) {
+        if (transportRepository.existsByTransportIdAndStatus(transportId, transportStatus)) {
+            throw new BadRequestException("Đơn vận chuyển đã tồn tại với trạng thái: " + convertTransportStatusToString(transportStatus));
+        }
+    }
 
 
     private void hasPickupOrShipperRole(String username) {
