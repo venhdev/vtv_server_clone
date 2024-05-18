@@ -3,9 +3,11 @@ package hcmute.kltn.vtv.model.dto.vendor;
 import hcmute.kltn.vtv.model.entity.vendor.Attribute;
 import lombok.*;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -28,7 +30,8 @@ public class AttributeDTO {
             AttributeDTO attributeDTO = convertEntityToDTO(attribute);
             attributeDTOS.add(attributeDTO);
         }
-        attributeDTOS.sort(Comparator.comparing(AttributeDTO::getName).thenComparing(AttributeDTO::getValue));
+        Collator collator = Collator.getInstance(new Locale("vi", "VN")); // Use the appropriate Locale for your case
+        attributeDTOS.sort((c1, c2) -> collator.compare(c1.getName(), c2.getName()));
 
         return attributeDTOS;
     }

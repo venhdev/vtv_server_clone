@@ -4,8 +4,10 @@ import hcmute.kltn.vtv.model.entity.vendor.CategoryShop;
 import hcmute.kltn.vtv.model.entity.vendor.Product;
 import lombok.*;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -53,7 +55,9 @@ public class CategoryShopDTO {
         for (CategoryShop categoryShop : categoryShops) {
             categoryShopDTOs.add(convertEntityToDTO(categoryShop));
         }
-        categoryShopDTOs.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Collator collator = Collator.getInstance(new Locale("vi", "VN")); // Use the appropriate Locale for your case
+        categoryShopDTOs.sort((c1, c2) -> collator.compare(c1.getName(), c2.getName()));
+
         return categoryShopDTOs;
     }
 

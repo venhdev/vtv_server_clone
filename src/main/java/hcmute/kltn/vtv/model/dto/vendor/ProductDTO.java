@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.OptionalDouble;
 
 @Data
@@ -54,20 +56,13 @@ public class ProductDTO {
         for (Product product : products) {
             productDTOs.add(convertEntityToDTO(product));
         }
+        Collator collator = Collator.getInstance(new Locale("vi", "VN")); // Use the appropriate Locale for your case
+        productDTOs.sort((c1, c2) -> collator.compare(c1.getName(), c2.getName()));
+
         return productDTOs;
     }
 
 
-    public static List<ProductDTO> sortProductDTOs(List<ProductDTO> productDTOs, String sortType) {
-        if (sortType.equals("price")) {
-            productDTOs.sort((o1, o2) -> o1.getMinPrice().compareTo(o2.getMinPrice()));
-        } else if (sortType.equals("rating")) {
-            productDTOs.sort((o1, o2) -> o2.getRating().compareTo(o1.getRating()));
-        } else if (sortType.equals("sold")) {
-            productDTOs.sort((o1, o2) -> o2.getSold().compareTo(o1.getSold()));
-        }
-        return productDTOs;
-    }
 
     public static ProductDTO convertEntityToDTO(Product product) {
 

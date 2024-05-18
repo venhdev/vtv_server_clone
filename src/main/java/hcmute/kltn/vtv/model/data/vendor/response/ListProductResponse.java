@@ -29,9 +29,4 @@ public class ListProductResponse extends ResponseAbstract {
     }
 
 
-    public static ListProductResponse listProductResponseSort(List<Product> products, String message, String status, String sort) {
-        ListProductResponse response = listProductResponse(products, message, status);
-        response.setProductDTOs(ProductDTO.sortProductDTOs(response.getProductDTOs(), sort));
-        return response;
-    }
 }

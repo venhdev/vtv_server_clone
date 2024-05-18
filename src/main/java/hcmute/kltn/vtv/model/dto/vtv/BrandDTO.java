@@ -7,8 +7,10 @@ import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
 @Setter
@@ -55,7 +57,8 @@ public class BrandDTO {
         for (Brand brand : brands) {
             brandDTOS.add(convertEntityToDTO(brand));
         }
-        brandDTOS.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Collator collator = Collator.getInstance(new Locale("vi", "VN")); // Use the appropriate Locale for your case
+        brandDTOS.sort((c1, c2) -> collator.compare(c1.getName(), c2.getName()));
         return brandDTOS;
     }
 }
