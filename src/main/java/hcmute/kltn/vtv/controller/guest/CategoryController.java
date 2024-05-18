@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.controller.guest;
 
 
 import hcmute.kltn.vtv.model.data.guest.CategoriesResponse;
+import hcmute.kltn.vtv.model.data.guest.CategoryResponse;
 import hcmute.kltn.vtv.service.guest.ICategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class CategoryController {
     @GetMapping("/all")
     public ResponseEntity<CategoriesResponse> getAllCategory() {
         return ResponseEntity.ok(categoryService.getAllCategory());
+    }
+
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<CategoryResponse> getCategoryByCategoryId(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(categoryService.getCategoryByCategoryId(categoryId));
     }
 
 

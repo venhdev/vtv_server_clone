@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.service.guest.impl;
 
 
 import hcmute.kltn.vtv.model.data.guest.CategoriesResponse;
+import hcmute.kltn.vtv.model.data.guest.CategoryResponse;
 import hcmute.kltn.vtv.model.entity.vtv.Category;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.repository.vtv.CategoryRepository;
@@ -41,6 +42,17 @@ public class CategoryServiceImpl implements ICategoryService {
     public CategoriesResponse getAllCategory(){
         return CategoriesResponse.categoriesResponse(categoryRepository.findAll(), "Lấy tất cả danh mục thành công!", "OK");
     }
+
+
+    @Override
+    public CategoryResponse getCategoryByCategoryId(Long categoryId) {
+        checkExistCategoryById(categoryId);
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Không tìm thấy danh mục!"));
+
+        return CategoryResponse.categoryResponse(category, "Lấy danh mục thành công!", "OK");
+    }
+
 
 
 

@@ -1,6 +1,7 @@
 package hcmute.kltn.vtv.service.guest;
 
 import hcmute.kltn.vtv.model.data.guest.CategoriesResponse;
+import hcmute.kltn.vtv.model.data.guest.CategoryResponse;
 import hcmute.kltn.vtv.model.entity.vtv.Category;
 
 public interface ICategoryService {
@@ -9,6 +10,8 @@ public interface ICategoryService {
     CategoriesResponse getAllCategoryByParentId(Long categoryId);
 
     CategoriesResponse getAllCategory();
+
+    CategoryResponse getCategoryByCategoryId(Long categoryId);
 
     void checkExistCategoryHasChild(Long categoryId);
 
