@@ -119,14 +119,13 @@ public class TransportServiceImpl implements ITransportService {
     @Transactional
     public TransportResponse updateTransportStatusByDeliver(UUID transportId, String username, boolean handled,
                                                             TransportStatus transportStatus, String wardCode) {
+        checkStatusTransportBeforeUpdateStatusTransportByTransportId(transportId);
+        checkStatusOrderBeforeUpdateTransportStatusByDeliver(transportId);
+        wardService.checkExistWardCode(wardCode);
+
+        Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
+        checkDeliverCanUpdateStatus(transportId, deliver);
         try {
-            checkStatusTransportBeforeUpdateStatusTransportByTransportId(transportId);
-            checkStatusOrderBeforeUpdateTransportStatusByDeliver(transportId);
-            wardService.checkExistWardCode(wardCode);
-
-            Deliver deliver = deliverService.checkTypeWorkDeliverWithTransportStatus(username, transportStatus);
-            checkDeliverCanUpdateStatus(transportId, deliver);
-
             Transport transport = updateStatusTransportByTransportId(transportId, wardCode, username, handled, transportStatus);
             updateStatusOrderByDeliver(transport.getOrderId(), transportStatus);
             checkTransportStatusAndAddCashOrderByTransportId(transportId, username, transportStatus, getPaymentMethodByTransportId(transportId));

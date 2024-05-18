@@ -1,10 +1,13 @@
 package hcmute.kltn.vtv.repository.user;
 
 import hcmute.kltn.vtv.model.entity.user.Customer;
+import hcmute.kltn.vtv.model.extra.Role;
 import hcmute.kltn.vtv.model.extra.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -46,5 +49,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     int countAllByFullNameContainingAndStatus(String fullName, Status status);
 
     Optional<Page<Customer>> findAllByFullNameContainingAndStatus(String fullName, Status status, Pageable pageable);
+
+    @Query("SELECT c FROM Customer c WHERE c.status = :status AND :role MEMBER OF c.roles")
+    Optional<Page<Customer>> findAllByStatusAndRoles(@Param("status") Status status, @Param("role") Role role, Pageable pageable);
 
 }
