@@ -19,13 +19,12 @@ public class ManagerCategoryController {
     private final IManagerCategoryService managerCategoryService;
 
     @PostMapping("/add")
-    public ResponseEntity<CategoryResponse> addNewCategoryByManager(
-            @ModelAttribute CategoryRequest request, HttpServletRequest servletRequest) {
-
-        String username = (String) servletRequest.getAttribute("username");
+    public ResponseEntity<CategoryResponse> addNewCategoryByManager(@ModelAttribute CategoryRequest request,
+                                                                    HttpServletRequest servletRequest) {
         if (request.getImage() == null || request.getImage().isEmpty()) {
             throw new BadRequestException("Hình ảnh danh mục mới không được để trống!");
         }
+        String username = (String) servletRequest.getAttribute("username");
         request.validate();
 
         return ResponseEntity.ok(managerCategoryService.addNewCategoryByManager(request, username));

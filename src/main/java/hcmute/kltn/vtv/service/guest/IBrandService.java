@@ -8,4 +8,6 @@ public interface IBrandService {
     BrandResponse getBrandByBrandId(Long brandId);
 
     ListBrandResponse getBrandsByCategoryId(Long categoryId);
+    
+    ListBrandResponse getBrands();
 }

@@ -30,7 +30,6 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
     private final BrandRepository brandRepository;
     private final IImageService imageService;
 
-
     @Override
     @Transactional
     public CategoryResponse addNewCategoryByManager(CategoryRequest request, String username) {
@@ -47,7 +46,6 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
             throw new InternalServerErrorException("Thêm danh mục thất bại!");
         }
     }
-
 
     @Override
     @Transactional
@@ -74,8 +72,8 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
             }
             throw new InternalServerErrorException("Cập nhật danh mục thất bại!");
         }
-    }
 
+    }
 
     @Override
     @Transactional
@@ -93,13 +91,11 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
         }
     }
 
-
     @Override
     public List<Category> getCategoriesByIds(List<Long> categoryIds) {
         return categoryRepository.findAllByCategoryIdInAndStatus(categoryIds, Status.ACTIVE)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy danh mục!"));
     }
-
 
     @Override
     public void checkExistsCategoriesByIds(List<Long> categoryIds) {
@@ -107,7 +103,6 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
             throw new BadRequestException("Danh mục không tồn tại!");
         }
     }
-
 
     private void checkUsingCategory(Long categoryId) {
 
@@ -119,7 +114,6 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
             throw new BadRequestException("Danh mục đang chứa sản phẩm, không thể xóa!");
         }
     }
-
 
     private Category createCategoryByCategoryRequest(CategoryRequest request, String username) {
         Category category = new Category();
@@ -139,11 +133,11 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
         return category;
     }
 
-
     private void updateCategoryByCategoryRequest(Category category, CategoryRequest request, String username) {
         category.setName(request.getName());
         category.setDescription(request.getDescription());
-        category.setImage(request.isChangeImage() ? imageService.uploadImageToFirebase(request.getImage()) : category.getImage());
+        category.setImage(
+                request.isChangeImage() ? imageService.uploadImageToFirebase(request.getImage()) : category.getImage());
         category.setChild(request.isChild());
         category.setUpdatedBy(username);
         category.setParent(null);
@@ -153,14 +147,12 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
         category.setUpdateAt(LocalDateTime.now());
     }
 
-
     private void validateCategoryDepth(Long categoryId) {
         checkExistCategoryById(categoryId);
         int depth = 0;
 
         validateCategoryDepthRecursive(categoryId, depth);
     }
-
 
     private void validateCategoryDepthRecursive(Long categoryId, int depth) {
         if (checkExistCategoryByIdAndChild(categoryId)) {
@@ -174,24 +166,20 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
         }
     }
 
-
     private void checkExistCategoryById(Long categoryId) {
         if (!categoryRepository.existsById(categoryId)) {
             throw new BadRequestException("Danh mục không tồn tại!");
         }
     }
 
-
     private boolean checkExistCategoryByIdAndChild(Long categoryId) {
         return categoryRepository.existsByCategoryIdAndChild(categoryId, true);
     }
-
 
     private Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BadRequestException("Không tìm thấy danh mục theo id!"));
     }
-
 
     private void checkExistCategoryByName(String name) {
         if (categoryRepository.existsByNameAndStatus(name, Status.ACTIVE)) {
@@ -199,13 +187,11 @@ public class ManagerCategoryServiceImpl implements IManagerCategoryService {
         }
     }
 
-
     private void checkExistCategoryByCategoryIdAndName(Long categoryId, String name) {
         if (!categoryRepository.existsByCategoryIdAndName(categoryId, name)
                 && categoryRepository.existsByNameAndStatus(name, Status.ACTIVE)) {
             throw new BadRequestException("Tên danh mục đã tồn tại!");
         }
     }
-
 
 }

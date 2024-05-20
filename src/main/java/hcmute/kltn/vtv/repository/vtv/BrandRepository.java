@@ -22,6 +22,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     Optional<List<Brand>> findAllByCategoriesEmptyAndStatus(Status status);
 
 
+
     Optional<List<Brand>> findAllByCategories_CategoryIdAndStatusOrCategoriesEmpty(Long categoryId, Status status);
 
 

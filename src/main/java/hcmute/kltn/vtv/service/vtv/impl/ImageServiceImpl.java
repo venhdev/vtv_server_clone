@@ -6,6 +6,7 @@ import hcmute.kltn.vtv.service.vtv.IImageService;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,8 +24,6 @@ public class ImageServiceImpl implements IImageService {
 
     private final Bucket storageClient;
 
-
-
     @Override
     @Transactional
     public String uploadImageToFirebase(MultipartFile multipartFile) {
@@ -41,9 +40,7 @@ public class ImageServiceImpl implements IImageService {
         }
     }
 
-
-
-
+    @Async
     @Override
     @Transactional
     public void deleteImageInFirebase(String imageUrl) {
@@ -51,7 +48,7 @@ public class ImageServiceImpl implements IImageService {
             String fileName = getFileNameFromUrl(imageUrl);
             deleteFile(fileName);
         } catch (Exception e) {
-            throw new InternalServerErrorException("Lỗi khi xóa ảnh!");
+            e.printStackTrace();
         }
     }
 
@@ -70,17 +67,14 @@ public class ImageServiceImpl implements IImageService {
             String decodedUrl = URLDecoder.decode(imageUrl, StandardCharsets.UTF_8);
 
             // Extract the file name from the decoded URL
-            // Example: "https://firebasestorage.googleapis.com/v0/b/image-vtv.appspot.com/o/6bd77496-4b74-4a91-9e9d-42ce430e5dfb.jpg?alt=media"
+            // Example:
+            // "https://firebasestorage.googleapis.com/v0/b/image-vtv.appspot.com/o/6bd77496-4b74-4a91-9e9d-42ce430e5dfb.jpg?alt=media"
             // The file name would be "6bd77496-4b74-4a91-9e9d-42ce430e5dfb.jpg"
             return decodedUrl.substring(decodedUrl.lastIndexOf("/") + 1, decodedUrl.indexOf("?alt=media"));
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi khi trích xuất tên file từ URL!");
         }
     }
-
-
-
-
 
     private void uploadFile(File file, String fileName) {
         try {

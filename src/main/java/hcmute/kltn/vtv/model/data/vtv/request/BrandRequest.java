@@ -28,7 +28,7 @@ public class BrandRequest {
 
     private boolean allCategories;
 
-    private List<Long> categories;
+    private List<Long> categoryIds;
 
     public void validate() {
 
@@ -49,7 +49,7 @@ public class BrandRequest {
         }
 
 
-        if (!this.allCategories && (this.categories == null || this.categories.isEmpty())) {
+        if (!this.allCategories && (this.categoryIds == null || this.categoryIds.isEmpty())) {
             throw new BadRequestException("Danh sách danh mục không được để trống!");
         }
 

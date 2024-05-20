@@ -1,5 +1,9 @@
 package hcmute.kltn.vtv.service.guest.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import hcmute.kltn.vtv.model.data.guest.BrandResponse;
 import hcmute.kltn.vtv.model.data.guest.ListBrandResponse;
 import hcmute.kltn.vtv.model.entity.vtv.Brand;
@@ -9,10 +13,6 @@ import hcmute.kltn.vtv.service.guest.IBrandService;
 import hcmute.kltn.vtv.service.guest.ICategoryService;
 import hcmute.kltn.vtv.util.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +38,15 @@ public class BrandServiceImpl implements IBrandService {
         return brandRepository.findAllByCategories_CategoryIdAndStatusOrCategoriesEmpty(categoryId, Status.ACTIVE)
                 .map(brand -> ListBrandResponse.listBrandResponse(brand, "Lấy danh sách thương hiệu theo danh mục thành công!", "OK"))
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy thương hiệu theo danh mục!"));
+
+    }
+
+
+      @Override
+    public ListBrandResponse getBrands() {
+        
+        List<Brand> brands = brandRepository.findAll();
+        return ListBrandResponse.listBrandResponse(brands, "Lấy danh sách thương hiệu thành công!", "OK");
 
     }
 

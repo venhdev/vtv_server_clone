@@ -12,7 +12,6 @@ import hcmute.kltn.vtv.service.manager.IManagerCategoryService;
 import hcmute.kltn.vtv.service.vtv.IImageService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +38,7 @@ public class ManagerBrandServiceImpl implements IManagerBrandService {
     @Transactional
     public BrandResponse addNewBrandByManager(BrandRequest brandRequest, String username) {
         existsBrandByName(brandRequest.getName());
-        categoryService.checkExistsCategoriesByIds(brandRequest.getCategories());
+        categoryService.checkExistsCategoriesByIds(brandRequest.getCategoryIds());
         Brand brand = createBrandByBrandRequest(brandRequest, username);
         try {
             brandRepository.save(brand);
@@ -57,7 +56,7 @@ public class ManagerBrandServiceImpl implements IManagerBrandService {
     public BrandResponse updateBrandByManager(Long brandId, BrandRequest brandRequest, String username) {
         checkExistBrandByBrandId(brandId);
         checkExistBrandByBrandIdAndName(brandId, brandRequest.getName());
-        categoryService.checkExistsCategoriesByIds(brandRequest.getCategories());
+        categoryService.checkExistsCategoriesByIds(brandRequest.getCategoryIds());
         Brand brand = getBrandById(brandId);
         String oldImage = brand.getImage();
         updateBrandByBrandRequest(brand, brandRequest, username);
@@ -108,7 +107,7 @@ public class ManagerBrandServiceImpl implements IManagerBrandService {
         brand.setUpdateAt(LocalDateTime.now());
         brand.setAllCategories(brandRequest.isAllCategories());
         brand.setCategories(brandRequest.isAllCategories() ? null :
-                categoryService.getCategoriesByIds(brandRequest.getCategories()));
+                categoryService.getCategoriesByIds(brandRequest.getCategoryIds()));
 
     }
 
@@ -125,7 +124,7 @@ public class ManagerBrandServiceImpl implements IManagerBrandService {
         brand.setStatus(Status.ACTIVE);
         brand.setAllCategories(brandRequest.isAllCategories());
         brand.setCategories(brandRequest.isAllCategories() ? null :
-                categoryService.getCategoriesByIds(brandRequest.getCategories()));
+                categoryService.getCategoriesByIds(brandRequest.getCategoryIds()));
         brand.setCreateAt(LocalDateTime.now());
         brand.setUpdateAt(LocalDateTime.now());
 
