@@ -90,7 +90,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
     @Override
     @Transactional
     public VoucherShopResponse updateVoucher(Long voucherId,VoucherShopRequest request, String username) {
-        Voucher voucher = getVoucherByCodeAndUsername(request.getCode(), username);
+        Voucher voucher = getVoucherByVoucherIdAndUsername(voucherId, username);
         if (!voucher.getCode().equals(request.getCode())
                 && existVoucherCodeOnShop(request.getCode(), voucher.getShop().getShopId())) {
             throw new BadRequestException("Mã giảm giá đã tồn tại trên cửa hàng này!");
