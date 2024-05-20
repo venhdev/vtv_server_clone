@@ -26,7 +26,7 @@ public class VoucherShopController {
         String username = (String) httpServletRequest.getAttribute("username");
 
         request.setUsername(username);
-        request.validateCreate();
+        request.validate();
 
         return ResponseEntity.ok(voucherShopService.addNewVoucher(request, username));
     }
@@ -65,15 +65,16 @@ public class VoucherShopController {
         return ResponseEntity.ok(voucherShopService.getListVoucherByUsernameAndVoucherType(username, type));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<VoucherShopResponse> updateVoucher(@RequestBody VoucherShopRequest request,
+    @PutMapping("/update/{voucherId}")
+    public ResponseEntity<VoucherShopResponse> updateVoucher(@PathVariable Long voucherId,
+                                                             @RequestBody VoucherShopRequest request,
             HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
 
         request.setUsername(username);
-        request.validateUpdate();
+        request.validate();
 
-        return ResponseEntity.ok(voucherShopService.updateVoucher(request, username));
+        return ResponseEntity.ok(voucherShopService.updateVoucher(voucherId, request, username));
     }
 
     @PatchMapping("/update-status/{voucherId}")

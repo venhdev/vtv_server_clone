@@ -89,7 +89,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
 
     @Override
     @Transactional
-    public VoucherShopResponse updateVoucher(VoucherShopRequest request, String username) {
+    public VoucherShopResponse updateVoucher(Long voucherId,VoucherShopRequest request, String username) {
         Voucher voucher = getVoucherByCodeAndUsername(request.getCode(), username);
         if (!voucher.getCode().equals(request.getCode())
                 && existVoucherCodeOnShop(request.getCode(), voucher.getShop().getShopId())) {

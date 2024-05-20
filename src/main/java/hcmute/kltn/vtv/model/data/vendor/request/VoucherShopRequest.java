@@ -16,8 +16,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class VoucherShopRequest {
 
-    private Long voucherId;
-
     private String code;
 
     private String name;
@@ -72,18 +70,14 @@ public class VoucherShopRequest {
             throw new BadRequestException("Ngày bắt đầu không được sau ngày kết thúc");
         }
 
-        Date yesterday = new Date();
-        yesterday.setTime(yesterday.getTime() - (24 * 60 * 60 * 1000)); // Subtract 24 hours (1 day)
 
-        if (this.startDate.after(yesterday)) { // Check if startDate is after yesterday
-            throw new BadRequestException("Ngày bắt đầu không được trước ngày hôm qua");
+        // Ngày kết thúc không được ở trong quá khứ
+        if (this.endDate.before(new Date())) {
+            throw new BadRequestException("Ngày kết thúc không được ở trong quá khứ");
         }
 
 
-    }
 
-    public void validateCreate() {
-        validate();
 
         if (this.type == null || this.type.isEmpty()) {
             throw new BadRequestException("Loại giảm giá không được để trống");
@@ -97,17 +91,10 @@ public class VoucherShopRequest {
         }
 
 
-        trim();
     }
 
-    public void validateUpdate() {
 
-        if (this.voucherId == null) {
-            throw new BadRequestException("Mã giảm giá không được để trống");
-        }
 
-        validateCreate();
-    }
 
     public static Voucher convertCreateToVoucher(VoucherShopRequest request) {
         Voucher voucher = new Voucher();
