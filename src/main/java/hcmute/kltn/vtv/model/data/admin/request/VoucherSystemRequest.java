@@ -14,9 +14,7 @@ import java.util.Date;
 @Data
 @ToString
 @RequiredArgsConstructor
-public class VoucherAdminRequest {
-
-    private Long voucherId;
+public class VoucherSystemRequest {
 
     private String code;
 
@@ -34,7 +32,6 @@ public class VoucherAdminRequest {
 
     private String type;
 
-    private String username;
 
     public void validate() {
         if (this.code == null || this.code.isEmpty()) {
@@ -94,15 +91,9 @@ public class VoucherAdminRequest {
         }
     }
 
-    public void validateUpdate() {
-        if (this.voucherId == null) {
-            throw new BadRequestException("Mã giảm giá không được để trống");
-        }
 
-        validateCreate();
-    }
 
-    public static Voucher convertCreateToVoucher(VoucherAdminRequest request) {
+    public static Voucher convertCreateToVoucher(VoucherSystemRequest request) {
         Voucher voucher = new Voucher();
         voucher.setCode(request.getCode());
         voucher.setName(request.getName());
@@ -120,7 +111,7 @@ public class VoucherAdminRequest {
         return voucher;
     }
 
-    public static Voucher convertUpdateToVoucher(VoucherAdminRequest request, Voucher voucher) {
+    public static Voucher convertUpdateToVoucher(VoucherSystemRequest request, Voucher voucher) {
         voucher.setName(request.getName());
         voucher.setDescription(request.getDescription());
         voucher.setDiscount(request.getDiscount());
@@ -133,7 +124,7 @@ public class VoucherAdminRequest {
         return voucher;
     }
 
-    private static VoucherType convertType(String type) {
+    public static VoucherType convertType(String type) {
         if (type.equals("percent")) {
             return VoucherType.PERCENTAGE_SYSTEM;
         }
@@ -151,7 +142,6 @@ public class VoucherAdminRequest {
         this.name = this.name.trim();
         this.description = this.description.trim();
         this.type = this.type.trim();
-        this.username = this.username.trim();
     }
 
 }

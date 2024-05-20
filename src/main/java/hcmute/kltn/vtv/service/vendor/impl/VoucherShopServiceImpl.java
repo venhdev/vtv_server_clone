@@ -132,25 +132,18 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         Instant now = Instant.now(); // Sử dụng Instant thay vì Date
         Instant voucherStartDate = voucher.getStartDate().toInstant(); // Chuyển startDate của voucher thành Instant
         Instant voucherEndDate = voucher.getEndDate().toInstant();
-
         if (voucherStartDate.isAfter(now)) { // So sánh theo Instant
-            System.out.println("Voucher start date: " + voucher.getStartDate());
-            System.out.println("start date: " + Date.from(now)); // Chuyển Instant về Date nếu cần
             throw new BadRequestException("Mã giảm giá chưa có hiệu lực!");
         }
-
         if (voucherEndDate.isBefore(now)) {
             throw new BadRequestException("Mã giảm giá đã hết hạn!");
         }
-
         if (voucher.getStatus() == Status.DELETED) {
             throw new BadRequestException("Mã giảm giá đã bị xóa!");
         }
-
         if (voucher.getQuantityUsed() >= voucher.getQuantity()) {
             throw new BadRequestException("Mã giảm giá đã hết lượt sử dụng!");
         }
-
         return voucher;
     }
 
@@ -213,7 +206,7 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
                 && existVoucherCodeOnShop(request.getCode(), voucher.getShop().getShopId())) {
             throw new BadRequestException("Mã giảm giá đã tồn tại trên cửa hàng này!");
         }
-        if (voucher.getQuantityUsed() > 0) {
+        if (voucher.getQuantityUsed() >= 0) {
             throw new BadRequestException("Mã giảm giá đã được sử dụng!");
         }
     }

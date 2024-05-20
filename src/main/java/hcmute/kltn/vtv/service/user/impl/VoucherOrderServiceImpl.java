@@ -8,12 +8,11 @@ import hcmute.kltn.vtv.model.entity.user.VoucherOrder;
 import hcmute.kltn.vtv.model.extra.VoucherType;
 import hcmute.kltn.vtv.repository.user.VoucherOrderRepository;
 import hcmute.kltn.vtv.repository.vtv.VoucherRepository;
-import hcmute.kltn.vtv.service.admin.impl.VoucherAdminServiceImpl;
+import hcmute.kltn.vtv.service.manager.impl.ManagerVoucherSystemServiceImpl;
 import hcmute.kltn.vtv.service.user.IVoucherOrderService;
 import hcmute.kltn.vtv.service.vendor.impl.VoucherShopServiceImpl;
 import hcmute.kltn.vtv.util.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +23,7 @@ public class VoucherOrderServiceImpl implements IVoucherOrderService {
     private final VoucherOrderRepository voucherOrderRepository;
     private final VoucherRepository voucherRepository;
     private final VoucherShopServiceImpl voucherShopService;
-    private final VoucherAdminServiceImpl voucherSystemService;
+    private final ManagerVoucherSystemServiceImpl voucherSystemService;
     private final IVoucherCustomerService voucherCustomerService;
 
     @Transactional
