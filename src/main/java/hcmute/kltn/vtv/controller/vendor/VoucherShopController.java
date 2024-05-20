@@ -9,7 +9,6 @@ import hcmute.kltn.vtv.model.extra.VoucherType;
 import hcmute.kltn.vtv.service.vendor.IVoucherShopService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +73,7 @@ public class VoucherShopController {
         request.setUsername(username);
         request.validate();
 
-        return ResponseEntity.ok(voucherShopService.updateVoucher(voucherId, request, username));
+        return ResponseEntity.ok(voucherShopService.updateVoucherShopByVoucherShopRequest(voucherId, request, username));
     }
 
     @PatchMapping("/update-status/{voucherId}")

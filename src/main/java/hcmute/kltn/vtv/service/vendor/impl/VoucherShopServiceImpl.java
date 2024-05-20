@@ -5,7 +5,6 @@ import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.data.vendor.request.VoucherShopRequest;
 import hcmute.kltn.vtv.model.data.vendor.response.ListVoucherShopResponse;
 import hcmute.kltn.vtv.model.data.vendor.response.VoucherShopResponse;
-import hcmute.kltn.vtv.model.dto.vtv.VoucherDTO;
 import hcmute.kltn.vtv.model.entity.vendor.Shop;
 import hcmute.kltn.vtv.model.entity.vendor.Voucher;
 import hcmute.kltn.vtv.model.extra.Status;
@@ -14,11 +13,11 @@ import hcmute.kltn.vtv.repository.vtv.ShopRepository;
 import hcmute.kltn.vtv.repository.vtv.VoucherRepository;
 import hcmute.kltn.vtv.service.vendor.IVoucherShopService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -89,17 +88,10 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
 
     @Override
     @Transactional
-    public VoucherShopResponse updateVoucher(Long voucherId,VoucherShopRequest request, String username) {
+    public VoucherShopResponse updateVoucherShopByVoucherShopRequest(Long voucherId, VoucherShopRequest request, String username) {
         Voucher voucher = getVoucherByVoucherIdAndUsername(voucherId, username);
-        if (!voucher.getCode().equals(request.getCode())
-                && existVoucherCodeOnShop(request.getCode(), voucher.getShop().getShopId())) {
-            throw new BadRequestException("Mã giảm giá đã tồn tại trên cửa hàng này!");
-        }
-        if (voucher.getQuantityUsed() > 0) {
-            throw new BadRequestException("Mã giảm giá đã được sử dụng!");
-        }
-
-        VoucherShopRequest.convertUpdateToVoucher(request, voucher);
+        checkVoucherBeforeUpdate(voucher, request);
+        convertUpdateVoucherShopByRequest(voucher, request);
 
         try {
             voucherRepository.save(voucher);
@@ -215,6 +207,29 @@ public class VoucherShopServiceImpl implements IVoucherShopService {
         return voucher;
     }
 
+
+    private void checkVoucherBeforeUpdate(Voucher voucher, VoucherShopRequest request) {
+        if (!voucher.getCode().equals(request.getCode())
+                && existVoucherCodeOnShop(request.getCode(), voucher.getShop().getShopId())) {
+            throw new BadRequestException("Mã giảm giá đã tồn tại trên cửa hàng này!");
+        }
+        if (voucher.getQuantityUsed() > 0) {
+            throw new BadRequestException("Mã giảm giá đã được sử dụng!");
+        }
+    }
+
+
+    private void convertUpdateVoucherShopByRequest(Voucher voucher, VoucherShopRequest request){
+        voucher.setName(request.getName());
+        voucher.setCode(request.getCode());
+        voucher.setDescription(request.getDescription());
+        voucher.setDiscount(request.getDiscount());
+        voucher.setQuantity(request.getQuantity());
+        voucher.setStartDate(request.getStartDate());
+        voucher.setEndDate(request.getEndDate());
+        voucher.setUpdateAt(LocalDateTime.now());
+        voucher.setType(VoucherShopRequest.convertType(request.getType()));
+    }
 
 
 

@@ -128,7 +128,7 @@ public class VoucherShopRequest {
         return voucher;
     }
 
-    private static VoucherType convertType(String type) {
+    public static VoucherType convertType(String type) {
         if (type.equals("percent")) {
             return VoucherType.PERCENTAGE_SHOP;
         } else {

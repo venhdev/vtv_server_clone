@@ -21,7 +21,7 @@ public interface IVoucherShopService {
     ListVoucherShopResponse getListVoucherByUsernameAndVoucherType(String username, VoucherType type);
 
     @Transactional
-    VoucherShopResponse updateVoucher(Long voucherId,VoucherShopRequest request, String username);
+    VoucherShopResponse updateVoucherShopByVoucherShopRequest(Long voucherId, VoucherShopRequest request, String username);
 
     @Transactional
     VoucherShopResponse updateStatusVoucher(Long voucherId, Status status, String username);
