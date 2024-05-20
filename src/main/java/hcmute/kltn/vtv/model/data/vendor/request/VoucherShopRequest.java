@@ -60,6 +60,7 @@ public class VoucherShopRequest {
         if (this.quantity > 1000) {
             throw new BadRequestException("Số lượng giảm giá không được lớn hơn 1000");
         }
+
         if (this.startDate == null) {
             throw new BadRequestException("Ngày bắt đầu không được để trống");
         }
@@ -70,8 +71,12 @@ public class VoucherShopRequest {
         if (this.startDate.after(this.endDate)) {
             throw new BadRequestException("Ngày bắt đầu không được sau ngày kết thúc");
         }
-        if (this.startDate.after(new Date())) {
-            throw new BadRequestException("Ngày bắt đầu không được sau ngày hiện tại");
+
+        Date yesterday = new Date();
+        yesterday.setTime(yesterday.getTime() - (24 * 60 * 60 * 1000)); // Subtract 24 hours (1 day)
+
+        if (this.startDate.after(yesterday)) { // Check if startDate is after yesterday
+            throw new BadRequestException("Ngày bắt đầu không được trước ngày hôm qua");
         }
 
 

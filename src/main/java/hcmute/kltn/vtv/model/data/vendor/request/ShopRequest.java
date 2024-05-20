@@ -92,10 +92,7 @@ public class ShopRequest {
         if (this.description == null || this.description.isEmpty()) {
             throw new BadRequestException("Mô tả cửa hàng không được để trống!");
         }
-
-        if (this.avatar == null || this.avatar.isEmpty()) {
-            throw new BadRequestException("Ảnh đại diện không được để trống!");
-        }
+   
 
         if (!Pattern.matches("[0-9]+", this.getPhone())) {
             throw new BadRequestException("Số điện thoại chỉ được chứa ký tự số.");

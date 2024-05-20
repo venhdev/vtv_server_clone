@@ -24,6 +24,9 @@ public class ShopController {
     public ResponseEntity<ShopResponse> registerShop(@ModelAttribute ShopRequest request,
             HttpServletRequest httpServletRequest) {
         String username = (String) httpServletRequest.getAttribute("username");
+        if(request.getAvatar() == null) {
+            throw new IllegalArgumentException("Avatar không được để trống!");
+        }
         request.validate();
 
         return ResponseEntity.ok(shopService.registerShop(request, username));

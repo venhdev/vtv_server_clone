@@ -16,7 +16,6 @@ public interface IMailService {
     @Transactional
     SendEmailResponse forgotPasswordSendOtpToEmail(String username);
 
-    @Async
     @Transactional
     void activateAccountSendOtpToEmailAsync(String username);
 
