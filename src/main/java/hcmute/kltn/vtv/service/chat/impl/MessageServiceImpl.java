@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.UUID;
 
-
 @Service
 @RequiredArgsConstructor
 public class MessageServiceImpl implements IMessageService {
@@ -30,7 +29,6 @@ public class MessageServiceImpl implements IMessageService {
     private final ICustomerService customerService;
     private final IRoomChatService roomChatService;
     private final MessageRepository messageRepository;
-
 
     @Override
     @Transactional
@@ -41,7 +39,7 @@ public class MessageServiceImpl implements IMessageService {
         message.setDate(chatMessageRequest.getDate());
         message.setUsernameSenderDelete(false);
         message.setUsernameReceiverDelete(false);
-        message.setRoomChat(roomChatService.getRoomChatById(chatMessageRequest.getRomChatId()));
+        message.setRoomChat(roomChatService.getRoomChatById(chatMessageRequest.getRoomChatId()));
         message.setStatus(Status.ACTIVE);
 
         try {
@@ -51,9 +49,9 @@ public class MessageServiceImpl implements IMessageService {
         }
     }
 
-
     @Override
     public ListMessagesPageResponse getListChatMessagesPage(String username, UUID roomChatId, int page, int size) {
+
         Page<Message> messages = messageRepository
                 .findByRoomChatRomChatId(roomChatId, PageRequest.of(page - 1, size))
                 .orElseThrow(() -> new NotFoundException("Không tìm danh sách tin nhắn!"));
@@ -63,11 +61,12 @@ public class MessageServiceImpl implements IMessageService {
         return listMessagesPageResponse(messages, message, page, size);
     }
 
-
     @Override
-    public ListMessagesPageResponse getListChatMessagesPageByUsername(String senderUsername, String receiverUsername, int page, int size) {
+    public ListMessagesPageResponse getListChatMessagesPageByUsername(String senderUsername, String receiverUsername,
+            int page, int size) {
 
-        RoomChat roomChat = roomChatService.getRoomChatBySenderUsernameAndReceiverUsername(senderUsername, receiverUsername);
+        RoomChat roomChat = roomChatService.getRoomChatBySenderUsernameAndReceiverUsername(senderUsername,
+                receiverUsername);
 
         Page<Message> messages = messageRepository
                 .findByRoomChatRomChatId(roomChat.getRomChatId(), PageRequest.of(page - 1, size))
@@ -92,8 +91,8 @@ public class MessageServiceImpl implements IMessageService {
         }
     }
 
-
-    private ListMessagesPageResponse listMessagesPageResponse(Page<Message> messagesPage, String message, int page, int size) {
+    private ListMessagesPageResponse listMessagesPageResponse(Page<Message> messagesPage, String message, int page,
+            int size) {
         ListMessagesPageResponse response = new ListMessagesPageResponse();
         try {
             response.setMessageDTOs(MessageDTO.convertEntitiesToDTOs(messagesPage.getContent()));

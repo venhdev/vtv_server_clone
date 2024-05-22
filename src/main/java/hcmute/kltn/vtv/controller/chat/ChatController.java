@@ -1,6 +1,5 @@
 package hcmute.kltn.vtv.controller.chat;
 
-
 import hcmute.kltn.vtv.model.data.chat.request.ChatMessageRequest;
 import hcmute.kltn.vtv.model.data.chat.response.ChatMessageResponse;
 import hcmute.kltn.vtv.service.chat.IChatService;
@@ -25,31 +24,28 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final IChatService chatService;
 
-
     @PostMapping("/send")
     @SendTo("/topic/{romChatId}/public")
     public ResponseEntity<ChatMessageResponse> sendMessage(@RequestBody ChatMessageRequest chatMessageRequest,
-                                                           HttpServletRequest request) {
+            HttpServletRequest request) {
 
-      try {
-          String username = (String) request.getAttribute("username");
-          chatMessageRequest.setSenderUsername(username);
-          chatMessageRequest.validate(chatMessageRequest);
-          chatMessageRequest.setDate(new Date());
+        try {
+            String username = (String) request.getAttribute("username");
+            chatMessageRequest.setSenderUsername(username);
+            chatMessageRequest.validate(chatMessageRequest);
+            chatMessageRequest.setDate(new Date());
 
-          ChatMessageResponse response =  chatService.saveMessage(chatMessageRequest);
+            ChatMessageResponse response = chatService.saveMessage(chatMessageRequest);
 
-          messagingTemplate.convertAndSendToUser(
-                  chatMessageRequest.getReceiverUsername(),
-                  "/topic/" + chatMessageRequest.getRomChatId() + "/public",
-                  chatMessageRequest
-          );
+            messagingTemplate.convertAndSendToUser(
+                    chatMessageRequest.getReceiverUsername(),
+                    "/topic/" + chatMessageRequest.getRoomChatId() + "/public",
+                    chatMessageRequest);
 
-          return ResponseEntity.ok(response);
-      }catch (Exception e){
-          throw new InternalServerErrorException("Lỗi hệ thống tin nhắn! Vui lòng thử lại sau. " + e.getMessage());
-      }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Lỗi hệ thống tin nhắn! Vui lòng thử lại sau. " + e.getMessage());
+        }
     }
-
 
 }

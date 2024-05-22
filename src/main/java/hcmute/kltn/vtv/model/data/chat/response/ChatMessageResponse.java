@@ -19,7 +19,7 @@ public class ChatMessageResponse extends ResponseAbstract {
     private Date date;
     private String senderUsername;
     private String receiverUsername;
-    private UUID romChatId;
+    private UUID roomChatId;
 
     public static ChatMessageResponse convertRequestToResponse(ChatMessageRequest chatMessageRequest){
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
@@ -27,7 +27,7 @@ public class ChatMessageResponse extends ResponseAbstract {
         chatMessageResponse.setDate(chatMessageRequest.getDate());
         chatMessageResponse.setSenderUsername(chatMessageRequest.getSenderUsername());
         chatMessageResponse.setReceiverUsername(chatMessageRequest.getReceiverUsername());
-        chatMessageResponse.setRomChatId(chatMessageRequest.getRomChatId());
+        chatMessageResponse.setRoomChatId(chatMessageRequest.getRoomChatId());
         return chatMessageResponse;
     }
 }
