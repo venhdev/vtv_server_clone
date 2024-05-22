@@ -1,20 +1,15 @@
 # Sàn Thương Mại Điện Tử VTV
 
 ## 1. Giới thiệu
-
 Đồ án môn học: Sàn Thương Mại Điện Tử VTV
 
 ## 2. Thành viên
-
-- Tô Duy Vượng - 20110053
 - Nguyễn Quốc Trung - 20110588
 - Hà Nhật Vềnh - 20110599
+- Tô Duy Vượng - 20110053
 
 ## 3. Mô tả đồ án
-
 - Đồ án sử dụng công nghệ Spring Boot, Security, Spring Data JPA, Hibernate, MySQL, Restful API, ReactJS, Redux, Axios, Flutter
-
-
 
 ## 4. Các chức năng
 
