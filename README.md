@@ -1,25 +1,19 @@
-# Sàn Bách Hóa VTC
+# Sàn Thương Mại Điện Tử VTV
 
 ## 1. Giới thiệu
 
-Đồ án môn học: Trang Bán Sàn Thương Mại Điện Tử VTV
+Đồ án môn học: Sàn Thương Mại Điện Tử VTV
 
 ## 2. Thành viên
 
 - Tô Duy Vượng - 20110053
 - Nguyễn Quốc Trung - 20110588
-
-[//]: # (- Hà Nhật Vềnh - 20110599)
+- Hà Nhật Vềnh - 20110599
 
 ## 3. Mô tả đồ án
 
-[//]: # (- Đồ án sử dụng công nghệ Spring Boot, Security, Spring Data JPA, Hibernate, MySQL, Restful API, ReactJS, Redux, Axios,)
+- Đồ án sử dụng công nghệ Spring Boot, Security, Spring Data JPA, Hibernate, MySQL, Restful API, ReactJS, Redux, Axios, Flutter
 
-[//]: # (  Bootstrap, HTML, CSS, JavaScript...)
-
-[//]: # (- Đồ án sử dụng mô hình Client - Server.)
-
-[//]: # (  _~~- Đồ án sử dụng mô hình 3 lớp: Controller, Service, Repository.~~_)
 
 
 ## 4. Các chức năng
@@ -224,7 +218,6 @@
     - Xem danh sách sản phẩm theo giá theo cửa hàng.
     - Xem danh sách sản phẩm theo giá.
     - Lọc sản phẩm theo giá.
-    - //Xem danh sách sản phẩm theo thương hiệu.
 
 
 
@@ -232,20 +225,6 @@
     - Xem danh sách khách hàng theo trạng thái.
     - Xem danh sách khách hàng theo trạng thái và sắp xếp theo tên, thời gian.
     - Tìm kiếm khách hàng theo tên, trạng thái.
-
-
-
-- //Xem chi tiết khách hàng.
-- //Xóa khách hàng.
-  -// Xem danh sách khách hàng theo thời gian.
-- //Xem danh sách khách hàng theo thời gian và trạng thái.
--
-- //Xem danh sách khách hàng theo tên.
-- //Xem danh sách khách hàng theo tên và trạng thái.
-- //Xem danh sách khách hàng theo tên và thời gian.
-- //Xem danh sách khách hàng theo tên, thời gian và trạng thái.
-- //Xem danh sách khách hàng theo tên và thời gian.
-- // danh sách khách hàng theo tên, thời gian và trạng thái.
 
 
 
@@ -257,14 +236,6 @@
 
 
 - Quản lý sản phẩm từ quyền nhân viên:
-
-[//]: # (    - Khóa sản phẩm.)
-
-[//]: # (    - Mở khóa sản phẩm.)
-
-[//]: # (    - Lấy danh sách sản phẩm bị khóa.)
-
-[//]: # (    - Tìm kiếm sản phẩm bị khóa theo tên sản phẩm.)
 
 
 
@@ -287,10 +258,6 @@
     - Xem danh sách quyền nhân viên theo trạng thái.
     - Xem danh sách quyền nhân viên theo tài khoản và trạng thái.
     - Xóa quyền nhân viên.
-
-
-[//]: # (có thên thêmn nhà cung cấp vận chuyển)
-
 
 
 - Trò chuyện với customer:
@@ -328,10 +295,6 @@
 - Gợi ý sản phẩm cửa Customer:
   - Theo lịch sử tìm kiếm.
 
-[//]: # (  - Gợi ý sản phẩm theo sản phẩm đã xem.)
-[//]: # (  - Gợi ý sản phẩm theo sản phẩm yêu thích.)
-[//]: # (  - Gợi ý sản phẩm theo sản phẩm đã mua.)
-
 
 - Gợi ý sản phẩm cửa Guest:
   - Theo ngẫu nhiên.
@@ -367,9 +330,6 @@
 - Quản lý thông tin của nhân viên vận chuyển:
   - Xem thông tin nhân viên vận chuyển.
 
-[//]: # (  - Cập nhật thông tin nhân viên vận chuyển.)
-
-[//]: # (  - Xóa nhân viên vận chuyển.)
 
 
 - Quản lý đơn hàng của nhân viên vận chuyển:
@@ -415,14 +375,6 @@
   - Mở khóa cửa hàng.
   - Xem danh sách quản lý cửa hàng theo trạng thái.
   - Xem danh sách quản lý cửa hàng theo tên và trạng thái.
-
-[//]: # (  - Xem danh sách sản phẩm bán chạy theo danh mục.)
-
-[//]: # (  - Xem danh sách sản phẩm mới nhất theo danh mục.)
-
-[//]: # (  - Tim kiếm sản phẩm theo tên và danh mục.)
-
-[//]: # (  - Xem danh sách sản phẩm theo giá và danh mục.)
 
 
 

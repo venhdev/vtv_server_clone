@@ -1,8 +1,8 @@
 package hcmute.kltn.vtv.controller.manager;
 
-import hcmute.kltn.vtv.model.data.admin.request.VoucherSystemRequest;
-import hcmute.kltn.vtv.model.data.admin.response.ListVoucherSystemResponse;
-import hcmute.kltn.vtv.model.data.admin.response.VoucherSystemResponse;
+import hcmute.kltn.vtv.model.data.manager.request.VoucherSystemRequest;
+import hcmute.kltn.vtv.model.data.manager.response.ListVoucherSystemResponse;
+import hcmute.kltn.vtv.model.data.manager.response.VoucherSystemResponse;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import hcmute.kltn.vtv.model.extra.VoucherType;
@@ -35,7 +35,7 @@ public class ManagerVoucherSystemController {
     }
 
     @GetMapping("/get-all/by-username")
-    public ResponseEntity<ListVoucherSystemResponse> getAllVoucherAdminByUsername(HttpServletRequest servletRequest) {
+    public ResponseEntity<ListVoucherSystemResponse> getAllVoucherSystemByUsername(HttpServletRequest servletRequest) {
         String username = (String) servletRequest.getAttribute("username");
 
         return ResponseEntity.ok(managerVoucherSystemService.getListVoucherSystemByUsername(username));
@@ -76,9 +76,6 @@ public class ManagerVoucherSystemController {
                                                                            @RequestParam Status status,
                                                                            HttpServletRequest servletRequest) {
         String username = (String) servletRequest.getAttribute("username");
-        if (voucherId == null) {
-            throw new BadRequestException("Mã giảm giá không được để trống!");
-        }
 
         return ResponseEntity.ok(managerVoucherSystemService.updateStatusVoucherSystem(voucherId, status, username));
     }

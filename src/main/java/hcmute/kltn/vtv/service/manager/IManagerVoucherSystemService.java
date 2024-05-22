@@ -1,14 +1,15 @@
 package hcmute.kltn.vtv.service.manager;
 
-import hcmute.kltn.vtv.model.data.admin.request.VoucherSystemRequest;
-import hcmute.kltn.vtv.model.data.admin.response.ListVoucherSystemResponse;
-import hcmute.kltn.vtv.model.data.admin.response.VoucherSystemResponse;
+import hcmute.kltn.vtv.model.data.manager.request.VoucherSystemRequest;
+import hcmute.kltn.vtv.model.data.manager.response.ListVoucherSystemResponse;
+import hcmute.kltn.vtv.model.data.manager.response.VoucherSystemResponse;
 import hcmute.kltn.vtv.model.entity.vendor.Voucher;
 import hcmute.kltn.vtv.model.extra.Status;
 import hcmute.kltn.vtv.model.extra.VoucherType;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface IManagerVoucherSystemService {
+    @Transactional
     VoucherSystemResponse addNewVoucherSystem(String username, VoucherSystemRequest request);
 
     VoucherSystemResponse getVoucherSystemByVoucherId(Long voucherId);

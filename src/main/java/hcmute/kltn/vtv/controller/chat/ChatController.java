@@ -27,6 +27,7 @@ public class ChatController {
 
 
     @PostMapping("/send")
+    @SendTo("/topic/{romChatId}/public")
     public ResponseEntity<ChatMessageResponse> sendMessage(@RequestBody ChatMessageRequest chatMessageRequest,
                                                            HttpServletRequest request) {
 

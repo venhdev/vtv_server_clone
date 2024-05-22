@@ -1,4 +1,4 @@
-package hcmute.kltn.vtv.model.data.admin.request;
+package hcmute.kltn.vtv.model.data.manager.request;
 
 import hcmute.kltn.vtv.model.entity.vendor.Voucher;
 import hcmute.kltn.vtv.model.extra.Status;
@@ -67,9 +67,11 @@ public class VoucherSystemRequest {
             throw new BadRequestException("Ngày bắt đầu không được sau ngày kết thúc");
         }
 
-        if (this.endDate.equals(this.startDate)) {
-            throw new BadRequestException("Ngày bắt đầu không được trùng ngày kết thúc");
+        // Ngày kết thúc không được ở trong quá khứ
+        if (this.endDate.before(new Date())) {
+            throw new BadRequestException("Ngày kết thúc không được ở trong quá khứ");
         }
+
 
         trim();
 
@@ -81,10 +83,9 @@ public class VoucherSystemRequest {
         if (this.type == null || this.type.isEmpty()) {
             throw new BadRequestException("Loại giảm giá không được để trống");
         }
-        if (!this.type.equals("percent".trim()) && !this.type.equals("money".trim())
-                && !this.type.equals("shipping".trim())) {
+        if (!this.type.equals("percent".trim()) && !this.type.equals("money".trim())) {
             throw new BadRequestException(
-                    "Loại giảm giá không hợp lệ. Loại giảm giá cửa chỉ có thể là percent, money hoặc shipping");
+                    "Loại giảm giá không hợp lệ. Loại giảm giá cửa chỉ có thể là percent, money");
         }
         if (this.type.equals("percent") && this.discount > 100) {
             throw new BadRequestException("Giá trị giảm giá không được lớn 100%");
@@ -92,48 +93,11 @@ public class VoucherSystemRequest {
     }
 
 
-
-    public static Voucher convertCreateToVoucher(VoucherSystemRequest request) {
-        Voucher voucher = new Voucher();
-        voucher.setCode(request.getCode());
-        voucher.setName(request.getName());
-        voucher.setDescription(request.getDescription());
-        voucher.setDiscount(request.getDiscount());
-        voucher.setQuantity(request.getQuantity());
-        voucher.setStartDate(request.getStartDate());
-        voucher.setEndDate(request.getEndDate());
-        voucher.setCreateAt(LocalDateTime.now());
-        voucher.setUpdateAt(LocalDateTime.now());
-        voucher.setQuantityUsed(0);
-        voucher.setStatus(Status.ACTIVE);
-        voucher.setType(convertType(request.getType()));
-
-        return voucher;
-    }
-
-    public static Voucher convertUpdateToVoucher(VoucherSystemRequest request, Voucher voucher) {
-        voucher.setName(request.getName());
-        voucher.setDescription(request.getDescription());
-        voucher.setDiscount(request.getDiscount());
-        voucher.setQuantity(request.getQuantity());
-        voucher.setStartDate(request.getStartDate());
-        voucher.setEndDate(request.getEndDate());
-        voucher.setUpdateAt(LocalDateTime.now());
-        voucher.setType(convertType(request.getType()));
-
-        return voucher;
-    }
-
     public static VoucherType convertType(String type) {
         if (type.equals("percent")) {
             return VoucherType.PERCENTAGE_SYSTEM;
-        }
-        if (type.equals("money")) {
-            return VoucherType.MONEY_SYSTEM;
         } else {
-
             return VoucherType.MONEY_SYSTEM;
-           // return VoucherType.SHIPPING;
         }
     }
 
