@@ -188,7 +188,7 @@ public class OrderShopServiceImpl implements IOrderShopService {
             String messageEmail = "Trạng thái đơn hàng của bạn đã được cập nhật thành " + messageUpdateStatusOrder(status);
             String messageResponse = "Cập nhật trạng " + messageUpdateStatusOrder(status) + " cho đơn hàng thành công!";
             String titleNotification = "Cập nhật trạng thái đơn hàng";
-            String bodyNotification = "Đơn hàng của bạn đã được cập nhật trạng thái " + messageUpdateStatusOrder(status);
+            String bodyNotification = "Đơn hàng # " + order.getOrderId() + " đã được cập nhật trạng thái thành " + messageUpdateStatusOrder(status);
             TransportStatus transportStatus = convertOrderStatusToTransportStatus(status);
 
             return handleAfterSaveOrderShop(order, messageEmail, messageResponse, titleNotification, bodyNotification, transportStatus);
