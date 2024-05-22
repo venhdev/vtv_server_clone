@@ -16,7 +16,7 @@ public class ChatMessageRequest {
     private Date date;
     private String senderUsername;
     private String receiverUsername;
-    private UUID romChatId;
+    private UUID roomChatId;
 
 
     public void validate(ChatMessageRequest request) {
@@ -32,7 +32,7 @@ public class ChatMessageRequest {
         if (request.getReceiverUsername() == null) {
             throw new BadRequestException("Tên người nhận không được để trống");
         }
-        if (request.getRomChatId() == null) {
+        if (request.getRoomChatId() == null) {
             throw new BadRequestException("Mã phòng chat không được để trống");
         }
         trim();
