@@ -37,6 +37,7 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequest chatMessageRequest) {
+        chatMessageRequest.validate(chatMessageRequest);
         MessageDTO msgDTO = chatService.saveChatMessage(chatMessageRequest);
         simpMessagingTemplate.convertAndSendToUser(msgDTO.getRoomChatId().toString(), "/chat", msgDTO);
     }
