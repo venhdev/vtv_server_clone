@@ -1,7 +1,7 @@
 # Sàn Thương Mại Điện Tử VTV
 
 ## 1. Giới thiệu
-Đồ án môn học: Sàn Thương Mại Điện Tử VTV
+Đồ án khóa luận: Sàn Thương Mại Điện Tử VTV
 
 ## 2. Thành viên
 - Nguyễn Quốc Trung - 20110588
