@@ -32,11 +32,11 @@ public class MessageServiceImpl implements IMessageService {
 
     @Override
     @Transactional
-    public Message addNewMessage(ChatMessageRequest chatMessageRequest) {
+    public Message addNewMessage(String username, ChatMessageRequest chatMessageRequest) {
         Message message = new Message();
         message.setContent(chatMessageRequest.getContent());
-        message.setSenderUsername(chatMessageRequest.getSenderUsername());
-        message.setDate(chatMessageRequest.getDate());
+        message.setSenderUsername(username);
+        message.setDate(new Date());
         message.setUsernameSenderDelete(false);
         message.setUsernameReceiverDelete(false);
         message.setRoomChat(roomChatService.getRoomChatById(chatMessageRequest.getRoomChatId()));

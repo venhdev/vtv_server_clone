@@ -1,5 +1,7 @@
 package hcmute.kltn.vtv.controller.chat;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -36,9 +38,16 @@ public class WebSocketController {
     // }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessageRequest chatMessageRequest) {
+    public void processMessage(@Payload ChatMessageRequest chatMessageRequest, HttpServletRequest request) {
+        String username = (String) request.getAttribute("username");
+        String token = (String) request.getAttribute("Authorization");
+        System.out.println("Token: " + token + " Username: " + username);
+
+        if (username == null || username.isEmpty()) {
+            throw new BadRequestException("Thiếu thông tin người gửi");
+        }
         chatMessageRequest.validate(chatMessageRequest);
-        MessageDTO msgDTO = chatService.saveChatMessage(chatMessageRequest);
+        MessageDTO msgDTO = chatService.saveChatMessage(username, chatMessageRequest);
         simpMessagingTemplate.convertAndSendToUser(msgDTO.getRoomChatId().toString(), "/chat", msgDTO);
     }
 }

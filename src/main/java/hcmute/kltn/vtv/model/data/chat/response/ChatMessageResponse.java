@@ -2,6 +2,7 @@ package hcmute.kltn.vtv.model.data.chat.response;
 
 
 import hcmute.kltn.vtv.model.data.chat.request.ChatMessageRequest;
+import hcmute.kltn.vtv.model.entity.chat.Message;
 import hcmute.kltn.vtv.model.extra.ResponseAbstract;
 import lombok.*;
 
@@ -21,13 +22,16 @@ public class ChatMessageResponse extends ResponseAbstract {
     private String receiverUsername;
     private UUID roomChatId;
 
-    public static ChatMessageResponse convertRequestToResponse(ChatMessageRequest chatMessageRequest){
+    public static ChatMessageResponse chatMessageResponse(Message message , String receiverUsername, String meg,  String status) {
         ChatMessageResponse chatMessageResponse = new ChatMessageResponse();
-        chatMessageResponse.setContent(chatMessageRequest.getContent());
-        chatMessageResponse.setDate(chatMessageRequest.getDate());
-        chatMessageResponse.setSenderUsername(chatMessageRequest.getSenderUsername());
-        chatMessageResponse.setReceiverUsername(chatMessageRequest.getReceiverUsername());
-        chatMessageResponse.setRoomChatId(chatMessageRequest.getRoomChatId());
+        chatMessageResponse.setContent(message.getContent());
+        chatMessageResponse.setDate(new Date());
+        chatMessageResponse.setSenderUsername(message.getSenderUsername());
+        chatMessageResponse.setRoomChatId(message.getRoomChat().getRomChatId());
+        chatMessageResponse.setReceiverUsername(receiverUsername);
+        chatMessageResponse.setMessage(meg);
+        chatMessageResponse.setStatus(status);
+        chatMessageResponse.setCode(200);
         return chatMessageResponse;
     }
 }

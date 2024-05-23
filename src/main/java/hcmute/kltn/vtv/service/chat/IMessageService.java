@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface IMessageService {
     @Transactional
-    Message addNewMessage(ChatMessageRequest chatMessageRequest);
+    Message addNewMessage(String username, ChatMessageRequest chatMessageRequest);
 
 
     ListMessagesPageResponse getListChatMessagesPage(String username, UUID roomChatId, int page, int size);

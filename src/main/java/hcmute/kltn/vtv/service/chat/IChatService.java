@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface IChatService {
 
     @Transactional
-    ChatMessageResponse saveMessage(ChatMessageRequest request);
+    ChatMessageResponse saveMessage(String username, ChatMessageRequest request);
 
     
     @Transactional
-    MessageDTO saveChatMessage(ChatMessageRequest request);
+    MessageDTO saveChatMessage(String username, ChatMessageRequest request);
 }

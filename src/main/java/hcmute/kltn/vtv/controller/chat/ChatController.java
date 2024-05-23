@@ -31,11 +31,9 @@ public class ChatController {
 
         try {
             String username = (String) request.getAttribute("username");
-            chatMessageRequest.setSenderUsername(username);
             chatMessageRequest.validate(chatMessageRequest);
-            chatMessageRequest.setDate(new Date());
 
-            ChatMessageResponse response = chatService.saveMessage(chatMessageRequest);
+            ChatMessageResponse response = chatService.saveMessage(username, chatMessageRequest);
 
             messagingTemplate.convertAndSendToUser(
                     chatMessageRequest.getReceiverUsername(),

@@ -21,31 +21,23 @@ public class ChatServiceIImpl implements IChatService {
 
     @Override
     @Transactional
-    public ChatMessageResponse saveMessage(ChatMessageRequest request) {
+    public ChatMessageResponse saveMessage(String username, ChatMessageRequest request) {
         try {
-            Message message = messageService.addNewMessage(request);
+            Message message = messageService.addNewMessage(username, request);
             roomChatService.updateDateRoomChatById(message.getRoomChat().getRomChatId(), message.getDate(),
                     message.getContent(), message.getSenderUsername());
 
-            return chatMessageResponse(request);
+            return ChatMessageResponse.chatMessageResponse(message, request.getReceiverUsername(), "Gửi tin nhắn thành công!",
+                    "Success");
         } catch (Exception e) {
             throw new InternalServerErrorException("Lỗi hệ thống tin nhắn! Vui lòng thử lại sau. " + e.getMessage());
         }
     }
 
-    private ChatMessageResponse chatMessageResponse(ChatMessageRequest chatMessageRequest) {
-        ChatMessageResponse response = ChatMessageResponse.convertRequestToResponse(chatMessageRequest);
-        response.setStatus("Success");
-        response.setMessage("Gửi tin nhắn thành công!");
-        response.setCode(200);
-
-        return response;
-    }
-
     @Override
-    public MessageDTO saveChatMessage(ChatMessageRequest request) {
+    public MessageDTO saveChatMessage(String username, ChatMessageRequest request) {
         try {
-            Message msg = messageService.addNewMessage(request);
+            Message msg = messageService.addNewMessage(username, request);
             roomChatService.updateDateRoomChatById(msg.getRoomChat().getRomChatId(), msg.getDate(), msg.getContent(),
                     msg.getSenderUsername());
 

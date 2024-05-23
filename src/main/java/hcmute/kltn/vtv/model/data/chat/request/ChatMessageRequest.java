@@ -13,8 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChatMessageRequest {
     private String content;
-    private Date date;
-    private String senderUsername;
     private String receiverUsername;
     private UUID roomChatId;
 
@@ -26,9 +24,7 @@ public class ChatMessageRequest {
         if (request.getContent() == null) {
             throw new BadRequestException("Nội dung tin nhắn không được để trống");
         }
-        if (request.getSenderUsername() == null) {
-            throw new BadRequestException("Tên người gửi không được để trống");
-        }
+
         if (request.getReceiverUsername() == null) {
             throw new BadRequestException("Tên người nhận không được để trống");
         }
@@ -40,7 +36,6 @@ public class ChatMessageRequest {
 
     public void trim() {
         this.content = this.content.trim();
-        this.senderUsername = this.senderUsername.trim();
         this.receiverUsername = this.receiverUsername.trim();
     }
 
