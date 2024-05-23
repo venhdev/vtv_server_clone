@@ -1,6 +1,8 @@
 package hcmute.kltn.vtv.configuration;
 
+import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -15,8 +17,10 @@ import java.security.Principal;
 import java.util.Map;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    private final IJwtService jwtService;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -31,16 +35,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request, WebSocketHandler wsHandler,
                     Map<String, Object> attributes) {
-                // String token = request.getURI().getQuery();
-                String token = request.getURI().getQuery().split("=")[1];
+                String Authorization =  request.getURI().getQuery().split("=")[1];
 
-                System.out.println("token: " + token);
-
-
-                if (token == null || token.trim().isEmpty()) {
-                    throw new BadRequestException("Authorization token is missing");
+                if (Authorization == null || Authorization.trim().isEmpty()) {
+                    throw new BadRequestException("Thiếu thông tin người gửi");
                 }
-                return () -> token;
+                String username = jwtService.extractUsername(Authorization);
+                if (username == null || username.isEmpty()) {
+                    throw new BadRequestException("Không tìm thấy thông tin người gửi");
+                }
+
+                return () -> Authorization;
             }
         }).setAllowedOrigins("*");
     }

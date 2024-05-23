@@ -23,14 +23,10 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequest chatMessageRequest, SimpMessageHeaderAccessor headerAccessor) {
-        String token = headerAccessor.getNativeHeader("token").get(0);
-
+        String token = headerAccessor.getNativeHeader("Authorization").get(0);
         String username = jwtService.extractUsername(token);
-        System.out.println("Username: " + username);
-        System.out.println("Token: " + token + " Username: " + username);
-
         if (username == null || username.isEmpty()) {
-            throw new BadRequestException("Thiếu thông tin người gửi");
+            throw new BadRequestException("Không tìm thấy thông tin người gửi trong token");
         }
         chatMessageRequest.validate(chatMessageRequest);
         MessageDTO msgDTO = chatService.saveChatMessage(username, chatMessageRequest);
