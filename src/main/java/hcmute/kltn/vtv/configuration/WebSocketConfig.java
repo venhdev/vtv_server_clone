@@ -26,14 +26,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 
+
+
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp").setHandshakeHandler(new DefaultHandshakeHandler() {
             @Override
             protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
                 String token = (String) attributes.get("Authorization");
-                if (token != null){
-                    throw new BadRequestException("Thiếu thông tin người gửi");
+                if (token == null || token.trim().isEmpty()) {
+                    throw new BadRequestException("Authorization token is missing");
                 }
                 return () -> token;
             }
