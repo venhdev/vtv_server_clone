@@ -2,7 +2,6 @@ package hcmute.kltn.vtv.controller.chat;
 
 import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -24,7 +23,8 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequest chatMessageRequest, SimpMessageHeaderAccessor headerAccessor) {
-        String token = (String) headerAccessor.getSessionAttributes().get("Authorization");
+        String token = headerAccessor.getNativeHeader("token").get(0);
+
         String username = jwtService.extractUsername(token);
         System.out.println("Username: " + username);
         System.out.println("Token: " + token + " Username: " + username);

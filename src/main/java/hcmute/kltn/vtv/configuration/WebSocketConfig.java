@@ -25,25 +25,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setUserDestinationPrefix("/room");
     }
 
-
-
-
-
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp").setHandshakeHandler(new DefaultHandshakeHandler() {
             @Override
-            protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-                String token = (String) attributes.get("Authorization");
+            protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request, WebSocketHandler wsHandler,
+                    Map<String, Object> attributes) {
+                // String token = request.getURI().getQuery();
+                String token = request.getURI().getQuery().split("=")[1];
+
+                System.out.println("token: " + token);
+
+
                 if (token == null || token.trim().isEmpty()) {
                     throw new BadRequestException("Authorization token is missing");
                 }
                 return () -> token;
             }
-        });
+        }).setAllowedOrigins("*");
     }
-
-
-
 }
-
