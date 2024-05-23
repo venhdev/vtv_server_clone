@@ -1,9 +1,11 @@
 package hcmute.kltn.vtv.controller.chat;
 
+import hcmute.kltn.vtv.authentication.service.IJwtService;
 import hcmute.kltn.vtv.util.exception.BadRequestException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
@@ -18,29 +20,13 @@ public class WebSocketController {
 
     private final IChatService chatService;
     private final SimpMessagingTemplate simpMessagingTemplate;
-
-    // @MessageMapping("/message")
-    // @SendTo("/topic/{romChatId}/public")
-    // public ChatMessageResponse sendMessage(@Payload ChatMessageRequest
-    // chatMessageRequest,
-    // Principal principal) {
-
-    // // chatMessageRequest.setSenderUsername(principal.getName());
-
-    // chatService.saveMessage(chatMessageRequest);
-
-    // simpMessagingTemplate.convertAndSendToUser(
-    // chatMessageRequest.getReceiverUsername(),
-    // "/topic/" + chatMessageRequest.getRoomChatId() + "/public",
-    // chatMessageRequest);
-
-    // return ChatMessageResponse.convertRequestToResponse(chatMessageRequest);
-    // }
+    private final IJwtService jwtService;
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessageRequest chatMessageRequest, HttpServletRequest request) {
-        String username = (String) request.getAttribute("username");
-        String token = (String) request.getAttribute("Authorization");
+    public void processMessage(@Payload ChatMessageRequest chatMessageRequest, SimpMessageHeaderAccessor headerAccessor) {
+        String token = (String) headerAccessor.getSessionAttributes().get("token");
+        String username = jwtService.extractUsername(token);
+        System.out.println("Username: " + username);
         System.out.println("Token: " + token + " Username: " + username);
 
         if (username == null || username.isEmpty()) {

@@ -25,7 +25,6 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class JwtServiceImpl implements IJwtService {
 
-    @Autowired
     private final TokenRepository tokenRepository;
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
