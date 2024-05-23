@@ -17,7 +17,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
         String token = request.getHeaders().getFirst("Authorization");
 
         // You can store the token in the attributes map and access it later in your controller
-        attributes.put("token", token);
+        attributes.put("Authorization", token);
 
         return true;
     }

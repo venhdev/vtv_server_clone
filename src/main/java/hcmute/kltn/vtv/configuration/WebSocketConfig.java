@@ -1,5 +1,7 @@
 package hcmute.kltn.vtv.configuration;
 
+import hcmute.kltn.vtv.util.exception.BadRequestException;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -29,10 +31,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws-stomp").setHandshakeHandler(new DefaultHandshakeHandler() {
             @Override
             protected Principal determineUser(org.springframework.http.server.ServerHttpRequest request, WebSocketHandler wsHandler, Map<String, Object> attributes) {
-                String token = (String) attributes.get("token");
+                String token = (String) attributes.get("Authorization");
+                if (token != null){
+                    throw new BadRequestException("Thiếu thông tin người gửi");
+                }
                 return () -> token;
             }
-        }).withSockJS();
+        });
     }
 
 

@@ -24,7 +24,7 @@ public class WebSocketController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageRequest chatMessageRequest, SimpMessageHeaderAccessor headerAccessor) {
-        String token = (String) headerAccessor.getSessionAttributes().get("token");
+        String token = (String) headerAccessor.getSessionAttributes().get("Authorization");
         String username = jwtService.extractUsername(token);
         System.out.println("Username: " + username);
         System.out.println("Token: " + token + " Username: " + username);
