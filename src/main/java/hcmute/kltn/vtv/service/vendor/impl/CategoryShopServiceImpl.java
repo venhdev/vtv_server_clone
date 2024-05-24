@@ -218,7 +218,7 @@ public class CategoryShopServiceImpl implements ICategoryShopService {
     }
 
     private void checkExistsByNameAndCategoryShopIdNot(String name, Long shopId) {
-        if (!categoryShopRepository.existsByNameAndCategoryShopIdNot(name, shopId)) {
+        if (categoryShopRepository.existsByNameAndCategoryShopIdNot(name, shopId)) {
             throw new BadRequestException("Tên danh mục đã tồn tại trong cửa hàng!");
         }
     }
