@@ -70,8 +70,7 @@ public class RevenueServiceImpl implements IRevenueService {
             Date end = DateServiceImpl.formatEndOfDate(date);
 
             for (Order checkOrder : orders) {
-                Date dateUpdate = DateServiceImpl.convertLocalDateTimeToDate(checkOrder.getUpdateAt());
-                if (dateUpdate.after(start) && dateUpdate.before(end)) {
+                if (checkOrder.getOrderDate().after(start) && checkOrder.getOrderDate().before(end)) {
                     ordersSameDate.add(checkOrder);
                 }
             }
