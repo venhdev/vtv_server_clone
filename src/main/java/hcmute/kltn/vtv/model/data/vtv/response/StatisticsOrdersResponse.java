@@ -21,13 +21,13 @@ public class StatisticsOrdersResponse extends ResponseAbstract {
     private Long totalMoney;
     private Date dateStart;
     private Date dateEnd;
-    private List<StatisticsOrderDTO> statisticsOrderDTOS;
+    private List<StatisticsOrderDTO> statisticsOrderDTOs;
 
 
     public static StatisticsOrdersResponse statisticsOrdersResponse(List<Order> orders, Date startDate, Date endDate, String message) {
         StatisticsOrdersResponse response = new StatisticsOrdersResponse();
-        response.setStatisticsOrderDTOS(StatisticsOrderDTO.covertStatisticsOrderDTOs(orders, startDate, endDate));
-        response.setCount(response.getStatisticsOrderDTOS().size());
+        response.setStatisticsOrderDTOs(StatisticsOrderDTO.covertStatisticsOrderDTOs(orders, startDate, endDate));
+        response.setCount(response.getStatisticsOrderDTOs().size());
         response.setTotalOrder(orders.size());
         response.setTotalMoney(totalMoney(orders));
         response.setDateStart(DateServiceImpl.formatStartOfDate(startDate));

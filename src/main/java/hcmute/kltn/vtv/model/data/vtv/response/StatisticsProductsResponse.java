@@ -23,16 +23,16 @@ public class StatisticsProductsResponse extends ResponseAbstract {
     private Long totalSold;
     private Date dateStart;
     private Date dateEnd;
-    private List<StatisticsProductDTO> statisticsProductDTOS;
+    private List<StatisticsProductDTO> statisticsProductDTOs;
 
 
     public static StatisticsProductsResponse statisticsProductsResponse(List<Product> products, List<Order> orders, Date startDate, Date endDate, String message) {
         StatisticsProductsResponse response = new StatisticsProductsResponse();
-        response.setStatisticsProductDTOS(StatisticsProductDTO.convertProductsAndOrdersToDTOs(products, orders));
+        response.setStatisticsProductDTOs(StatisticsProductDTO.convertProductsAndOrdersToDTOs(products, orders));
         response.setCount(products.size());
         response.setTotalOrder(orders.size());
-        response.setTotalMoney(response.getStatisticsProductDTOS().stream().mapToLong(StatisticsProductDTO::getTotalMoney).sum());
-        response.setTotalSold(response.getStatisticsProductDTOS().stream().mapToLong(StatisticsProductDTO::getTotalSold).sum());
+        response.setTotalMoney(response.getStatisticsProductDTOs().stream().mapToLong(StatisticsProductDTO::getTotalMoney).sum());
+        response.setTotalSold(response.getStatisticsProductDTOs().stream().mapToLong(StatisticsProductDTO::getTotalSold).sum());
         response.setDateStart(DateServiceImpl.formatStartOfDate(startDate));
         response.setDateEnd(DateServiceImpl.formatStartOfDate(endDate));
         response.setMessage(message);
