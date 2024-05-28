@@ -4,7 +4,6 @@ package hcmute.kltn.vtv.vnpay;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -30,10 +29,11 @@ public class VNPayConfig {
 //        }
 //    }
 
-    public static String return_url = "http://" + "localhost"+ ":8585/api/vnpay/return";
+    public static String return_url_default = "http://" + "localhost"+ ":8585/api/vnpay/return";
+    public static String return_url_for_web = "http://" + "localhost"+ ":5173/vnpay/return";
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = return_url;
+    public static String vnp_ReturnUrl = return_url_default;
     public static String vnp_TmnCode = "U1PBPIW9";
     public static String secretKey = "RTQMAKUQUMXLALTESAQWTTIGSCHPBBMK";
     public static String vnp_Version = "2.1.0";

@@ -31,7 +31,33 @@ public class VNPayServiceImpl implements IVNPayService {
     public VNPayResponse createPaymentByVNPay(UUID orderId, String ipAddress, String username) {
 
         Long amount = orderService.getTotalPaymentByOrderId(orderId, username);
-        Map<String, String> vnp_Params = getVNPayParams(amount, orderId.toString(), ipAddress);
+        Map<String, String> vnp_Params = getVNPayParams(amount, orderId.toString(), ipAddress, VNPayConfig.return_url_default);
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        Collections.sort(fieldNames);
+        StringJoiner hashData = new StringJoiner("&");
+        StringJoiner query = new StringJoiner("&");
+        for (String fieldName : fieldNames) {
+            String fieldValue = vnp_Params.get(fieldName);
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                //Build hash data
+                hashData.add(fieldName + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                //Build query
+                query.add(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII) + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+
+
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho đơn hàng thành công.", "Success");
+    }
+
+    @Override
+    public VNPayResponse createPaymentByVNPayForWeb(UUID orderId, String ipAddress, String username) {
+        Long amount = orderService.getTotalPaymentByOrderId(orderId, username);
+        Map<String, String> vnp_Params = getVNPayParams(amount, orderId.toString(), ipAddress, VNPayConfig.return_url_for_web);
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringJoiner hashData = new StringJoiner("&");
@@ -62,7 +88,36 @@ public class VNPayServiceImpl implements IVNPayService {
             amount += orderService.getTotalPaymentByOrderId(orderId, username);
         }
         String vnp_TxnRef = orderIds.stream().map(UUID::toString).reduce((s1, s2) -> s1 + "," + s2).orElse("");
-        Map<String, String> vnp_Params = getVNPayParams(amount, vnp_TxnRef, ipAddress);
+        Map<String, String> vnp_Params = getVNPayParams(amount, vnp_TxnRef, ipAddress, VNPayConfig.return_url_default);
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        Collections.sort(fieldNames);
+        StringJoiner hashData = new StringJoiner("&");
+        StringJoiner query = new StringJoiner("&");
+        for (String fieldName : fieldNames) {
+            String fieldValue = vnp_Params.get(fieldName);
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                //Build hash data
+                hashData.add(fieldName + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                //Build query
+                query.add(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII) + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho nhiều đơn hàng thành công.", "Success");
+    }
+
+    @Override
+    public VNPayResponse createPaymentByVNPayWithMultipleOrderForWeb(List<UUID> orderIds, String ipAddress, String username) {
+        Long amount  = 0L;
+        for (UUID orderId : orderIds) {
+            amount += orderService.getTotalPaymentByOrderId(orderId, username);
+        }
+        String vnp_TxnRef = orderIds.stream().map(UUID::toString).reduce((s1, s2) -> s1 + "," + s2).orElse("");
+        Map<String, String> vnp_Params = getVNPayParams(amount, vnp_TxnRef, ipAddress, VNPayConfig.return_url_for_web);
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringJoiner hashData = new StringJoiner("&");
@@ -163,7 +218,7 @@ public class VNPayServiceImpl implements IVNPayService {
     }
 
 
-    private Map<String, String> getVNPayParams(Long amount, String vnp_TxnRef, String vnp_IpAddr) {
+    private Map<String, String> getVNPayParams(Long amount, String vnp_TxnRef, String vnp_IpAddr, String vnp_ReturnUrl) {
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", VNPayConfig.vnp_Version);
         vnp_Params.put("vnp_Command", VNPayConfig.vnp_Command);
@@ -175,7 +230,8 @@ public class VNPayServiceImpl implements IVNPayService {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+//        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_CreateDate", getVNPayCreateDate());
         vnp_Params.put("vnp_ExpireDate", getVNPayExpireDate());
