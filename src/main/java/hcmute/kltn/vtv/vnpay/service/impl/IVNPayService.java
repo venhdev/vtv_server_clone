@@ -12,6 +12,7 @@ public interface IVNPayService {
     VNPayResponse createPaymentByVNPayForWeb(UUID orderId, String ipAddress, String username);
 
     VNPayResponse createPaymentByVNPayWithMultipleOrder(List<UUID> orderIds, String ipAddress, String username);
+    VNPayResponse createPaymentByVNPayWithMultipleOrderForWeb(List<UUID> orderIds, String ipAddress, String username);
 
     VNPayDTO checkPaymentByVNPay(String vnp_TxnRef, String ipAddress, HttpServletRequest req) throws Exception;
 }

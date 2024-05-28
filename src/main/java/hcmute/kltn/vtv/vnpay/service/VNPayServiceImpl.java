@@ -110,6 +110,35 @@ public class VNPayServiceImpl implements IVNPayService {
         return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho nhiều đơn hàng thành công.", "Success");
     }
 
+    @Override
+    public VNPayResponse createPaymentByVNPayWithMultipleOrderForWeb(List<UUID> orderIds, String ipAddress, String username) {
+        Long amount  = 0L;
+        for (UUID orderId : orderIds) {
+            amount += orderService.getTotalPaymentByOrderId(orderId, username);
+        }
+        String vnp_TxnRef = orderIds.stream().map(UUID::toString).reduce((s1, s2) -> s1 + "," + s2).orElse("");
+        Map<String, String> vnp_Params = getVNPayParams(amount, vnp_TxnRef, ipAddress, VNPayConfig.return_url_for_web);
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        Collections.sort(fieldNames);
+        StringJoiner hashData = new StringJoiner("&");
+        StringJoiner query = new StringJoiner("&");
+        for (String fieldName : fieldNames) {
+            String fieldValue = vnp_Params.get(fieldName);
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                //Build hash data
+                hashData.add(fieldName + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+                //Build query
+                query.add(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII) + "=" + URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII));
+            }
+        }
+        String queryUrl = query.toString();
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+
+        return VNPayResponse.vnPayResponse(paymentUrl, "Tạo mã thanh toán cho nhiều đơn hàng thành công.", "Success");
+    }
+
 
     @Override
     public VNPayDTO checkPaymentByVNPay(String vnp_TxnRef, String ipAddress, HttpServletRequest req) throws Exception {
