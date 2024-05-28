@@ -35,7 +35,7 @@ public class VNPayController {
         String ipAddress = VNPayConfig.getIpAddress(req);
         String username = (String) req.getAttribute("username");
 
-        return ResponseEntity.ok(vnPayService.createPaymentByVNPay(orderId, ipAddress, username));
+        return ResponseEntity.ok(vnPayService.createPaymentByVNPayForWeb(orderId, ipAddress, username));
     }
 
 
