@@ -30,6 +30,14 @@ public class VNPayController {
         return ResponseEntity.ok(vnPayService.createPaymentByVNPay(orderId, ipAddress, username));
     }
 
+    @PostMapping("/create-payment-web/{orderId}")
+    public ResponseEntity<VNPayResponse> createPaymentByVNPayForWeb(@PathVariable UUID orderId, HttpServletRequest req) {
+        String ipAddress = VNPayConfig.getIpAddress(req);
+        String username = (String) req.getAttribute("username");
+
+        return ResponseEntity.ok(vnPayService.createPaymentByVNPay(orderId, ipAddress, username));
+    }
+
 
     @PostMapping("/create-payment/multiple-order")
     public ResponseEntity<VNPayResponse> createPaymentByVNPayWithMultipleOrder(@RequestBody List<UUID> orderIds,

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface IVNPayService {
     VNPayResponse createPaymentByVNPay(UUID orderId, String ipAddress, String username);
+    VNPayResponse createPaymentByVNPayForWeb(UUID orderId, String ipAddress, String username);
 
     VNPayResponse createPaymentByVNPayWithMultipleOrder(List<UUID> orderIds, String ipAddress, String username);
 
