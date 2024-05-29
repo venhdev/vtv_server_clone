@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Sensitivity ###
+src/main/resources/notification-vtv-firebase.json
+src/main/resources/image-vtv-firebase.json
